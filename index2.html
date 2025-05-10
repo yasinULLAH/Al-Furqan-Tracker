@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quranic Root Words - Yasin Ullah</title>
+    <style>
+        @font-face {
+            font-family: 'QuranicFont';
+            src: url('path/to/your/quranic-font.woff2') format('woff2'),
+                 url('path/to/your/quranic-font.woff') format('woff');
+            /* Add other font formats if needed */
+        }
+
+        :root {
+            --bg-color-light: #f0f4f8;
+            --text-color-light: #333;
+            --primary-color-light: #007bff;
+            --secondary-color-light: #6c757d;
+            --card-bg-light: #fff;
+            --border-color-light: #ddd;
+            --pattern-color-light: rgba(0, 0, 0, 0.05);
+
+            --bg-color-dark: #1a202c;
+            --text-color-dark: #e2e8f0;
+            --primary-color-dark: #63b3ed;
+            --secondary-color-dark: #a0aec0;
+            --card-bg-dark: #2d3748;
+            --border-color-dark: #4a5568;
+            --pattern-color-dark: rgba(255, 255, 255, 0.05);
+
+            --current-bg-color: var(--bg-color-light);
+            --current-text-color: var(--text-color-light);
+            --current-primary-color: var(--primary-color-light);
+            --current-secondary-color: var(--secondary-color-light);
+            --current-card-bg: var(--card-bg-light);
+            --current-border-color: var(--border-color-light);
+            --current-pattern-color: var(--pattern-color-light);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--current-bg-color);
+            color: var(--current-text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent 20%, var(--current-pattern-color) 20%, var(--current-pattern-color) 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, var(--current-pattern-color) 20%, var(--current-pattern-color) 80%, transparent 80%, transparent) 50px 50px;
+            background-size: 100px 100px;
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        .dark-mode {
+            --current-bg-color: var(--bg-color-dark);
+            --current-text-color: var(--text-color-dark);
+            --current-primary-color: var(--primary-color-dark);
+            --current-secondary-color: var(--secondary-color-dark);
+            --current-card-bg: var(--card-bg-dark);
+            --current-border-color: var(--border-color-dark);
+            --current-pattern-color: var(--pattern-color-dark);
+        }
+
+        header {
+            background-color: var(--current-card-bg);
+            color: var(--current-text-color);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--current-border-color);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        nav button {
+            background: none;
+            border: none;
+            color: var(--current-text-color);
+            font-size: 1rem;
+            cursor: pointer;
+            margin-left: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        nav button:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        main {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 20px auto;
+            background-color: var(--current-card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--current-border-color);
+        }
+
+        section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border: 1px solid var(--current-border-color);
+            border-radius: 8px;
+            background-color: var(--current-bg-color);
+        }
+
+        h2 {
+            color: var(--current-primary-color);
+            border-bottom: 2px solid var(--current-primary-color);
+            padding-bottom: 0.5rem;
+            margin-top: 0;
+        }
+
+        #add-word-form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        #add-word-form input,
+        #add-word-form textarea {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 1rem;
+            border: 1px solid var(--current-border-color);
+            border-radius: 4px;
+            background-color: var(--current-card-bg);
+            color: var(--current-text-color);
+        }
+
+        #add-word-form button {
+            background-color: var(--current-primary-color);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        #add-word-form button:hover {
+            background-color: darken(var(--current-primary-color), 10%);
+        }
+
+        #flashcard-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .flashcard-container {
+            perspective: 1000px;
+            width: 100%;
+            max-width: 400px;
+            height: 250px;
+            margin-bottom: 1rem;
+        }
+
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            border-radius: 8px;
+            background-color: var(--current-card-bg);
+            border: 1px solid var(--current-border-color);
+            text-align: center;
+        }
+
+        .flashcard-front {
+            z-index: 2;
+        }
+
+        .flashcard-back {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-word {
+            font-family: 'QuranicFont', 'Arial', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            direction: rtl;
+        }
+
+        .flashcard-root {
+            font-family: 'QuranicFont', 'Arial', sans-serif;
+            font-size: 1.5rem;
+            color: var(--current-secondary-color);
+            margin-bottom: 0.5rem;
+            direction: rtl;
+        }
+
+        .flashcard-meaning {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .flashcard-ayah {
+            font-size: 0.9rem;
+            color: var(--current-secondary-color);
+        }
+
+        .flashcard-controls {
+            margin-top: 1rem;
+        }
+
+        .flashcard-controls button {
+            background-color: var(--current-primary-color);
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 0 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .flashcard-controls button:hover {
+            background-color: darken(var(--current-primary-color), 10%);
+        }
+
+        #quiz-section {
+            text-align: center;
+        }
+
+        #quiz-area {
+            margin-top: 1rem;
+            padding: 1.5rem;
+            border: 1px solid var(--current-border-color);
+            border-radius: 8px;
+            background-color: var(--current-card-bg);
+        }
+
+        #quiz-question {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            min-height: 50px; /* Prevent layout shift */
+        }
+
+        #quiz-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .quiz-option {
+            background-color: var(--current-bg-color);
+            color: var(--current-text-color);
+            padding: 10px;
+            border: 1px solid var(--current-border-color);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            background-color: var(--current-primary-color);
+            color: white;
+            border-color: var(--current-primary-color);
+        }
+
+        .quiz-option.correct {
+            background-color: #28a745;
+            color: white;
+            border-color: #28a745;
+        }
+
+        .quiz-option.incorrect {
+            background-color: #dc3545;
+            color: white;
+            border-color: #dc3545;
+        }
+
+        #quiz-feedback {
+            margin-top: 1rem;
+            font-weight: bold;
+            min-height: 20px; /* Prevent layout shift */
+        }
+
+        #quiz-next-button {
+            margin-top: 1rem;
+            background-color: var(--current-primary-color);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        #quiz-next-button:hover {
+            background-color: darken(var(--current-primary-color), 10%);
+        }
+
+        #word-list-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        #word-list-section li {
+            background-color: var(--current-bg-color);
+            border: 1px solid var(--current-border-color);
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #word-list-section li span {
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+
+        #word-list-section li button {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #word-list-section li button:hover {
+            background-color: darken(#dc3545, 10%);
+        }
+
+        #settings-section label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        #settings-section select,
+        #settings-section input[type="file"] {
+            display: block;
+            margin-bottom: 1rem;
+            padding: 8px;
+            border: 1px solid var(--current-border-color);
+            border-radius: 4px;
+            background-color: var(--current-card-bg);
+            color: var(--current-text-color);
+        }
+
+        #settings-section button {
+            background-color: var(--current-primary-color);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        #settings-section button:hover {
+            background-color: darken(var(--current-primary-color), 10%);
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            margin-top: 2rem;
+            color: var(--current-secondary-color);
+            font-size: 0.9rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Accessibility */
+        [aria-hidden="true"] {
+            display: none;
+        }
+
+        button:focus,
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: 2px solid var(--current-primary-color);
+            outline-offset: 2px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            nav {
+                margin-top: 1rem;
+            }
+
+            nav button {
+                margin-left: 0;
+                margin-right: 1rem;
+                margin-bottom: 0.5rem;
+            }
+
+            main {
+                padding: 1rem;
+            }
+
+            section {
+                padding: 1rem;
+            }
+
+            .flashcard-container {
+                height: 200px;
+            }
+
+            .flashcard-word {
+                font-size: 1.5rem;
+            }
+
+            .flashcard-root {
+                font-size: 1.2rem;
+            }
+
+            .flashcard-meaning {
+                font-size: 1rem;
+            }
+
+            .flashcard-ayah {
+                font-size: 0.8rem;
+            }
+
+            #quiz-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Quranic Root Words</h1>
+        <nav>
+            <button id="nav-add-word">Add Word</button>
+            <button id="nav-flashcards">Flashcards</button>
+            <button id="nav-quiz">Quiz</button>
+            <button id="nav-word-list">Word List</button>
+            <button id="nav-settings">Settings</button>
+            <button id="theme-toggle">Toggle Theme</button>
+        </nav>
+    </header>
+
+    <main>
+        <section id="add-word-section">
+            <h2>Add New Word</h2>
+            <form id="add-word-form">
+                <label for="arabic-word">Arabic Word:</label>
+                <input type="text" id="arabic-word" required dir="rtl">
+
+                <label for="root-letters">Root Letters:</label>
+                <input type="text" id="root-letters" required dir="rtl">
+
+                <label for="meaning">Meaning (Urdu/English):</label>
+                <textarea id="meaning" required></textarea>
+
+                <label for="ayah-reference">Example Ayah Reference (e.g., 1:1):</label>
+                <input type="text" id="ayah-reference">
+
+                <button type="submit">Add Word</button>
+            </form>
+        </section>
+
+        <section id="flashcard-section" class="hidden">
+            <h2>Flashcards</h2>
+            <div id="flashcard-area">
+                <p id="no-flashcards-message">No flashcards available. Add some words!</p>
+                <div class="flashcard-container hidden">
+                    <div class="flashcard">
+                        <div class="flashcard-face flashcard-front">
+                            <div class="flashcard-word" lang="ar"></div>
+                            <div class="flashcard-root" lang="ar"></div>
+                        </div>
+                        <div class="flashcard-face flashcard-back">
+                            <div class="flashcard-meaning"></div>
+                            <div class="flashcard-ayah"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flashcard-controls hidden">
+                    <button id="prev-flashcard">Previous</button>
+                    <button id="next-flashcard">Next</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="quiz-section" class="hidden">
+            <h2>Quiz</h2>
+            <div id="quiz-area">
+                <p id="no-quiz-message">No words available for quiz. Add some words!</p>
+                <div id="quiz-content" class="hidden">
+                    <div id="quiz-question"></div>
+                    <div id="quiz-options"></div>
+                    <div id="quiz-feedback"></div>
+                    <button id="quiz-next-button">Next Question</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="word-list-section" class="hidden">
+            <h2>Word List</h2>
+            <ul id="word-list">
+                <p id="no-words-message">No words added yet.</p>
+            </ul>
+        </section>
+
+        <section id="settings-section" class="hidden">
+            <h2>Settings</h2>
+            <div>
+                <label for="quran-data-upload">Upload Quran Data (data.AM):</label>
+                <input type="file" id="quran-data-upload" accept=".AM">
+                <p id="quran-data-status"></p>
+            </div>
+            <div>
+                <button id="backup-data">Backup Data</button>
+                <label for="restore-data-upload">Restore Data:</label>
+                <input type="file" id="restore-data-upload" accept="application/json">
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2023 Quranic Root Words. Developed by Yasin Ullah (Pakistani).</p>
+    </footer>
+
+    <script>
+        const DB_NAME = 'QuranicRootWordsDB';
+        const DB_VERSION = 1;
+        const WORDS_STORE = 'words';
+        const QURAN_DATA_STORE = 'quranData';
+
+        let db;
+        let currentFlashcardIndex = 0;
+        let words = [];
+        let quranData = [];
+        let quizWords = [];
+        let currentQuizWord = null;
+        let quizType = 'word-to-meaning'; // 'word-to-meaning', 'root-to-word'
+
+        // DOM Elements
+        const addWordSection = document.getElementById('add-word-section');
+        const flashcardSection = document.getElementById('flashcard-section');
+        const quizSection = document.getElementById('quiz-section');
+        const wordListSection = document.getElementById('word-list-section');
+        const settingsSection = document.getElementById('settings-section');
+
+        const navAddWord = document.getElementById('nav-add-word');
+        const navFlashcards = document.getElementById('nav-flashcards');
+        const navQuiz = document.getElementById('nav-quiz');
+        const navWordList = document.getElementById('nav-word-list');
+        const navSettings = document.getElementById('nav-settings');
+        const themeToggle = document.getElementById('theme-toggle');
+
+        const addWordForm = document.getElementById('add-word-form');
+        const arabicWordInput = document.getElementById('arabic-word');
+        const rootLettersInput = document.getElementById('root-letters');
+        const meaningInput = document.getElementById('meaning');
+        const ayahReferenceInput = document.getElementById('ayah-reference');
+
+        const flashcardArea = document.getElementById('flashcard-area');
+        const noFlashcardsMessage = document.getElementById('no-flashcards-message');
+        const flashcardContainer = flashcardArea.querySelector('.flashcard-container');
+        const flashcard = flashcardArea.querySelector('.flashcard');
+        const flashcardWord = flashcardArea.querySelector('.flashcard-word');
+        const flashcardRoot = flashcardArea.querySelector('.flashcard-root');
+        const flashcardMeaning = flashcardArea.querySelector('.flashcard-meaning');
+        const flashcardAyah = flashcardArea.querySelector('.flashcard-ayah');
+        const flashcardControls = flashcardArea.querySelector('.flashcard-controls');
+        const prevFlashcardButton = document.getElementById('prev-flashcard');
+        const nextFlashcardButton = document.getElementById('next-flashcard');
+
+        const quizArea = document.getElementById('quiz-area');
+        const noQuizMessage = document.getElementById('no-quiz-message');
+        const quizContent = document.getElementById('quiz-content');
+        const quizQuestion = document.getElementById('quiz-question');
+        const quizOptions = document.getElementById('quiz-options');
+        const quizFeedback = document.getElementById('quiz-feedback');
+        const quizNextButton = document.getElementById('quiz-next-button');
+
+        const wordListUl = document.getElementById('word-list');
+        const noWordsMessage = document.getElementById('no-words-message');
+
+        const quranDataUploadInput = document.getElementById('quran-data-upload');
+        const quranDataStatus = document.getElementById('quran-data-status');
+        const backupDataButton = document.getElementById('backup-data');
+        const restoreDataUploadInput = document.getElementById('restore-data-upload');
+
+        // IndexedDB Functions
+        function openDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+                request.onupgradeneeded = (event) => {
+                    db = event.target.result;
+                    if (!db.objectStoreNames.contains(WORDS_STORE)) {
+                        const wordsStore = db.createObjectStore(WORDS_STORE, { keyPath: 'id', autoIncrement: true });
+                        wordsStore.createIndex('root', 'root', { unique: false });
+                        wordsStore.createIndex('word', 'word', { unique: false });
+                    }
+                    if (!db.objectStoreNames.contains(QURAN_DATA_STORE)) {
+                        const quranStore = db.createObjectStore(QURAN_DATA_STORE, { keyPath: 'id', autoIncrement: true });
+                        quranStore.createIndex('surahAyah', ['surah', 'ayah'], { unique: true });
+                    }
+                };
+
+                request.onsuccess = (event) => {
+                    db = event.target.result;
+                    resolve(db);
+                };
+
+                request.onerror = (event) => {
+                    console.error('IndexedDB error:', event.target.errorCode);
+                    reject('Error opening database');
+                };
+            });
+        }
+
+        async function addWord(word) {
+            const db = await openDB();
+            const tx = db.transaction(WORDS_STORE, 'readwrite');
+            const store = tx.objectStore(WORDS_STORE);
+            return new Promise((resolve, reject) => {
+                const request = store.add(word);
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function getAllWords() {
+            const db = await openDB();
+            const tx = db.transaction(WORDS_STORE, 'readonly');
+            const store = tx.objectStore(WORDS_STORE);
+            return new Promise((resolve, reject) => {
+                const request = store.getAll();
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function deleteWord(id) {
+            const db = await openDB();
+            const tx = db.transaction(WORDS_STORE, 'readwrite');
+            const store = tx.objectStore(WORDS_STORE);
+            return new Promise((resolve, reject) => {
+                const request = store.delete(id);
+                request.onsuccess = () => resolve();
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function addQuranAyah(ayah) {
+            const db = await openDB();
+            const tx = db.transaction(QURAN_DATA_STORE, 'readwrite');
+            const store = tx.objectStore(QURAN_DATA_STORE);
+            return new Promise((resolve, reject) => {
+                const request = store.add(ayah);
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function getAllQuranData() {
+            const db = await openDB();
+            const tx = db.transaction(QURAN_DATA_STORE, 'readonly');
+            const store = tx.objectStore(QURAN_DATA_STORE);
+            return new Promise((resolve, reject) => {
+                const request = store.getAll();
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function clearQuranData() {
+            const db = await openDB();
+            const tx = db.transaction(QURAN_DATA_STORE, 'readwrite');
+            const store = tx.objectStore(QURAN_DATA_STORE);
+            return new Promise((resolve, reject) => {
+                const request = store.clear();
+                request.onsuccess = () => resolve();
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        // UI Functions
+        function showSection(sectionId) {
+            const sections = [addWordSection, flashcardSection, quizSection, wordListSection, settingsSection];
+            sections.forEach(section => {
+                if (section.id === sectionId) {
+                    section.classList.remove('hidden');
+                } else {
+                    section.classList.add('hidden');
+                }
+            });
+        }
+
+        function renderFlashcard(word) {
+            if (!word) {
+                flashcardContainer.classList.add('hidden');
+                flashcardControls.classList.add('hidden');
+                noFlashcardsMessage.classList.remove('hidden');
+                return;
+            }
+            noFlashcardsMessage.classList.add('hidden');
+            flashcardContainer.classList.remove('hidden');
+            flashcardControls.classList.remove('hidden');
+
+            flashcardWord.textContent = word.word;
+            flashcardRoot.textContent = `Root: ${word.root}`;
+            flashcardMeaning.textContent = `Meaning: ${word.meaning}`;
+            flashcardAyah.textContent = word.ayahReference ? `Ayah: ${word.ayahReference}` : '';
+
+            // Reset flip state
+            flashcard.classList.remove('flipped');
+        }
+
+        function updateFlashcardControls() {
+            prevFlashcardButton.disabled = currentFlashcardIndex === 0;
+            nextFlashcardButton.disabled = currentFlashcardIndex >= words.length - 1;
+        }
+
+        function renderWordList() {
+            wordListUl.innerHTML = '';
+            if (words.length === 0) {
+                noWordsMessage.classList.remove('hidden');
+                return;
+            }
+            noWordsMessage.classList.add('hidden');
+            words.forEach(word => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span><strong>${word.word}</strong> (${word.root}) - ${word.meaning}</span>
+                    <button data-id="${word.id}">Delete</button>
+                `;
+                wordListUl.appendChild(li);
+            });
+        }
+
+        function startQuiz() {
+            if (words.length === 0) {
+                noQuizMessage.classList.remove('hidden');
+                quizContent.classList.add('hidden');
+                return;
+            }
+            noQuizMessage.classList.add('hidden');
+            quizContent.classList.remove('hidden');
+
+            // Simple quiz: shuffle words
+            quizWords = [...words].sort(() => 0.5 - Math.random());
+            nextQuizQuestion();
+        }
+
+        function nextQuizQuestion() {
+            if (quizWords.length === 0) {
+                quizQuestion.textContent = 'Quiz Finished!';
+                quizOptions.innerHTML = '';
+                quizFeedback.textContent = '';
+                quizNextButton.classList.add('hidden');
+                return;
+            }
+
+            currentQuizWord = quizWords.pop();
+            quizFeedback.textContent = '';
+            quizNextButton.classList.add('hidden');
+            quizOptions.innerHTML = ''; // Clear previous options
+
+            // Determine quiz type and generate question/options
+            quizType = Math.random() < 0.5 ? 'word-to-meaning' : 'meaning-to-word'; // Randomize quiz type
+
+            let questionText = '';
+            let correctAnswer = '';
+            let options = [];
+
+            if (quizType === 'word-to-meaning') {
+                questionText = `What is the meaning of the word: <span lang="ar" style="font-family: 'QuranicFont', 'Arial', sans-serif; font-size: 1.8rem;">${currentQuizWord.word}</span>?`;
+                correctAnswer = currentQuizWord.meaning;
+                options.push(currentQuizWord.meaning);
+
+                // Add incorrect options (meanings from other words)
+                const incorrectMeanings = words
+                    .filter(w => w.id !== currentQuizWord.id)
+                    .map(w => w.meaning)
+                    .sort(() => 0.5 - Math.random())
+                    .slice(0, 3); // Get up to 3 incorrect options
+                options = options.concat(incorrectMeanings);
+
+            } else { // meaning-to-word
+                questionText = `Which word has the meaning: "${currentQuizWord.meaning}"?`;
+                correctAnswer = currentQuizWord.word;
+                options.push(currentQuizWord.word);
+
+                // Add incorrect options (words from other words)
+                const incorrectWords = words
+                    .filter(w => w.id !== currentQuizWord.id)
+                    .map(w => w.word)
+                    .sort(() => 0.5 - Math.random())
+                    .slice(0, 3); // Get up to 3 incorrect options
+                options = options.concat(incorrectWords);
+            }
+
+            // Shuffle options
+            options.sort(() => 0.5 - Math.random());
+
+            quizQuestion.innerHTML = questionText;
+
+            options.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.classList.add('quiz-option');
+                optionElement.textContent = option;
+                optionElement.dataset.answer = option;
+                optionElement.addEventListener('click', handleQuizOptionClick);
+                quizOptions.appendChild(optionElement);
+            });
+        }
+
+        function handleQuizOptionClick(event) {
+            const selectedAnswer = event.target.dataset.answer;
+            let correctAnswerValue = '';
+
+            if (quizType === 'word-to-meaning') {
+                correctAnswerValue = currentQuizWord.meaning;
+            } else { // meaning-to-word
+                correctAnswerValue = currentQuizWord.word;
+            }
+
+            // Disable all options after selection
+            quizOptions.querySelectorAll('.quiz-option').forEach(option => {
+                option.removeEventListener('click', handleQuizOptionClick);
+                if (option.dataset.answer === correctAnswerValue) {
+                    option.classList.add('correct');
+                } else {
+                    option.classList.add('incorrect');
+                }
+            });
+
+            if (selectedAnswer === correctAnswerValue) {
+                quizFeedback.textContent = 'Correct!';
+                quizFeedback.style.color = '#28a745';
+                // Implement SRS logic here (e.g., update word's next review date)
+            } else {
+                quizFeedback.textContent = `Incorrect. The correct answer was: ${correctAnswerValue}`;
+                quizFeedback.style.color = '#dc3545';
+                // Implement SRS logic here (e.g., reset word's progress)
+            }
+
+            quizNextButton.classList.remove('hidden');
+        }
+
+        // Data Loading and Initialization
+        async function loadWords() {
+            try {
+                words = await getAllWords();
+                renderFlashcard(words[currentFlashcardIndex]);
+                updateFlashcardControls();
+                renderWordList();
+            } catch (error) {
+                console.error('Error loading words:', error);
+            }
+        }
+
+        async function loadQuranData() {
+            try {
+                quranData = await getAllQuranData();
+                if (quranData.length > 0) {
+                    quranDataStatus.textContent = `Quran data loaded (${quranData.length} ayahs).`;
+                } else {
+                    quranDataStatus.textContent = 'No Quran data found. Upload data.AM.';
+                }
+            } catch (error) {
+                console.error('Error loading Quran data:', error);
+                quranDataStatus.textContent = 'Error loading Quran data.';
+            }
+        }
+
+        async function parseAndStoreQuranData(file) {
+            quranDataStatus.textContent = 'Parsing and storing Quran data...';
+            try {
+                const text = await file.text();
+                const lines = text.split('\n').filter(line => line.trim() !== '');
+                const parsedAyahs = [];
+
+                for (const line of lines) {
+                    const match = line.match(/(.*?) ترجمہ: (.*?)<br\/>س (\d{3}) آ (\d{3})/);
+                    if (match) {
+                        parsedAyahs.push({
+                            arabic: match[1].trim(),
+                            urdu: match[2].trim(),
+                            surah: parseInt(match[3], 10),
+                            ayah: parseInt(match[4], 10)
+                        });
+                    }
+                }
+
+                await clearQuranData(); // Clear existing data before adding new
+                const db = await openDB();
+                const tx = db.transaction(QURAN_DATA_STORE, 'readwrite');
+                const store = tx.objectStore(QURAN_DATA_STORE);
+
+                for (const ayah of parsedAyahs) {
+                    store.add(ayah);
+                }
+
+                await tx.complete; // Wait for the transaction to complete
+                quranData = parsedAyahs; // Update in-memory data
+                quranDataStatus.textContent = `Successfully loaded and stored ${parsedAyahs.length} ayahs.`;
+                console.log('Quran data loaded:', quranData);
+
+            } catch (error) {
+                console.error('Error parsing or storing Quran data:', error);
+                quranDataStatus.textContent = `Error processing file: ${error.message}`;
+            }
+        }
+
+        // Event Listeners
+        navAddWord.addEventListener('click', () => showSection('add-word-section'));
+        navFlashcards.addEventListener('click', () => {
+            showSection('flashcard-section');
+            renderFlashcard(words[currentFlashcardIndex]);
+            updateFlashcardControls();
+        });
+        navQuiz.addEventListener('click', () => {
+            showSection('quiz-section');
+            startQuiz();
+        });
+        navWordList.addEventListener('click', () => {
+            showSection('word-list-section');
+            renderWordList();
+        });
+        navSettings.addEventListener('click', () => showSection('settings-section'));
+
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            // Save theme preference to localStorage
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        addWordForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const newWord = {
+                word: arabicWordInput.value.trim(),
+                root: rootLettersInput.value.trim(),
+                meaning: meaningInput.value.trim(),
+                ayahReference: ayahReferenceInput.value.trim(),
+                // SRS data (initial state)
+                srsLevel: 0, // e.g., 0: new, 1: learning, 2+: known
+                nextReview: new Date().toISOString(),
+                interval: 0, // days
+                easeFactor: 2.5 // Anki default
+            };
+
+            if (newWord.word && newWord.root && newWord.meaning) {
+                try {
+                    const id = await addWord(newWord);
+                    newWord.id = id; // Add the generated ID
+                    words.push(newWord);
+                    // Clear form
+                    addWordForm.reset();
+                    alert('Word added successfully!');
+                    // Optionally update flashcards/list immediately
+                    renderWordList(); // Update word list
+                } catch (error) {
+                    console.error('Error adding word:', error);
+                    alert('Error adding word.');
+                }
+            } else {
+                alert('Please fill in all required fields.');
+            }
+        });
+
+        flashcard.addEventListener('click', () => {
+            flashcard.classList.toggle('flipped');
+        });
+
+        prevFlashcardButton.addEventListener('click', () => {
+            if (currentFlashcardIndex > 0) {
+                currentFlashcardIndex--;
+                renderFlashcard(words[currentFlashcardIndex]);
+                updateFlashcardControls();
+            }
+        });
+
+        nextFlashcardButton.addEventListener('click', () => {
+            if (currentFlashcardIndex < words.length - 1) {
+                currentFlashcardIndex++;
+                renderFlashcard(words[currentFlashcardIndex]);
+                updateFlashcardControls();
+            }
+        });
+
+        quizNextButton.addEventListener('click', nextQuizQuestion);
+
+        wordListUl.addEventListener('click', async (event) => {
+            if (event.target.tagName === 'BUTTON') {
+                const wordId = parseInt(event.target.dataset.id, 10);
+                if (confirm('Are you sure you want to delete this word?')) {
+                    try {
+                        await deleteWord(wordId);
+                        words = words.filter(word => word.id !== wordId);
+                        renderWordList();
+                        // Reset flashcard view if the current one was deleted
+                        if (currentFlashcardIndex >= words.length) {
+                            currentFlashcardIndex = Math.max(0, words.length - 1);
+                        }
+                        renderFlashcard(words[currentFlashcardIndex]);
+                        updateFlashcardControls();
+                        alert('Word deleted successfully!');
+                    } catch (error) {
+                        console.error('Error deleting word:', error);
+                        alert('Error deleting word.');
+                    }
+                }
+            }
+        });
+
+        quranDataUploadInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                parseAndStoreQuranData(file);
+            }
+        });
+
+        backupDataButton.addEventListener('click', async () => {
+            try {
+                const allWords = await getAllWords();
+                const allQuranData = await getAllQuranData();
+                const backupData = {
+                    words: allWords,
+                    quranData: allQuranData
+                };
+                const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'quranic_root_words_backup.json';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                alert('Data backed up successfully!');
+            } catch (error) {
+                console.error('Error backing up data:', error);
+                alert('Error backing up data.');
+            }
+        });
+
+        restoreDataUploadInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    try {
+                        const backupData = JSON.parse(e.target.result);
+                        if (confirm('Restoring data will overwrite existing data. Are you sure?')) {
+                            const db = await openDB();
+                            const tx = db.transaction([WORDS_STORE, QURAN_DATA_STORE], 'readwrite');
+                            const wordsStore = tx.objectStore(WORDS_STORE);
+                            const quranStore = tx.objectStore(QURAN_DATA_STORE);
+
+                            await wordsStore.clear();
+                            await quranStore.clear();
+
+                            for (const word of backupData.words) {
+                                // Remove old ID to let IndexedDB assign a new one
+                                delete word.id;
+                                wordsStore.add(word);
+                            }
+                            for (const ayah of backupData.quranData) {
+                                // Remove old ID to let IndexedDB assign a new one
+                                delete ayah.id;
+                                quranStore.add(ayah);
+                            }
+
+                            await tx.complete;
+                            alert('Data restored successfully! Please refresh the page.');
+                            // Reload data after restore
+                            loadWords();
+                            loadQuranData();
+                        }
+                    } catch (error) {
+                        console.error('Error restoring data:', error);
+                        alert('Error restoring data. Make sure the file is a valid backup JSON.');
+                    }
+                };
+                reader.readAsText(file);
+            }
+        });
+
+
+        // Initial Load
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Apply saved theme preference
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+            }
+
+            await openDB(); // Ensure DB is created/upgraded
+            await loadWords();
+            await loadQuranData();
+            showSection('add-word-section'); // Default view
+        });
+
+        // Basic SRS Logic (Placeholder - needs refinement)
+        function updateSRS(word, quality) {
+            // quality: 0-5 (0: complete failure, 5: perfect recall)
+            const now = new Date();
+            let nextReview = new Date(word.nextReview);
+
+            if (quality < 3) {
+                // Failed or difficult recall
+                word.srsLevel = 1; // Move back to learning
+                word.interval = quality === 0 ? 0 : 1; // Review tomorrow if complete failure, else 1 day
+                word.easeFactor = Math.max(1.3, word.easeFactor - 0.2);
+            } else {
+                // Successful recall
+                if (word.srsLevel === 0) {
+                    word.srsLevel = 1;
+                    word.interval = 1; // First successful recall, review tomorrow
+                } else if (word.srsLevel === 1) {
+                    word.srsLevel = 2;
+                    word.interval = 6; // Second successful recall, review in 6 days
+                } else {
+                    // Known word, increase interval
+                    word.interval = Math.round(word.interval * word.easeFactor);
+                    word.srsLevel++;
+                }
+                word.easeFactor = word.easeFactor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
+            }
+
+            // Ensure minimum interval
+            if (word.interval < 1 && quality >= 3) word.interval = 1;
+            if (word.interval < 6 && quality >= 4 && word.srsLevel > 1) word.interval = 6;
+
+
+            nextReview.setDate(now.getDate() + word.interval);
+            word.nextReview = nextReview.toISOString();
+
+            // Save updated word to IndexedDB
+            updateWordInDB(word); // Need to implement updateWordInDB
+        }
+
+        async function updateWordInDB(word) {
+             const db = await openDB();
+            const tx = db.transaction(WORDS_STORE, 'readwrite');
+            const store = tx.objectStore(WORDS_STORE);
+            return new Promise((resolve, reject) => {
+                const request = store.put(word); // put() updates if key exists, adds if not
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        // Function to get words due for review (for SRS)
+        async function getWordsDueForReview() {
+            const now = new Date();
+            const allWords = await getAllWords();
+            return allWords.filter(word => {
+                const nextReviewDate = new Date(word.nextReview);
+                return nextReviewDate <= now;
+            });
+        }
+
+        // Integrate SRS into Quiz (Example)
+        // Modify handleQuizOptionClick to call updateSRS
+        // After a quiz answer is processed:
+        // const quality = selectedAnswer === correctAnswerValue ? 5 : 0; // Simple quality for now
+        // updateSRS(currentQuizWord, quality);
+        // Need to fetch the word from the 'words' array by ID to update its SRS properties correctly
+        // const wordToUpdate = words.find(w => w.id === currentQuizWord.id);
+        // if (wordToUpdate) {
+        //     updateSRS(wordToUpdate, quality);
+        // }
+
+
+    </script>
+</body>
+</html>

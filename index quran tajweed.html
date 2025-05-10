@@ -1,0 +1,2029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tajweed Guide Offline</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap');
+
+
+        :root {
+            --primary-color: #007bff; /* Was #2c3e50 */
+            --secondary-color: #6c757d; /* Was #3498db */
+            --background-color: #f8f9fa; /* Was #ecf0f1 */
+            --text-color: #212529; /* Was #333 */
+            --card-bg: #ffffff;
+            --border-color: #dee2e6; /* Was #bdc3c7 */
+            --header-bg: #0056b3; /* Darker blue */
+            --header-text: #ffffff;
+            --calligraphic-font: 'Amiri', 'Noto Naskh Arabic', serif;
+            --arabic-font: 'Noto Naskh Arabic', 'Amiri', serif;
+            --urdu-font: 'Noto Nastaliq Urdu', 'Urdu Typesetting', sans-serif;
+            --sans-serif-font: 'Roboto', sans-serif;
+            --button-bg: #007bff;
+            --button-hover-bg: #0056b3;
+            --button-text: #ffffff;
+            --input-bg: #fff;
+            --input-border: #ced4da;
+            --danger-color: #dc3545;
+            --success-color: #28a745;
+        }
+
+        body.theme-dark {
+            --primary-color: #0d8bf2; /* Lighter blue for dark theme */
+            --secondary-color: #7a868f;
+            --background-color: #1a1a1a; /* Darker background */
+            --text-color: #e0e0e0; /* Lighter text */
+            --card-bg: #2c2c2c; /* Darker card */
+            --border-color: #444444;
+            --header-bg: #004488; /* Slightly adjusted header */
+            --header-text: #e0e0e0;
+            --button-bg: #0d8bf2;
+            --button-hover-bg: #006ac1;
+            --input-bg: #333;
+            --input-border: #555;
+        }
+        
+        body.theme-sepia {
+            --primary-color: #705446;
+            --secondary-color: #8c7060;
+            --background-color: #f4e9db;
+            --text-color: #5b4636;
+            --card-bg: #efe0cd;
+            --border-color: #d3c0a5;
+            --header-bg: #5a3e30;
+            --header-text: #f4e9db;
+            --button-bg: #705446;
+            --button-hover-bg: #5a3e30;
+            --input-bg: #f9f2e8;
+            --input-border: #c8b59a;
+        }
+
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--sans-serif-font);
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+            padding-top: 70px; /* Space for fixed header */
+        }
+
+        header {
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            padding: 1rem;
+            text-align: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-family: var(--calligraphic-font);
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        nav {
+            background-color: var(--card-bg);
+            padding: 0.5rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 1rem;
+        }
+
+        nav button {
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            border: none;
+            padding: 0.6rem 1rem;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            transition: background-color 0.2s ease-in-out;
+            font-family: var(--sans-serif-font);
+        }
+
+        nav button:hover, nav button.active {
+            background-color: var(--button-hover-bg);
+        }
+
+        main {
+            padding: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        section {
+            background-color: var(--card-bg);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+            border: 1px solid var(--border-color);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        h2, h3 {
+            font-family: var(--calligraphic-font);
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        h2 { font-size: 1.8rem; }
+        h3 { font-size: 1.5rem; }
+
+        .arabic-text, .quran-arabic {
+            font-family: var(--arabic-font);
+            font-size: 1.8em;
+            direction: rtl;
+            line-height: 2;
+            text-align: right;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .urdu-text {
+            font-family: var(--urdu-font);
+            font-size: 1.3em;
+            direction: rtl;
+            text-align: right;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .metadata-text {
+            font-size: 0.9em;
+            color: var(--secondary-color);
+            text-align: right;
+            direction: rtl;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="date"],
+        .form-group input[type="number"],
+        .form-group input[type="file"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--input-border);
+            border-radius: 5px;
+            font-size: 1rem;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            font-family: var(--sans-serif-font);
+        }
+        .form-group input[type="file"] { padding: 0.3rem; }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        button.primary, input[type="submit"].primary {
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: background-color 0.2s ease-in-out;
+            font-family: var(--sans-serif-font);
+        }
+
+        button.primary:hover, input[type="submit"].primary:hover {
+            background-color: var(--button-hover-bg);
+        }
+        
+        button.secondary {
+            background-color: var(--secondary-color);
+            color: var(--button-text);
+        }
+        button.secondary:hover {
+            background-color: #5a6268;
+        }
+
+        button.danger {
+            background-color: var(--danger-color);
+            color: var(--button-text);
+        }
+        button.danger:hover {
+            background-color: #c82333;
+        }
+
+        .rule-card, .log-item, .bookmark-item, .ayah-card, .quiz-item {
+            background-color: var(--background-color); /* Slightly different from section bg */
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 5px;
+        }
+        .rule-card h4 {
+            font-family: var(--calligraphic-font);
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+        .rule-card p { margin-bottom: 0.5rem; }
+        .rule-card .examples { margin-top: 0.5rem; font-style: italic; }
+
+        .ayah-card {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+        }
+
+        #quran-viewer {
+            overflow-y: auto;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+        }
+        
+        .surah-selector-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1rem;
+            align-items: center;
+        }
+        .surah-selector-container label { margin-bottom: 0; }
+
+        .status-message {
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .status-message.success {
+            background-color: var(--success-color);
+            color: white;
+        }
+        .status-message.error {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        .status-message.info {
+            background-color: #17a2b8;
+            color: white;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+        }
+        .modal-content {
+            background-color: var(--card-bg);
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            width: 80%;
+            max-width: 600px;
+            border-radius: 8px;
+            position: relative;
+        }
+        .close-modal {
+            color: var(--secondary-color);
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close-modal:hover, .close-modal:focus {
+            color: var(--text-color);
+            text-decoration: none;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            header h1 { font-size: 1.5rem; }
+            nav { flex-direction: column; }
+            nav button { width: 100%; margin-bottom: 5px; }
+            main { padding: 0.5rem; }
+            section { padding: 1rem; }
+            .arabic-text, .quran-arabic { font-size: 1.5em; }
+            .urdu-text { font-size: 1.1em; }
+            .modal-content { width: 95%; margin: 20% auto; }
+        }
+
+        /* Utility classes */
+        .text-right { text-align: right; }
+        .mt-1 { margin-top: 1rem; }
+        .mb-1 { margin-bottom: 1rem; }
+        .d-flex { display: flex; }
+        .justify-between { justify-content: space-between; }
+        .align-center { align-items: center; }
+        .button-group button { margin-right: 0.5rem; }
+        .button-group button:last-child { margin-right: 0; }
+
+        #loading-indicator {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0,0,0,0.7);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            z-index: 2000;
+            font-size: 1.2rem;
+        }
+        .progress-bar-container {
+            width: 100%;
+            background-color: #ddd;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        .progress-bar {
+            width: 0%;
+            height: 20px;
+            background-color: var(--primary-color);
+            border-radius: 4px;
+            text-align: center;
+            line-height: 20px;
+            color: white;
+        }
+nav {
+    background-color: var(--card-bg);
+    padding: 0.5rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    display: flex
+;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: 0rem;
+    margin-top: 5px;
+}
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Tajweed Guide Offline - دليل التجويد</h1>
+    </header>
+
+    <nav>
+        <button data-section="home-section" class="active">Home</button>
+        <button data-section="rules-section">Tajweed Rules</button>
+        <button data-section="quran-section">Quran Explorer</button>
+        <button data-section="practice-log-section">Practice Log</button>
+        <button data-section="quiz-section">Ayah Analysis</button>
+        <button data-section="bookmarks-section">Bookmarks</button>
+        <button data-section="settings-section">Settings</button>
+    </nav>
+
+    <main>
+        <div id="status-message-container"></div>
+        <div id="loading-indicator" class="hidden">
+            Processing...
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="loading-progress-bar">0%</div>
+            </div>
+        </div>
+
+        <section id="home-section">
+            <h2>Welcome to your Personal Tajweed Guide!</h2>
+            <p>This application helps you learn, practice, and keep track of your Tajweed studies offline.</p>
+            <p>Use the navigation above to explore rules, browse the Quran, log your practice, and more.</p>
+            <p class="mt-1"><strong>Author:</strong> Yasin Ullah (Pakistani)</p>
+            <p><strong>Features:</strong> Offline Tajweed rules, Quran browsing with Urdu translation, practice logging, ayah analysis, bookmarks, data backup/restore, and themes.</p>
+            <hr class="mb-1 mt-1">
+            <h3>Quick Start:</h3>
+            <ol>
+                <li>Go to <strong>Settings</strong> to load Quran data from your `data.AM` file.</li>
+                <li>Explore <strong>Tajweed Rules</strong>. You can add your own rules and categories.</li>
+                <li>Use <strong>Quran Explorer</strong> to read and find Ayahs.</li>
+                <li>Log your study sessions in <strong>Practice Log</strong>.</li>
+                <li>Analyze Ayahs for Tajweed rules in <strong>Ayah Analysis</strong>.</li>
+            </ol>
+        </section>
+
+        <section id="rules-section" class="hidden">
+            <h2>Tajweed Rules - قواعد التجويد</h2>
+            <div class="button-group mb-1">
+                <button id="showAddRuleModalBtn" class="primary">Add New Rule</button>
+            </div>
+            <div class="form-group">
+                <label for="ruleCategoryFilter">Filter by Category:</label>
+                <select id="ruleCategoryFilter">
+                    <option value="">All Categories</option>
+                </select>
+            </div>
+            <div id="rulesList"></div>
+        </section>
+
+        <section id="quran-section" class="hidden">
+            <h2>Quran Explorer - مستكشف القرآن</h2>
+            <div class="surah-selector-container">
+                <label for="surah-select">Select Surah:</label>
+                <select id="surah-select" class="form-group"></select>
+                <button id="goToAyahBtn" class="primary">Go to Ayah #</button>
+                <input type="number" id="ayah-number-input" placeholder="Ayah #" min="1" style="width: 100px;">
+            </div>
+            <div id="quran-viewer">
+                <p>Please load Quran data from the Settings section if you haven't already.</p>
+            </div>
+        </section>
+
+        <section id="practice-log-section" class="hidden">
+            <h2>Practice Log - سجل الممارسة</h2>
+            <button id="showAddLogModalBtn" class="primary mb-1">Log New Practice Session</button>
+            <div id="practiceLogList">
+                <p>No practice sessions logged yet.</p>
+            </div>
+        </section>
+
+        <section id="quiz-section" class="hidden">
+            <h2>Ayah Analysis / Self-Quiz - تحليل الآيات</h2>
+            <p>Enter an Ayah snippet, identify Tajweed rules, and log your analysis for self-study.</p>
+            <form id="ayahAnalysisForm">
+                <div class="form-group">
+                    <label for="analysisAyahSnippet">Ayah Snippet (Arabic):</label>
+                    <textarea id="analysisAyahSnippet" rows="3" required class="arabic-text" dir="rtl"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Identified Tajweed Rules:</label>
+                    <div id="analysisRulesChecklist">
+                        <!-- Tajweed rules will be populated here as checkboxes -->
+                        <p>Load or add Tajweed rules first.</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="analysisNotes">Self-Assessment Notes:</label>
+                    <textarea id="analysisNotes" rows="3"></textarea>
+                </div>
+                <button type="submit" class="primary">Log Analysis</button>
+            </form>
+            <h3 class="mt-1">Logged Analyses:</h3>
+            <div id="analysisLogList">
+                <p>No analyses logged yet.</p>
+            </div>
+        </section>
+
+        <section id="bookmarks-section" class="hidden">
+            <h2>Bookmarked Rules - القواعد المفضلة</h2>
+            <div id="bookmarksList">
+                <p>No rules bookmarked yet.</p>
+            </div>
+        </section>
+
+        <section id="settings-section" class="hidden">
+            <h2>Settings - الإعدادات</h2>
+            
+            <div class="form-group">
+                <label for="theme-select">Select Theme:</label>
+                <select id="theme-select">
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                    <option value="sepia">Sepia</option>
+                </select>
+            </div>
+
+            <h3>Quran Data Management</h3>
+            <div class="form-group">
+                <label for="quranDataFile">Load Quran Data (`data.AM` file):</label>
+                <input type="file" id="quranDataFile" accept=".AM">
+                <button id="loadQuranDataBtn" class="primary mt-1">Process File</button>
+                <p id="quranDataStatus" class="mt-1">Status: No data loaded. Please select your `data.AM` file.</p>
+            </div>
+
+            <h3>Application Data Management</h3>
+            <div class="form-group">
+                <button id="exportDataBtn" class="primary">Backup All Data</button>
+                <p class="mt-1">Exports all rules, logs, bookmarks, and settings (excluding Quran text data to keep file size manageable for export/import of user data). Quran data should be reloaded from `data.AM` if needed.</p>
+            </div>
+            <div class="form-group">
+                <label for="importDataFile">Restore Data from Backup (.json):</label>
+                <input type="file" id="importDataFile" accept=".json">
+                <button id="importDataBtn" class="primary mt-1">Import Backup</button>
+            </div>
+             <div class="form-group mt-1">
+                <button id="clearAllDataBtn" class="danger">Clear All Application Data</button>
+                <p class="mt-1">Warning: This will delete all Tajweed rules, practice logs, bookmarks, analyses, and settings. Quran data loaded from `data.AM` will also be cleared. This action is irreversible.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p style="text-align:center; padding: 1rem; font-size: 0.9em; color: var(--secondary-color);">
+            Tajweed Guide Offline by Yasin Ullah. For personal educational use.
+        </p>
+    </footer>
+
+    <!-- Modal for Adding/Editing Tajweed Rule -->
+    <div id="ruleModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeRuleModal">×</span>
+            <h3 id="ruleModalTitle">Add New Tajweed Rule</h3>
+            <form id="ruleForm">
+                <input type="hidden" id="ruleId">
+                <div class="form-group">
+                    <label for="ruleCategory">Category:</label>
+                    <input type="text" id="ruleCategory" required list="categoryDatalist">
+                    <datalist id="categoryDatalist"></datalist>
+                </div>
+                <div class="form-group">
+                    <label for="ruleName">Rule Name (e.g., Izhaar):</label>
+                    <input type="text" id="ruleName" required>
+                </div>
+                <div class="form-group">
+                    <label for="ruleDescription">Description:</label>
+                    <textarea id="ruleDescription" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Examples (Arabic text):</label>
+                    <div id="ruleExamplesContainer">
+                        <!-- Example fields will be added here -->
+                    </div>
+                    <button type="button" id="addRuleExampleBtn" class="secondary mt-1">Add Example</button>
+                </div>
+                <button type="submit" class="primary">Save Rule</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for Adding Practice Log -->
+    <div id="logModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeLogModal">×</span>
+            <h3>Log Practice Session</h3>
+            <form id="practiceLogForm">
+                <div class="form-group">
+                    <label for="logRuleSelect">Tajweed Rule Practiced:</label>
+                    <select id="logRuleSelect" required></select>
+                </div>
+                <div class="form-group">
+                    <label for="logDate">Date:</label>
+                    <input type="date" id="logDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="logDuration">Duration (e.g., 30 minutes):</label>
+                    <input type="text" id="logDuration" placeholder="e.g., 30 minutes, 1 hour" required>
+                </div>
+                <div class="form-group">
+                    <label for="logNotes">Self-Assessment Notes:</label>
+                    <textarea id="logNotes" rows="3"></textarea>
+                </div>
+                <button type="submit" class="primary">Save Log</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // --- DATABASE SETUP ---
+        const DB_NAME = 'TajweedGuideDB_YasinUllah';
+        const DB_VERSION = 2; // Incremented due to schema changes/additions
+        let db;
+
+        const STORE_NAMES = {
+            RULES: 'tajweedRules',
+            LOGS: 'practiceLogs',
+            BOOKMARKS: 'bookmarks',
+            QURAN: 'quranAyahs',
+            SETTINGS: 'settings',
+            ANALYSES: 'ayahAnalyses' // For Ayah Analysis/Self-Quiz
+        };
+
+        function initDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+                request.onupgradeneeded = (event) => {
+                    db = event.target.result;
+                    // Tajweed Rules
+                    if (!db.objectStoreNames.contains(STORE_NAMES.RULES)) {
+                        const rulesStore = db.createObjectStore(STORE_NAMES.RULES, { keyPath: 'id', autoIncrement: true });
+                        rulesStore.createIndex('category', 'category', { unique: false });
+                        rulesStore.createIndex('name', 'name', { unique: false });
+                    }
+                    // Practice Logs
+                    if (!db.objectStoreNames.contains(STORE_NAMES.LOGS)) {
+                        const logsStore = db.createObjectStore(STORE_NAMES.LOGS, { keyPath: 'id', autoIncrement: true });
+                        logsStore.createIndex('ruleId', 'ruleId', { unique: false });
+                        logsStore.createIndex('date', 'date', { unique: false });
+                    }
+                    // Bookmarks
+                    if (!db.objectStoreNames.contains(STORE_NAMES.BOOKMARKS)) {
+                        db.createObjectStore(STORE_NAMES.BOOKMARKS, { keyPath: 'ruleId' });
+                    }
+                    // Quran Ayahs
+                    if (!db.objectStoreNames.contains(STORE_NAMES.QURAN)) {
+                        const quranStore = db.createObjectStore(STORE_NAMES.QURAN, { keyPath: 'id' }); // id is "surah_ayah"
+                        quranStore.createIndex('surah', 'surah', { unique: false });
+                    }
+                    // Settings
+                    if (!db.objectStoreNames.contains(STORE_NAMES.SETTINGS)) {
+                        db.createObjectStore(STORE_NAMES.SETTINGS, { keyPath: 'key' });
+                    }
+                    // Ayah Analyses
+                    if (!db.objectStoreNames.contains(STORE_NAMES.ANALYSES)) {
+                        const analysesStore = db.createObjectStore(STORE_NAMES.ANALYSES, { keyPath: 'id', autoIncrement: true });
+                        analysesStore.createIndex('date', 'date', { unique: false });
+                    }
+                     // If upgrading from an older version, you might need to migrate data or adjust existing stores.
+                    // For simplicity, this setup assumes new creation or compatible existing stores.
+                };
+
+                request.onsuccess = (event) => {
+                    db = event.target.result;
+                    console.log('Database initialized successfully.');
+                    resolve(db);
+                };
+
+                request.onerror = (event) => {
+                    console.error('DB error:', event.target.errorCode);
+                    showStatusMessage(`Database error: ${event.target.errorCode}`, 'error');
+                    reject(event.target.errorCode);
+                };
+            });
+        }
+
+        // --- CRUD HELPER FUNCTIONS ---
+        function addToStore(storeName, data) {
+            return new Promise((resolve, reject) => {
+                if (!db) { reject("DB not initialized"); return; }
+                const transaction = db.transaction([storeName], 'readwrite');
+                const store = transaction.objectStore(storeName);
+                const request = store.add(data);
+                request.onsuccess = () => resolve(request.result); // Returns the key of the new record
+                request.onerror = (event) => reject(event.target.error);
+            });
+        }
+
+        function putToStore(storeName, data) { // Add or Update
+            return new Promise((resolve, reject) => {
+                if (!db) { reject("DB not initialized"); return; }
+                const transaction = db.transaction([storeName], 'readwrite');
+                const store = transaction.objectStore(storeName);
+                const request = store.put(data);
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = (event) => reject(event.target.error);
+            });
+        }
+
+        function getFromStore(storeName, key) {
+            return new Promise((resolve, reject) => {
+                if (!db) { reject("DB not initialized"); return; }
+                const transaction = db.transaction([storeName], 'readonly');
+                const store = transaction.objectStore(storeName);
+                const request = store.get(key);
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = (event) => reject(event.target.error);
+            });
+        }
+
+        function getAllFromStore(storeName) {
+            return new Promise((resolve, reject) => {
+                if (!db) { reject("DB not initialized"); return; }
+                const transaction = db.transaction([storeName], 'readonly');
+                const store = transaction.objectStore(storeName);
+                const request = store.getAll();
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = (event) => reject(event.target.error);
+            });
+        }
+        
+        function getAllFromStoreWithIndex(storeName, indexName, query) {
+            return new Promise((resolve, reject) => {
+                if (!db) { reject("DB not initialized"); return; }
+                const transaction = db.transaction([storeName], 'readonly');
+                const store = transaction.objectStore(storeName);
+                const index = store.index(indexName);
+                const request = index.getAll(query); // query can be a single key or IDBKeyRange
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = (event) => reject(event.target.error);
+            });
+        }
+
+
+        function deleteFromStore(storeName, key) {
+            return new Promise((resolve, reject) => {
+                if (!db) { reject("DB not initialized"); return; }
+                const transaction = db.transaction([storeName], 'readwrite');
+                const store = transaction.objectStore(storeName);
+                const request = store.delete(key);
+                request.onsuccess = () => resolve();
+                request.onerror = (event) => reject(event.target.error);
+            });
+        }
+
+        function clearStore(storeName) {
+            return new Promise((resolve, reject) => {
+                if (!db) { reject("DB not initialized"); return; }
+                const transaction = db.transaction([storeName], 'readwrite');
+                const store = transaction.objectStore(storeName);
+                const request = store.clear();
+                request.onsuccess = () => resolve();
+                request.onerror = (event) => reject(event.target.error);
+            });
+        }
+        
+        // --- UI HELPER FUNCTIONS ---
+        const sections = document.querySelectorAll('main section');
+        const navButtons = document.querySelectorAll('nav button');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const loadingProgressBar = document.getElementById('loading-progress-bar');
+
+        function showSection(sectionId) {
+            sections.forEach(section => {
+                if (section.id === sectionId) {
+                    section.classList.remove('hidden');
+                } else {
+                    section.classList.add('hidden');
+                }
+            });
+            navButtons.forEach(button => {
+                if (button.dataset.section === sectionId) {
+                    button.classList.add('active');
+                } else {
+                    button.classList.remove('active');
+                }
+            });
+            window.scrollTo(0,0); // Scroll to top on section change
+        }
+
+        function showLoading(message = "Processing...", showProgress = false) {
+            loadingIndicator.firstChild.textContent = message;
+            loadingIndicator.classList.remove('hidden');
+            loadingIndicator.querySelector('.progress-bar-container').style.display = showProgress ? 'block' : 'none';
+            updateLoadingProgress(0);
+        }
+
+        function hideLoading() {
+            loadingIndicator.classList.add('hidden');
+        }
+        
+        function updateLoadingProgress(percentage) {
+            loadingProgressBar.style.width = percentage + '%';
+            loadingProgressBar.textContent = percentage + '%';
+        }
+
+        function showStatusMessage(message, type = 'info', duration = 5000) {
+            const container = document.getElementById('status-message-container');
+            const div = document.createElement('div');
+            div.className = `status-message ${type}`;
+            div.textContent = message;
+            container.appendChild(div);
+            setTimeout(() => {
+                div.remove();
+            }, duration);
+        }
+        
+        // --- MODAL HANDLING ---
+        const ruleModal = document.getElementById('ruleModal');
+        const logModal = document.getElementById('logModal');
+
+        function openModal(modalElement) {
+            modalElement.style.display = 'block';
+        }
+        function closeModal(modalElement) {
+            modalElement.style.display = 'none';
+        }
+
+        document.getElementById('showAddRuleModalBtn').addEventListener('click', () => {
+            document.getElementById('ruleModalTitle').textContent = 'Add New Tajweed Rule';
+            document.getElementById('ruleForm').reset();
+            document.getElementById('ruleId').value = '';
+            clearRuleExamples();
+            addRuleExampleField(); // Add one empty example field
+            populateCategoryDatalist();
+            openModal(ruleModal);
+        });
+        document.getElementById('closeRuleModal').addEventListener('click', () => closeModal(ruleModal));
+
+        document.getElementById('showAddLogModalBtn').addEventListener('click', async () => {
+            await populateLogRuleSelect();
+            document.getElementById('practiceLogForm').reset();
+            document.getElementById('logDate').valueAsDate = new Date(); // Default to today
+            openModal(logModal);
+        });
+        document.getElementById('closeLogModal').addEventListener('click', () => closeModal(logModal));
+
+        window.onclick = function(event) { // Close modal if clicked outside
+            if (event.target == ruleModal) closeModal(ruleModal);
+            if (event.target == logModal) closeModal(logModal);
+        }
+
+        // --- TAJWEED RULES ---
+        const ruleForm = document.getElementById('ruleForm');
+        const rulesListDiv = document.getElementById('rulesList');
+        const ruleCategoryFilter = document.getElementById('ruleCategoryFilter');
+        const categoryDatalist = document.getElementById('categoryDatalist');
+        const ruleExamplesContainer = document.getElementById('ruleExamplesContainer');
+
+        function addRuleExampleField(text = '') {
+            const div = document.createElement('div');
+            div.className = 'form-group d-flex align-center';
+            div.innerHTML = `
+                <input type="text" class="rule-example-text arabic-text" dir="rtl" placeholder="Example in Arabic" value="${text}" style="flex-grow:1; margin-right: 5px;">
+                <button type="button" class="remove-example-btn danger" style="padding:0.5rem;">×</button>
+            `;
+            ruleExamplesContainer.appendChild(div);
+            div.querySelector('.remove-example-btn').addEventListener('click', () => div.remove());
+        }
+        function clearRuleExamples() {
+            ruleExamplesContainer.innerHTML = '';
+        }
+        document.getElementById('addRuleExampleBtn').addEventListener('click', () => addRuleExampleField());
+
+        ruleForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('ruleId').value;
+            const examples = Array.from(document.querySelectorAll('.rule-example-text'))
+                                .map(input => input.value.trim())
+                                .filter(text => text !== '');
+
+            const rule = {
+                category: document.getElementById('ruleCategory').value.trim(),
+                name: document.getElementById('ruleName').value.trim(),
+                description: document.getElementById('ruleDescription').value.trim(),
+                examples: examples.map(ex => ({ text: ex })) // Storing as {text: "..."} for future audioURL
+            };
+
+            try {
+                if (id) { // Editing
+                    rule.id = parseInt(id);
+                    await putToStore(STORE_NAMES.RULES, rule);
+                    showStatusMessage('Rule updated successfully!', 'success');
+                } else { // Adding new
+                    await addToStore(STORE_NAMES.RULES, rule);
+                    showStatusMessage('Rule added successfully!', 'success');
+                }
+                closeModal(ruleModal);
+                loadTajweedRules();
+                populateCategoryDatalist();
+                populateLogRuleSelect(); // Update rule select in log form
+                populateAnalysisRulesChecklist(); // Update rules in analysis form
+            } catch (error) {
+                console.error('Error saving rule:', error);
+                showStatusMessage(`Error saving rule: ${error.message}`, 'error');
+            }
+        });
+
+        async function loadTajweedRules(filterCategory = '') {
+            try {
+                let rules = await getAllFromStore(STORE_NAMES.RULES);
+                if (filterCategory) {
+                    rules = rules.filter(rule => rule.category === filterCategory);
+                }
+                rules.sort((a, b) => a.name.localeCompare(b.name)); // Sort by name
+
+                rulesListDiv.innerHTML = '';
+                if (rules.length === 0) {
+                    rulesListDiv.innerHTML = '<p>No Tajweed rules found. Add some to get started!</p>';
+                    return;
+                }
+
+                const categories = {};
+                rules.forEach(rule => {
+                    if (!categories[rule.category]) {
+                        categories[rule.category] = [];
+                    }
+                    categories[rule.category].push(rule);
+                });
+                
+                // Sort categories alphabetically
+                const sortedCategories = Object.keys(categories).sort();
+
+                for (const category of sortedCategories) {
+                    const categoryDiv = document.createElement('div');
+                    categoryDiv.innerHTML = `<h3>${category}</h3>`;
+                    categories[category].forEach(rule => {
+                        const ruleCard = document.createElement('div');
+                        ruleCard.className = 'rule-card';
+                        ruleCard.innerHTML = `
+                            <h4>${rule.name}</h4>
+                            <p>${rule.description.replace(/\n/g, '<br>')}</p>
+                            ${rule.examples && rule.examples.length > 0 ? `
+                                <div class="examples">
+                                    <strong>Examples:</strong>
+                                    <ul>
+                                        ${rule.examples.map(ex => `<li class="arabic-text" dir="rtl">${ex.text}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            ` : ''}
+                            <div class="button-group mt-1">
+                                <button class="secondary edit-rule-btn" data-id="${rule.id}">Edit</button>
+                                <button class="danger delete-rule-btn" data-id="${rule.id}">Delete</button>
+                                <button class="primary toggle-bookmark-btn" data-id="${rule.id}" data-name="${rule.name}">Bookmark</button>
+                            </div>
+                        `;
+                        categoryDiv.appendChild(ruleCard);
+                    });
+                    rulesListDiv.appendChild(categoryDiv);
+                }
+                updateBookmarkButtonStates();
+            } catch (error) {
+                console.error('Error loading rules:', error);
+                rulesListDiv.innerHTML = '<p>Error loading rules. Check console for details.</p>';
+            }
+        }
+        
+        async function populateCategoryDatalist() {
+            const rules = await getAllFromStore(STORE_NAMES.RULES);
+            const uniqueCategories = [...new Set(rules.map(rule => rule.category))].sort();
+            categoryDatalist.innerHTML = uniqueCategories.map(cat => `<option value="${cat}">`).join('');
+            
+            // Populate filter dropdown
+            const currentFilterVal = ruleCategoryFilter.value;
+            ruleCategoryFilter.innerHTML = '<option value="">All Categories</option>';
+            uniqueCategories.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat;
+                option.textContent = cat;
+                ruleCategoryFilter.appendChild(option);
+            });
+            ruleCategoryFilter.value = currentFilterVal; // Preserve selection if possible
+        }
+
+        ruleCategoryFilter.addEventListener('change', (e) => loadTajweedRules(e.target.value));
+
+        rulesListDiv.addEventListener('click', async (e) => {
+            if (e.target.classList.contains('edit-rule-btn')) {
+                const ruleId = parseInt(e.target.dataset.id);
+                const rule = await getFromStore(STORE_NAMES.RULES, ruleId);
+                if (rule) {
+                    document.getElementById('ruleModalTitle').textContent = 'Edit Tajweed Rule';
+                    document.getElementById('ruleId').value = rule.id;
+                    document.getElementById('ruleCategory').value = rule.category;
+                    document.getElementById('ruleName').value = rule.name;
+                    document.getElementById('ruleDescription').value = rule.description;
+                    clearRuleExamples();
+                    rule.examples.forEach(ex => addRuleExampleField(ex.text));
+                    if (rule.examples.length === 0) addRuleExampleField(); // Add one empty if none exist
+                    populateCategoryDatalist();
+                    openModal(ruleModal);
+                }
+            } else if (e.target.classList.contains('delete-rule-btn')) {
+                const ruleId = parseInt(e.target.dataset.id);
+                if (confirm('Are you sure you want to delete this rule? This will also remove it from logs and bookmarks.')) {
+                    try {
+                        await deleteFromStore(STORE_NAMES.RULES, ruleId);
+                        // Also need to handle cascading deletes or updates in logs/bookmarks if ruleId is stored there
+                        // For now, just deleting the rule. Dependent items might show "Rule not found".
+                        // A more robust solution would be to update related items or prevent deletion if referenced.
+                        await deleteFromStore(STORE_NAMES.BOOKMARKS, ruleId); // Remove bookmark if exists
+                        // Consider how to handle practice logs referencing this ruleId
+                        showStatusMessage('Rule deleted successfully.', 'success');
+                        loadTajweedRules(ruleCategoryFilter.value);
+                        populateLogRuleSelect();
+                        populateAnalysisRulesChecklist();
+                    } catch (error) {
+                        console.error('Error deleting rule:', error);
+                        showStatusMessage(`Error deleting rule: ${error.message}`, 'error');
+                    }
+                }
+            } else if (e.target.classList.contains('toggle-bookmark-btn')) {
+                const ruleId = parseInt(e.target.dataset.id);
+                await toggleBookmark(ruleId);
+                updateBookmarkButtonState(e.target, ruleId);
+                loadBookmarks(); // Refresh bookmarks list if visible
+            }
+        });
+        
+        // --- QURAN EXPLORER ---
+        const quranDataFile = document.getElementById('quranDataFile');
+        const loadQuranDataBtn = document.getElementById('loadQuranDataBtn');
+        const quranDataStatus = document.getElementById('quranDataStatus');
+        const surahSelect = document.getElementById('surah-select');
+        const quranViewer = document.getElementById('quran-viewer');
+        const goToAyahBtn = document.getElementById('goToAyahBtn');
+        const ayahNumberInput = document.getElementById('ayah-number-input');
+
+        const SURAH_NAMES = [ // For display in select, 1-indexed
+            "Al-Fatiha", "Al-Baqarah", "Aal-Imran", "An-Nisa", "Al-Ma'idah", "Al-An'am", "Al-A'raf", "Al-Anfal", "At-Tawbah", "Yunus", "Hud", "Yusuf", "Ar-Ra'd", "Ibrahim", "Al-Hijr", "An-Nahl", "Al-Isra", "Al-Kahf", "Maryam", "Ta-Ha", "Al-Anbiya", "Al-Hajj", "Al-Mu'minun", "An-Nur", "Al-Furqan", "Ash-Shu'ara", "An-Naml", "Al-Qasas", "Al-Ankabut", "Ar-Rum", "Luqman", "As-Sajdah", "Al-Ahzab", "Saba", "Fatir", "Ya-Sin", "As-Saffat", "Sad", "Az-Zumar", "Ghafir", "Fussilat", "Ash-Shura", "Az-Zukhruf", "Ad-Dukhan", "Al-Jathiyah", "Al-Ahqaf", "Muhammad", "Al-Fath", "Al-Hujurat", "Qaf", "Adh-Dhariyat", "At-Tur", "An-Najm", "Al-Qamar", "Ar-Rahman", "Al-Waqi'ah", "Al-Hadid", "Al-Mujadila", "Al-Hashr", "Al-Mumtahanah", "As-Saff", "Al-Jumu'ah", "Al-Munafiqun", "At-Taghabun", "At-Talaq", "At-Tahrim", "Al-Mulk", "Al-Qalam", "Al-Haqqah", "Al-Ma'arij", "Nuh", "Al-Jinn", "Al-Muzzammil", "Al-Muddaththir", "Al-Qiyamah", "Al-Insan", "Al-Mursalat", "An-Naba", "An-Nazi'at", "Abasa", "At-Takwir", "Al-Infitar", "Al-Mutaffifin", "Al-Inshiqaq", "Al-Buruj", "At-Tariq", "Al-A'la", "Al-Ghashiyah", "Al-Fajr", "Al-Balad", "Ash-Shams", "Al-Layl", "Ad-Duha", "Ash-Sharh", "At-Tin", "Al-Alaq", "Al-Qadr", "Al-Bayyinah", "Az-Zalzalah", "Al-Adiyat", "Al-Qari'ah", "At-Takathur", "Al-Asr", "Al-Humazah", "Al-Fil", "Quraysh", "Al-Ma'un", "Al-Kawthar", "Al-Kafirun", "An-Nasr", "Al-Masad", "Al-Ikhlas", "Al-Falaq", "An-Nas"
+        ];
+
+        function populateSurahSelect() {
+            surahSelect.innerHTML = '';
+            for (let i = 0; i < 114; i++) {
+                const option = document.createElement('option');
+                option.value = i + 1;
+                option.textContent = `${i + 1}. ${SURAH_NAMES[i]}`;
+                surahSelect.appendChild(option);
+            }
+        }
+        
+        loadQuranDataBtn.addEventListener('click', async () => {
+            const file = quranDataFile.files[0];
+            if (!file) {
+                showStatusMessage('Please select a data.AM file first.', 'error');
+                return;
+            }
+            showLoading("Processing Quran data...", true);
+            quranDataStatus.textContent = 'Status: Processing...';
+
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                try {
+                    const content = e.target.result;
+                    const lines = content.split('\n');
+                    const ayahs = [];
+                    // Regex: [Arabic Ayah] ترجمہ: [Urdu Translation]<br/>س [Surah Number] آ [Ayah Number]
+                    // Updated regex to be more robust with potential spaces around <br/>
+                    const regex = /^(.*?) ترجمہ: (.*?)(?:<br\s*\/?>\s*|<br\s*>\s*)س\s*(\d{1,3})\s*آ\s*(\d{1,3})$/;
+
+                    const totalLines = lines.length;
+                    let processedLines = 0;
+
+                    for (const line of lines) {
+                        processedLines++;
+                        const trimmedLine = line.trim();
+                        if (trimmedLine === '') continue;
+                        
+                        const match = trimmedLine.match(regex);
+                        if (match) {
+                            const arabic = match[1].trim();
+                            const urdu = match[2].trim();
+                            const surah = parseInt(match[3], 10);
+                            const ayahNum = parseInt(match[4], 10);
+                            ayahs.push({
+                                id: `${surah}_${ayahNum}`,
+                                surah: surah,
+                                ayahNum: ayahNum,
+                                arabic: arabic,
+                                urdu: urdu
+                            });
+                        } else {
+                            console.warn('Could not parse line:', trimmedLine);
+                        }
+                        if (processedLines % 100 === 0 || processedLines === totalLines) {
+                             updateLoadingProgress(Math.round((processedLines / totalLines) * 50)); // Parsing is 50%
+                        }
+                    }
+                    
+                    if (ayahs.length === 0 && totalLines > 0) {
+                         throw new Error("No Ayahs parsed. Check file format and regex. Example line: 'بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ ترجمہ: شروع اللہ کے نام سے<br/>س 001 آ 001'");
+                    }
+
+
+                    // Store in IndexedDB
+                    if (!db) await initDB();
+                    const transaction = db.transaction([STORE_NAMES.QURAN], 'readwrite');
+                    const store = transaction.objectStore(STORE_NAMES.QURAN);
+                    
+                    // Clear existing Quran data first
+                    await new Promise((resolve, reject) => {
+                        const clearRequest = store.clear();
+                        clearRequest.onsuccess = resolve;
+                        clearRequest.onerror = reject;
+                    });
+
+                    let storedCount = 0;
+                    for (const ayah of ayahs) {
+                        store.put(ayah);
+                        storedCount++;
+                         if (storedCount % 100 === 0 || storedCount === ayahs.length) {
+                             updateLoadingProgress(50 + Math.round((storedCount / ayahs.length) * 50)); // Storing is other 50%
+                        }
+                    }
+                    
+                    transaction.oncomplete = () => {
+                        quranDataStatus.textContent = `Status: Successfully loaded ${ayahs.length} ayahs.`;
+                        showStatusMessage(`Quran data loaded: ${ayahs.length} ayahs.`, 'success');
+                        hideLoading();
+                        populateSurahSelect();
+                        loadSurah(1); // Load first surah by default
+                        quranDataFile.value = null; // Reset file input
+                    };
+                    transaction.onerror = (event) => {
+                        throw event.target.error; // Propagate error to catch block
+                    };
+
+                } catch (error) {
+                    console.error('Error processing Quran data:', error);
+                    quranDataStatus.textContent = `Status: Error - ${error.message}`;
+                    showStatusMessage(`Error processing Quran data: ${error.message}`, 'error');
+                    hideLoading();
+                }
+            };
+            reader.readAsText(file);
+        });
+
+        surahSelect.addEventListener('change', (e) => {
+            loadSurah(parseInt(e.target.value));
+            ayahNumberInput.value = ''; // Clear ayah input when surah changes
+        });
+        
+        goToAyahBtn.addEventListener('click', () => {
+            const surahNum = parseInt(surahSelect.value);
+            const ayahNum = parseInt(ayahNumberInput.value);
+            if (surahNum && ayahNum) {
+                loadSurah(surahNum, ayahNum);
+            } else {
+                showStatusMessage("Please select a Surah and enter an Ayah number.", "info");
+            }
+        });
+
+        async function loadSurah(surahNumber, highlightAyahNumber = null) {
+            if (!db) {
+                quranViewer.innerHTML = '<p>Database not ready. Please try again.</p>';
+                return;
+            }
+            showLoading("Loading Surah...");
+            try {
+                const ayahs = await getAllFromStoreWithIndex(STORE_NAMES.QURAN, 'surah', IDBKeyRange.only(surahNumber));
+                ayahs.sort((a, b) => a.ayahNum - b.ayahNum); // Ensure ayahs are in order
+
+                quranViewer.innerHTML = '';
+                if (ayahs.length === 0) {
+                    quranViewer.innerHTML = `<p>No ayahs found for Surah ${surahNumber}. Has Quran data been loaded?</p>`;
+                    hideLoading();
+                    return;
+                }
+
+                ayahs.forEach(ayah => {
+                    const ayahCard = document.createElement('div');
+                    ayahCard.className = 'ayah-card';
+                    ayahCard.id = `ayah-${ayah.surah}-${ayah.ayahNum}`;
+                    ayahCard.innerHTML = `
+                        <p class="quran-arabic" dir="rtl">${ayah.arabic}</p>
+                        <p class="urdu-text" dir="rtl">ترجمہ: ${ayah.urdu}</p>
+                        <p class="metadata-text" dir="rtl">سورة ${SURAH_NAMES[ayah.surah-1]} (${ayah.surah})، آیت ${ayah.ayahNum}</p>
+                    `;
+                    quranViewer.appendChild(ayahCard);
+                });
+                
+                if (highlightAyahNumber) {
+                    const targetAyahElement = document.getElementById(`ayah-${surahNumber}-${highlightAyahNumber}`);
+                    if (targetAyahElement) {
+                        targetAyahElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        targetAyahElement.style.backgroundColor = 'var(--primary-color-light)'; // Needs a light primary color variable
+                        setTimeout(() => { targetAyahElement.style.backgroundColor = ''; }, 3000);
+                    } else {
+                        showStatusMessage(`Ayah ${highlightAyahNumber} not found in Surah ${surahNumber}.`, "info");
+                    }
+                } else {
+                     quranViewer.scrollTop = 0; // Scroll to top of Surah
+                }
+
+            } catch (error) {
+                console.error(`Error loading Surah ${surahNumber}:`, error);
+                quranViewer.innerHTML = `<p>Error loading Surah. Check console for details.</p>`;
+                showStatusMessage(`Error loading Surah: ${error.message}`, 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        async function checkQuranDataExists() {
+            try {
+                const count = await new Promise((resolve, reject) => {
+                    if (!db) { resolve(0); return; } // DB not ready, assume no data
+                    const transaction = db.transaction([STORE_NAMES.QURAN], 'readonly');
+                    const store = transaction.objectStore(STORE_NAMES.QURAN);
+                    const request = store.count();
+                    request.onsuccess = () => resolve(request.result);
+                    request.onerror = (event) => reject(event.target.error);
+                });
+
+                if (count > 0) {
+                    quranDataStatus.textContent = `Status: ${count} ayahs loaded.`;
+                    populateSurahSelect();
+                    loadSurah(1); // Load first surah
+                } else {
+                    quranDataStatus.textContent = 'Status: No Quran data loaded. Please use the "Load Quran Data" feature in Settings.';
+                    quranViewer.innerHTML = '<p>Please load Quran data from the Settings section.</p>';
+                }
+            } catch (error) {
+                console.error("Error checking Quran data:", error);
+                quranDataStatus.textContent = 'Status: Error checking Quran data.';
+            }
+        }
+
+        // --- PRACTICE LOG ---
+        const practiceLogForm = document.getElementById('practiceLogForm');
+        const practiceLogListDiv = document.getElementById('practiceLogList');
+        const logRuleSelect = document.getElementById('logRuleSelect');
+
+        async function populateLogRuleSelect() {
+            const rules = await getAllFromStore(STORE_NAMES.RULES);
+            rules.sort((a,b) => a.name.localeCompare(b.name));
+            logRuleSelect.innerHTML = '<option value="">Select a Rule</option>';
+            if (rules.length > 0) {
+                rules.forEach(rule => {
+                    const option = document.createElement('option');
+                    option.value = rule.id;
+                    option.textContent = `${rule.name} (${rule.category})`;
+                    logRuleSelect.appendChild(option);
+                });
+            } else {
+                 logRuleSelect.innerHTML = '<option value="">No rules available. Add rules first.</option>';
+            }
+        }
+
+        practiceLogForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const log = {
+                ruleId: parseInt(document.getElementById('logRuleSelect').value),
+                date: document.getElementById('logDate').value,
+                duration: document.getElementById('logDuration').value.trim(),
+                notes: document.getElementById('logNotes').value.trim()
+            };
+
+            if (!log.ruleId) {
+                showStatusMessage('Please select a Tajweed rule.', 'error');
+                return;
+            }
+
+            try {
+                await addToStore(STORE_NAMES.LOGS, log);
+                showStatusMessage('Practice session logged successfully!', 'success');
+                closeModal(logModal);
+                loadPracticeLogs();
+            } catch (error) {
+                console.error('Error logging practice:', error);
+                showStatusMessage(`Error logging practice: ${error.message}`, 'error');
+            }
+        });
+
+        async function loadPracticeLogs() {
+            try {
+                const logs = await getAllFromStore(STORE_NAMES.LOGS);
+                logs.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by date descending
+
+                practiceLogListDiv.innerHTML = '';
+                if (logs.length === 0) {
+                    practiceLogListDiv.innerHTML = '<p>No practice sessions logged yet.</p>';
+                    return;
+                }
+
+                const rules = await getAllFromStore(STORE_NAMES.RULES);
+                const rulesMap = new Map(rules.map(rule => [rule.id, rule]));
+
+                logs.forEach(log => {
+                    const rule = rulesMap.get(log.ruleId);
+                    const ruleName = rule ? `${rule.name} (${rule.category})` : 'Unknown Rule (ID: ' + log.ruleId + ')';
+                    const logItem = document.createElement('div');
+                    logItem.className = 'log-item';
+                    logItem.innerHTML = `
+                        <h4>${ruleName}</h4>
+                        <p><strong>Date:</strong> ${new Date(log.date).toLocaleDateString()}</p>
+                        <p><strong>Duration:</strong> ${log.duration}</p>
+                        ${log.notes ? `<p><strong>Notes:</strong> ${log.notes.replace(/\n/g, '<br>')}</p>` : ''}
+                        <button class="danger delete-log-btn mt-1" data-id="${log.id}">Delete Log</button>
+                    `;
+                    practiceLogListDiv.appendChild(logItem);
+                });
+            } catch (error) {
+                console.error('Error loading practice logs:', error);
+                practiceLogListDiv.innerHTML = '<p>Error loading practice logs.</p>';
+            }
+        }
+        
+        practiceLogListDiv.addEventListener('click', async (e) => {
+            if (e.target.classList.contains('delete-log-btn')) {
+                const logId = parseInt(e.target.dataset.id);
+                if (confirm('Are you sure you want to delete this practice log?')) {
+                    try {
+                        await deleteFromStore(STORE_NAMES.LOGS, logId);
+                        showStatusMessage('Practice log deleted.', 'success');
+                        loadPracticeLogs();
+                    } catch (error) {
+                        console.error('Error deleting log:', error);
+                        showStatusMessage(`Error deleting log: ${error.message}`, 'error');
+                    }
+                }
+            }
+        });
+
+        // --- AYAH ANALYSIS (SELF-QUIZ) ---
+        const ayahAnalysisForm = document.getElementById('ayahAnalysisForm');
+        const analysisRulesChecklistDiv = document.getElementById('analysisRulesChecklist');
+        const analysisLogListDiv = document.getElementById('analysisLogList');
+
+        async function populateAnalysisRulesChecklist() {
+            const rules = await getAllFromStore(STORE_NAMES.RULES);
+            rules.sort((a,b) => a.name.localeCompare(b.name));
+            analysisRulesChecklistDiv.innerHTML = '';
+
+            if (rules.length === 0) {
+                analysisRulesChecklistDiv.innerHTML = '<p>No Tajweed rules available. Please add rules in the "Tajweed Rules" section first.</p>';
+                return;
+            }
+            
+            rules.forEach(rule => {
+                const div = document.createElement('div');
+                div.innerHTML = `
+                    <input type="checkbox" id="analysis-rule-${rule.id}" name="analysis-rule" value="${rule.id}">
+                    <label for="analysis-rule-${rule.id}">${rule.name} (${rule.category})</label>
+                `;
+                analysisRulesChecklistDiv.appendChild(div);
+            });
+        }
+
+        ayahAnalysisForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const snippet = document.getElementById('analysisAyahSnippet').value.trim();
+            const notes = document.getElementById('analysisNotes').value.trim();
+            const selectedRuleIds = Array.from(document.querySelectorAll('#analysisRulesChecklist input[name="analysis-rule"]:checked'))
+                                        .map(cb => parseInt(cb.value));
+            
+            if (!snippet) {
+                showStatusMessage('Ayah snippet cannot be empty.', 'error');
+                return;
+            }
+            if (selectedRuleIds.length === 0) {
+                showStatusMessage('Please select at least one identified Tajweed rule.', 'error');
+                return;
+            }
+
+            const rules = await getAllFromStore(STORE_NAMES.RULES);
+            const rulesMap = new Map(rules.map(r => [r.id, r]));
+            const identifiedRules = selectedRuleIds.map(id => ({
+                ruleId: id,
+                ruleName: rulesMap.get(id)?.name || 'Unknown Rule',
+                ruleCategory: rulesMap.get(id)?.category || 'Unknown'
+            }));
+
+            const analysis = {
+                ayahSnippet: snippet,
+                identifiedRules: identifiedRules,
+                selfNotes: notes,
+                date: new Date().toISOString()
+            };
+
+            try {
+                await addToStore(STORE_NAMES.ANALYSES, analysis);
+                showStatusMessage('Ayah analysis logged successfully!', 'success');
+                ayahAnalysisForm.reset(); // Clear form
+                document.querySelectorAll('#analysisRulesChecklist input[name="analysis-rule"]').forEach(cb => cb.checked = false); // Uncheck all
+                loadAyahAnalyses();
+            } catch (error) {
+                console.error('Error logging analysis:', error);
+                showStatusMessage(`Error logging analysis: ${error.message}`, 'error');
+            }
+        });
+
+        async function loadAyahAnalyses() {
+            try {
+                const analyses = await getAllFromStore(STORE_NAMES.ANALYSES);
+                analyses.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by date descending
+
+                analysisLogListDiv.innerHTML = '';
+                if (analyses.length === 0) {
+                    analysisLogListDiv.innerHTML = '<p>No Ayah analyses logged yet.</p>';
+                    return;
+                }
+
+                analyses.forEach(analysis => {
+                    const analysisItem = document.createElement('div');
+                    analysisItem.className = 'quiz-item'; // Re-use quiz-item styling
+                    analysisItem.innerHTML = `
+                        <h4>Analyzed on: ${new Date(analysis.date).toLocaleString()}</h4>
+                        <p class="arabic-text" dir="rtl"><strong>Snippet:</strong> ${analysis.ayahSnippet}</p>
+                        <p><strong>Identified Rules:</strong></p>
+                        <ul>
+                            ${analysis.identifiedRules.map(r => `<li>${r.ruleName} (${r.ruleCategory})</li>`).join('')}
+                        </ul>
+                        ${analysis.selfNotes ? `<p><strong>Notes:</strong> ${analysis.selfNotes.replace(/\n/g, '<br>')}</p>` : ''}
+                        <button class="danger delete-analysis-btn mt-1" data-id="${analysis.id}">Delete Analysis</button>
+                    `;
+                    analysisLogListDiv.appendChild(analysisItem);
+                });
+            } catch (error) {
+                console.error('Error loading analyses:', error);
+                analysisLogListDiv.innerHTML = '<p>Error loading Ayah analyses.</p>';
+            }
+        }
+        
+        analysisLogListDiv.addEventListener('click', async (e) => {
+            if (e.target.classList.contains('delete-analysis-btn')) {
+                const analysisId = parseInt(e.target.dataset.id);
+                if (confirm('Are you sure you want to delete this analysis?')) {
+                    try {
+                        await deleteFromStore(STORE_NAMES.ANALYSES, analysisId);
+                        showStatusMessage('Analysis deleted.', 'success');
+                        loadAyahAnalyses();
+                    } catch (error) {
+                        console.error('Error deleting analysis:', error);
+                        showStatusMessage(`Error deleting analysis: ${error.message}`, 'error');
+                    }
+                }
+            }
+        });
+
+        // --- BOOKMARKS ---
+        const bookmarksListDiv = document.getElementById('bookmarksList');
+
+        async function toggleBookmark(ruleId) {
+            try {
+                const existingBookmark = await getFromStore(STORE_NAMES.BOOKMARKS, ruleId);
+                if (existingBookmark) {
+                    await deleteFromStore(STORE_NAMES.BOOKMARKS, ruleId);
+                    showStatusMessage('Rule unbookmarked.', 'info');
+                } else {
+                    await addToStore(STORE_NAMES.BOOKMARKS, { ruleId: ruleId, dateAdded: new Date().toISOString() });
+                    showStatusMessage('Rule bookmarked!', 'success');
+                }
+            } catch (error) {
+                console.error('Error toggling bookmark:', error);
+                showStatusMessage(`Error managing bookmark: ${error.message}`, 'error');
+            }
+        }
+
+        async function loadBookmarks() {
+            try {
+                const bookmarkRecords = await getAllFromStore(STORE_NAMES.BOOKMARKS);
+                bookmarksListDiv.innerHTML = '';
+
+                if (bookmarkRecords.length === 0) {
+                    bookmarksListDiv.innerHTML = '<p>No rules bookmarked yet. You can bookmark rules from the Tajweed Rules section.</p>';
+                    return;
+                }
+                
+                const rules = await getAllFromStore(STORE_NAMES.RULES);
+                const rulesMap = new Map(rules.map(rule => [rule.id, rule]));
+
+                bookmarkRecords.sort((a,b) => new Date(b.dateAdded) - new Date(a.dateAdded)); // Sort by most recently added
+
+                bookmarkRecords.forEach(bm => {
+                    const rule = rulesMap.get(bm.ruleId);
+                    if (rule) {
+                        const bookmarkItem = document.createElement('div');
+                        bookmarkItem.className = 'bookmark-item rule-card'; // Reuse rule-card styling
+                        bookmarkItem.innerHTML = `
+                            <h4>${rule.name} (${rule.category})</h4>
+                            <p>${rule.description.substring(0,150)}${rule.description.length > 150 ? '...' : ''}</p>
+                            <button class="primary view-rule-btn" data-id="${rule.id}">View Full Rule</button>
+                            <button class="danger unbookmark-btn mt-1" data-id="${rule.id}">Remove Bookmark</button>
+                        `;
+                        bookmarksListDiv.appendChild(bookmarkItem);
+                    } else {
+                         // Stale bookmark, rule might have been deleted. Optionally remove it.
+                         console.warn(`Bookmarked rule ID ${bm.ruleId} not found. Removing stale bookmark.`);
+                         deleteFromStore(STORE_NAMES.BOOKMARKS, bm.ruleId);
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading bookmarks:', error);
+                bookmarksListDiv.innerHTML = '<p>Error loading bookmarks.</p>';
+            }
+        }
+        
+        async function updateBookmarkButtonState(buttonElement, ruleId) {
+            const isBookmarked = await getFromStore(STORE_NAMES.BOOKMARKS, ruleId);
+            if (isBookmarked) {
+                buttonElement.textContent = 'Unbookmark';
+                buttonElement.classList.remove('primary');
+                buttonElement.classList.add('secondary');
+            } else {
+                buttonElement.textContent = 'Bookmark';
+                buttonElement.classList.remove('secondary');
+                buttonElement.classList.add('primary');
+            }
+        }
+
+        async function updateBookmarkButtonStates() {
+            const bookmarkButtons = document.querySelectorAll('.toggle-bookmark-btn');
+            for (const btn of bookmarkButtons) {
+                await updateBookmarkButtonState(btn, parseInt(btn.dataset.id));
+            }
+        }
+
+        bookmarksListDiv.addEventListener('click', async (e) => {
+            if (e.target.classList.contains('unbookmark-btn')) {
+                const ruleId = parseInt(e.target.dataset.id);
+                await toggleBookmark(ruleId); // This will unbookmark it
+                loadBookmarks(); // Refresh list
+                updateBookmarkButtonStates(); // Refresh buttons in rules section if visible
+            } else if (e.target.classList.contains('view-rule-btn')) {
+                const ruleId = parseInt(e.target.dataset.id);
+                // Navigate to rules section and highlight/scroll to the rule
+                // For simplicity, just switch to rules section. User can find it.
+                // A more advanced way would be to filter/scroll.
+                showSection('rules-section');
+                // Try to scroll to the rule if it's rendered
+                setTimeout(() => { // Allow time for rules to render if not already
+                    const ruleCardInList = rulesListDiv.querySelector(`.edit-rule-btn[data-id="${ruleId}"]`)?.closest('.rule-card');
+                    if (ruleCardInList) {
+                        ruleCardInList.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        ruleCardInList.style.boxShadow = '0 0 10px var(--primary-color)';
+                        setTimeout(() => { ruleCardInList.style.boxShadow = ''; }, 3000);
+                    }
+                }, 200);
+            }
+        });
+
+        // --- SETTINGS ---
+        const themeSelect = document.getElementById('theme-select');
+        const exportDataBtn = document.getElementById('exportDataBtn');
+        const importDataFile = document.getElementById('importDataFile');
+        const importDataBtn = document.getElementById('importDataBtn');
+        const clearAllDataBtn = document.getElementById('clearAllDataBtn');
+
+        themeSelect.addEventListener('change', (e) => {
+            document.body.className = `theme-${e.target.value}`;
+            putToStore(STORE_NAMES.SETTINGS, { key: 'theme', value: e.target.value });
+        });
+
+        async function loadSettings() {
+            const themeSetting = await getFromStore(STORE_NAMES.SETTINGS, 'theme');
+            if (themeSetting) {
+                document.body.className = `theme-${themeSetting.value}`;
+                themeSelect.value = themeSetting.value;
+            } else { // Default theme if nothing set
+                document.body.className = 'theme-light';
+                themeSelect.value = 'light';
+            }
+        }
+
+        exportDataBtn.addEventListener('click', async () => {
+            if (!db) { showStatusMessage("Database not ready.", "error"); return; }
+            if (!confirm("This will export Tajweed rules, practice logs, analyses, bookmarks, and settings. Quran text data is NOT included in this backup. Continue?")) return;
+
+            showLoading("Exporting data...");
+            try {
+                const exportObj = {};
+                const storesToExport = [STORE_NAMES.RULES, STORE_NAMES.LOGS, STORE_NAMES.BOOKMARKS, STORE_NAMES.SETTINGS, STORE_NAMES.ANALYSES];
+                
+                for (const storeName of storesToExport) {
+                    exportObj[storeName] = await getAllFromStore(storeName);
+                }
+
+                const jsonString = JSON.stringify(exportObj, null, 2);
+                const blob = new Blob([jsonString], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `tajweed_guide_backup_${new Date().toISOString().slice(0,10).replace(/-/g,'')}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showStatusMessage('Data exported successfully!', 'success');
+            } catch (error) {
+                console.error('Export error:', error);
+                showStatusMessage(`Error exporting data: ${error.message}`, 'error');
+            } finally {
+                hideLoading();
+            }
+        });
+        
+        importDataBtn.addEventListener('click', () => {
+             const file = importDataFile.files[0];
+            if (!file) {
+                showStatusMessage('Please select a backup file (.json) to import.', 'error');
+                return;
+            }
+            if (!confirm("Importing data will OVERWRITE all existing rules, logs, analyses, bookmarks, and settings. Quran data will NOT be affected. Are you sure you want to continue?")) return;
+            
+            handleImportData(file);
+        });
+
+        async function handleImportData(file) {
+            showLoading("Importing data...");
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                try {
+                    const importedObj = JSON.parse(e.target.result);
+                    if (!db) await initDB(); // Ensure DB is ready
+
+                    const storesToImport = [STORE_NAMES.RULES, STORE_NAMES.LOGS, STORE_NAMES.BOOKMARKS, STORE_NAMES.SETTINGS, STORE_NAMES.ANALYSES];
+                    const transaction = db.transaction(storesToImport, 'readwrite');
+                    
+                    transaction.onabort = (event) => {
+                        console.error("Import transaction aborted:", event.target.error);
+                        showStatusMessage(`Import failed: ${event.target.error.message}`, 'error');
+                        hideLoading();
+                    };
+                    transaction.onerror = (event) => {
+                        console.error("Import transaction error:", event.target.error);
+                        showStatusMessage(`Import failed: ${event.target.error.message}`, 'error');
+                        hideLoading();
+                    };
+
+                    for (const storeName of storesToImport) {
+                        if (importedObj[storeName]) {
+                            const store = transaction.objectStore(storeName);
+                            await new Promise((resolve, reject) => { // Clear store
+                                const req = store.clear();
+                                req.onsuccess = resolve;
+                                req.onerror = (errEvent) => reject(errEvent.target.error);
+                            });
+                            for (const record of importedObj[storeName]) {
+                                // Basic validation or transformation could happen here if needed
+                                await new Promise((resolve, reject) => {
+                                    const req = store.put(record); // Use put for flexibility
+                                    req.onsuccess = resolve;
+                                    req.onerror = (errEvent) => reject(errEvent.target.error);
+                                });
+                            }
+                        }
+                    }
+                    
+                    transaction.oncomplete = () => {
+                        showStatusMessage('Data imported successfully! Reloading application data.', 'success');
+                        importDataFile.value = null; // Reset file input
+                        // Reload all relevant data and UI components
+                        initializeAppUI(); 
+                        hideLoading();
+                    };
+
+                } catch (error) {
+                    console.error('Import error:', error);
+                    showStatusMessage(`Error reading or parsing backup file: ${error.message}`, 'error');
+                    hideLoading();
+                }
+            };
+            reader.readAsText(file);
+        }
+        
+        clearAllDataBtn.addEventListener('click', async () => {
+            if (!confirm("WARNING: This will delete ALL application data including Tajweed rules, practice logs, analyses, bookmarks, settings, AND loaded Quran data. This action is IRREVERSIBLE. Are you sure you want to proceed?")) {
+                return;
+            }
+            if (!confirm("SECOND WARNING: This is your final confirmation. All data will be permanently erased. Continue?")) {
+                return;
+            }
+
+            showLoading("Clearing all data...");
+            try {
+                if (!db) await initDB();
+                const allStoreNames = Array.from(db.objectStoreNames);
+                const transaction = db.transaction(allStoreNames, 'readwrite');
+                
+                for (const storeName of allStoreNames) {
+                    const store = transaction.objectStore(storeName);
+                    await new Promise((resolve, reject) => {
+                        const req = store.clear();
+                        req.onsuccess = resolve;
+                        req.onerror = (event) => reject(event.target.error);
+                    });
+                }
+
+                transaction.oncomplete = () => {
+                    showStatusMessage('All application data has been cleared. Please refresh the page if necessary.', 'success');
+                    // Reset UI elements
+                    quranDataStatus.textContent = 'Status: No data loaded.';
+                    quranViewer.innerHTML = '<p>Please load Quran data from the Settings section.</p>';
+                    surahSelect.innerHTML = '';
+                    initializeAppUI(); // Reload UI which will show empty states
+                    hideLoading();
+                };
+                transaction.onerror = (event) => {
+                    throw event.target.error;
+                };
+
+            } catch (error) {
+                console.error('Error clearing data:', error);
+                showStatusMessage(`Error clearing data: ${error.message}`, 'error');
+                hideLoading();
+            }
+        });
+
+
+        // --- INITIALIZATION ---
+        async function initializeAppUI() {
+            // Load data for each section
+            loadTajweedRules();
+            populateCategoryDatalist();
+            await populateLogRuleSelect(); // ensure rules are loaded for select
+            loadPracticeLogs();
+            await populateAnalysisRulesChecklist(); // ensure rules are loaded for checklist
+            loadAyahAnalyses();
+            loadBookmarks();
+            loadSettings(); // Apply theme
+            await checkQuranDataExists(); // Check and load Quran data status/initial view
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                await initDB();
+                showStatusMessage('Application Ready.', 'success', 2000);
+
+                // Setup navigation
+                navButtons.forEach(button => {
+                    button.addEventListener('click', () => showSection(button.dataset.section));
+                });
+                showSection('home-section'); // Show home section by default
+
+                // Initial data population and UI setup
+                await initializeAppUI();
+                
+                // Add one empty example field when rule modal opens for new rule
+                if (document.getElementById('ruleId').value === '') {
+                     clearRuleExamples(); addRuleExampleField();
+                }
+
+            } catch (error) {
+                console.error("Initialization failed:", error);
+                showStatusMessage(`Critical error during initialization: ${error.message}. Please try refreshing.`, 'error', 10000);
+                // Display a more prominent error message on the page itself if DB fails to init
+                document.body.innerHTML = `<div style="padding: 20px; text-align: center; color: red;">
+                    <h1>Application Initialization Failed</h1>
+                    <p>There was a problem setting up the application's database. This might be due to browser compatibility issues or private browsing mode.</p>
+                    <p>Details: ${error.message}</p>
+                    <p>Please try refreshing the page, or use a different browser. Ensure you are not in private/incognito mode, as it may restrict database access.</p>
+                </div>`;
+            }
+        });
+
+
+
+async function preloadDefaultTajweedRules() {
+    if (!db) {
+        console.error("DB not initialized, cannot preload rules.");
+        return;
+    }
+
+    try {
+        const transaction = db.transaction([STORE_NAMES.RULES], 'readonly');
+        const store = transaction.objectStore(STORE_NAMES.RULES);
+        const countRequest = store.count();
+
+        const ruleCount = await new Promise((resolve, reject) => {
+            countRequest.onsuccess = () => resolve(countRequest.result);
+            countRequest.onerror = (event) => reject(event.target.error);
+        });
+
+        if (ruleCount === 0) {
+            console.log("No Tajweed rules found. Preloading default rules...");
+            showLoading("Preloading default Tajweed rules...");
+
+            const defaultRules = [
+                // Noon Sakinah & Tanween
+                {
+                    category: "Noon Sakinah & Tanween (أحكام النون الساكنة والتنوين)",
+                    name: "Izhaar Halqi (الإظهار الحلقي)",
+                    description: "Clear pronunciation of Noon Sakinah (نْ) or Tanween when followed by one of the six throat letters (حروف الحلق): ء هـ ع ح غ خ.",
+                    examples: [{ text: "مِنْهُ" }, { text: "عَذَابٌ أَلِيمٌ" }, { text: "يَنْأَوْنَ" }]
+                },
+                {
+                    category: "Noon Sakinah & Tanween (أحكام النون الساكنة والتنوين)",
+                    name: "Idghaam (الإدغام)",
+                    description: "Merging Noon Sakinah (نْ) or Tanween into the following letter. Two types: with Ghunnah and without Ghunnah.",
+                    examples: []
+                },
+                {
+                    category: "Noon Sakinah & Tanween (أحكام النون الساكنة والتنوين)",
+                    name: "Idghaam bi Ghunnah (إدغام بغنة)",
+                    description: "Merging with nasalization (Ghunnah) when Noon Sakinah (نْ) or Tanween is followed by one of the letters: ي ن م و (يَنْمُو).",
+                    examples: [{ text: "مَن يَقُولُ" }, { text: "مِن وَالٍ" }, { text: "خَيْرٌ نُّزُلًا" }]
+                },
+                {
+                    category: "Noon Sakinah & Tanween (أحكام النون الساكنة والتنوين)",
+                    name: "Idghaam bila Ghunnah (إدغام بلا غنة)",
+                    description: "Merging without nasalization (Ghunnah) when Noon Sakinah (نْ) or Tanween is followed by one of the letters: ل ر.",
+                    examples: [{ text: "مِن لَّدُنْهُ" }, { text: "غَفُورٌ رَّحِيمٌ" }]
+                },
+                {
+                    category: "Noon Sakinah & Tanween (أحكام النون الساكنة والتنوين)",
+                    name: "Iqlab (الإقلاب)",
+                    description: "Changing Noon Sakinah (نْ) or Tanween into a Meem (م) sound with Ghunnah when followed by the letter Baa (ب).",
+                    examples: [{ text: "مِۢن بَعْدِ" }, { text: "سَمِيعٌۢ بَصِيرٌ" }]
+                },
+                {
+                    category: "Noon Sakinah & Tanween (أحكام النون الساكنة والتنوين)",
+                    name: "Ikhfaa Haqiqi (الإخفاء الحقيقي)",
+                    description: "Hiding the Noon Sakinah (نْ) or Tanween with Ghunnah when followed by one of the 15 remaining letters: ت ث ج د ذ ز س ش ص ض ط ظ ف ق ك.",
+                    examples: [{ text: "أَنتُمْ" }, { text: "مِن ثَمَرَةٍ" }, { text: "رِيحًا صَرْصَرًا" }]
+                },
+                // Meem Sakinah
+                {
+                    category: "Meem Sakinah (أحكام الميم الساكنة)",
+                    name: "Ikhfaa Shafawi (الإخفاء الشفوي)",
+                    description: "Hiding Meem Sakinah (مْ) with Ghunnah when followed by the letter Baa (ب).",
+                    examples: [{ text: "تَرْمِيهِم بِحِجَارَةٍ" }, { text: "يَعْتَصِم بِاللَّهِ" }]
+                },
+                {
+                    category: "Meem Sakinah (أحكام الميم الساكنة)",
+                    name: "Idghaam Shafawi / Mithlayn Saghir (إدغام شفوي / إدغام مثلين صغير)",
+                    description: "Merging Meem Sakinah (مْ) into a following Meem (م) with Ghunnah.",
+                    examples: [{ text: "لَكُم مَّا كَسَبْتُمْ" }, { text: "أَطْعَمَهُم مِّن جُوعٍ" }]
+                },
+                {
+                    category: "Meem Sakinah (أحكام الميم الساكنة)",
+                    name: "Izhaar Shafawi (الإظهار الشفوي)",
+                    description: "Clear pronunciation of Meem Sakinah (مْ) when followed by any letter other than Baa (ب) or Meem (م). Be extra clear with و and ف.",
+                    examples: [{ text: "أَنْعَمْتَ عَلَيْهِمْ غَيْرِ" }, { text: "لَهُمْ فِيهَا" }, { text: "ذَٰلِكُمْ وَأَنَّ" }]
+                },
+                // Madd
+                {
+                    category: "Madd (المد)",
+                    name: "Madd Tabee'ee / Asli (المد الطبيعي / الأصلي)",
+                    description: "Natural Madd. Elongation of a vowel (Alif preceded by Fatha, Waw preceded by Dammah, Yaa preceded by Kasrah) for 2 harakahs (beats), provided it's not followed by Hamzah or Sukoon.",
+                    examples: [{ text: "قَالَ" }, { text: "يَقُولُ" }, { text: "قِيلَ" }]
+                },
+                {
+                    category: "Madd (المد)",
+                    name: "Madd Al-Badal (مد البدل)",
+                    description: "Exchange Madd. When a Hamzah is followed by a Madd letter (originally Madd letter followed by Hamzah). Elongated for 2 harakahs.",
+                    examples: [{ text: "آمَنُوا (أَأْمَنُوا)" }, { text: "أُوتُوا (أُؤْتُوا)" }, { text: "إِيمَانًا (إِئْمَانًا)" }]
+                },
+                {
+                    category: "Madd (المد)",
+                    name: "Madd Al-'Iwad (مد العوض)",
+                    description: "Compensation Madd. When stopping on a Tanween Fathah (ـًــٍــٌ), it is replaced by an Alif Madd and elongated for 2 harakahs. Does not apply to Tanween on Ta Marbutah (ةً).",
+                    examples: [{ text: "عَلِيمًا (وقوفاً: عَلِيمَا)" }, { text: "غَفُورًا (وقوفاً: غَفُورَا)" }]
+                },
+                {
+                    category: "Madd (المد)",
+                    name: "Madd Wajib Muttasil (المد الواجب المتصل)",
+                    description: "Connected Obligatory Madd. When a Madd letter is followed by a Hamzah (ء) in the same word. Elongated for 4 or 5 harakahs.",
+                    examples: [{ text: "جَاءَ" }, { text: "السَّمَاءِ" }, { text: "سُوءَ" }]
+                },
+                {
+                    category: "Madd (المد)",
+                    name: "Madd Jaa'iz Munfasil (المد الجائز المنفصل)",
+                    description: "Separated Permissible Madd. When a Madd letter is at the end of a word and the next word begins with a Hamzah (ء). Elongated for 2, 4, or 5 harakahs (Hafs 'an Asim via Shatibiyyah: 4 or 5).",
+                    examples: [{ text: "يَا أَيُّهَا" }, { text: "بِمَا أُنزِلَ" }, { text: "قُوا أَنفُسَكُمْ" }]
+                },
+                {
+                    category: "Madd (المد)",
+                    name: "Madd 'Aaridh Lissukoon (المد العارض للسكون)",
+                    description: "Temporary Madd due to Sukoon. When stopping on a letter that follows a Madd letter, and that letter becomes Sakin due to stopping. Elongated for 2, 4, or 6 harakahs.",
+                    examples: [{ text: "الْعَالَمِينَ (وقوفاً)" }, { text: "الرَّحِيمِ (وقوفاً)" }, { text: "يُؤْمِنُونَ (وقوفاً)" }]
+                },
+                {
+                    category: "Madd (المد)",
+                    name: "Madd Al-Leen (مد اللين)",
+                    description: "Easiness Madd. When a Waw Sakinah (وْ) or Yaa Sakinah (يْ) is preceded by a Fatha, and followed by a letter on which one stops (making it Sakin). Elongated for 2, 4, or 6 harakahs when stopping.",
+                    examples: [{ text: "خَوْفٌ (وقوفاً على الفاء)" }, { text: "الْبَيْتِ (وقوفاً على التاء)" }, { text: "قُرَيْشٍ (وقوفاً على الشين)" }]
+                },
+                {
+                    category: "Madd (المد)",
+                    name: "Madd Laazim (المد اللازم)",
+                    description: "Necessary Madd. When a Madd letter is followed by an original (permanent) Sukoon or a Shaddah. Always elongated for 6 harakahs. Has four types.",
+                    examples: []
+                },
+                {
+                    category: "Madd (المد)",
+                    name: "Madd Laazim Kalimi Muthaqqal (مد لازم كلمي مثقل)",
+                    description: "Heavy Word Necessary Madd. Madd letter followed by a Shaddah in a word.",
+                    examples: [{ text: "الطَّآمَّةُ" }, { text: "الضَّآلِّينَ" }, { text: "دَآبَّةٍ" }]
+                },
+                {
+                    category: "Madd (المد)",
+                    name: "Madd Laazim Kalimi Mukhaffaf (مد لازم كلمي مخفف)",
+                    description: "Light Word Necessary Madd. Madd letter followed by an original Sukoon (not Shaddah) in a word. Only one instance in Quran.",
+                    examples: [{ text: "آلْآنَ (in Surah Yunus, Ayahs 51 & 91)" }]
+                },
+                {
+                    category: "Madd (المد)",
+                    name: "Madd Laazim Harfi Muthaqqal (مد لازم حرفي مثقل)",
+                    description: "Heavy Letter Necessary Madd. In some Huroof Muqatta'at (disjoined letters at start of Surahs). When the last letter of the spelled-out name of a letter is merged (Idgham) into the first letter of the next spelled-out letter. The Madd is on the letter whose name is 3 letters long with middle one being a Madd letter.",
+                    examples: [{ text: "الٓمٓ (Laam Meem - لَاْم مِّيْم)" }]
+                },
+                {
+                    category: "Madd (المد)",
+                    name: "Madd Laazim Harfi Mukhaffaf (مد لازم حرفي مخفف)",
+                    description: "Light Letter Necessary Madd. In Huroof Muqatta'at. When the spelled-out name of a letter (3 letters long, middle is Madd letter) is followed by a Sakin letter that is not merged. Or, letters whose names are 2 letters long, second being Madd letter (Hayy Tahur letters: ح ي ط هـ ر - these are 2 harakahs Madd Tabee'ee). Laazim Harfi Mukhaffaf is 6 harakahs for letters like قٓ, صٓ, كٓ (in كهيعص), نٓ.",
+                    examples: [{ text: "قٓ" }, { text: "صٓ" }, { text: "نٓ" }, { text: "الٓرٰ (Alif Laam Raa - Raa is 2 harakahs)" }, { text: "حمٓ (Haa Meem - Haa is 2 harakahs)" }]
+                },
+                // Qalqalah
+                {
+                    category: "Qalqalah (القلقلة)",
+                    name: "Qalqalah (القلقلة)",
+                    description: "Echoing or vibrating sound made when one of the five Qalqalah letters (ق ط ب ج د - collected in قُطْبُ جَدٍ) has a Sukoon (either original or due to stopping).",
+                    examples: []
+                },
+                {
+                    category: "Qalqalah (القلقلة)",
+                    name: "Qalqalah Sughra (قلقلة صغرى)",
+                    description: "Minor Qalqalah. When a Qalqalah letter with Sukoon is in the middle of a word or at the end of a word but recitation continues.",
+                    examples: [{ text: "يَقْطَعُونَ" }, { text: "يَجْعَلُونَ" }, { text: "خَلَقْنَا" }]
+                },
+                {
+                    category: "Qalqalah (القلقلة)",
+                    name: "Qalqalah Kubra (قلقلة كبرى)",
+                    description: "Major Qalqalah. When stopping on a Qalqalah letter at the end of a word (not Shaddah).",
+                    examples: [{ text: "الْفَلَقِ (وقوفاً)" }, { text: "مُحِيطٌ (وقوفاً)" }, { text: "الْحَجُّ (وقوفاً - if not shaddah, but this example is shaddah, see Akbar)" }]
+                },
+                 {
+                    category: "Qalqalah (القلقلة)",
+                    name: "Qalqalah Akbar (قلقلة أكبر)",
+                    description: "Greatest Qalqalah. When stopping on a Qalqalah letter that has a Shaddah at the end of a word.",
+                    examples: [{ text: "الْحَقُّ (وقوفاً)" }, { text: "وَتَبَّ (وقوفاً)" }]
+                },
+                // Tafkheem & Tarqeeq
+                {
+                    category: "Tafkheem & Tarqeeq (التفخيم والترقيق)",
+                    name: "Tafkheem (التفخيم)",
+                    description: "Pronouncing a letter with a 'heavy' or 'full-mouthed' sound. Applies to always-heavy letters (خ ص ض غ ط ق ظ) and sometimes to ل and ر.",
+                    examples: [{ text: "خَالِدِينَ" }, { text: "الصَّالِحَاتِ" }, { text: "اللَّهُ" }]
+                },
+                {
+                    category: "Tafkheem & Tarqeeq (التفخيم والترقيق)",
+                    name: "Tarqeeq (الترقيق)",
+                    description: "Pronouncing a letter with a 'light' or 'thin' sound. Applies to always-light letters (most letters) and sometimes to ل and ر.",
+                    examples: [{ text: "بِسْمِ" }, { text: "لِلَّهِ (after kasrah)" }, { text: "فِرْعَوْنَ" }]
+                },
+                {
+                    category: "Tafkheem & Tarqeeq (التفخيم والترقيق)",
+                    name: "Rules of Raa (أحكام الراء)",
+                    description: "The letter Raa (ر) can be Tafkheem (heavy) or Tarqeeq (light) based on its vowel and surrounding vowels/letters. (Detailed rules are many).",
+                    examples: [{ text: "رَبُّكُمْ (Tafkheem)" }, { text: "رِزْقًا (Tarqeeq)" }, { text: "مَرْيَمَ (Tafkheem - Sakin preceded by Fatha)" }, {text: "فِرْعَوْنَ (Tarqeeq - Sakin preceded by Kasrah)"}]
+                },
+                {
+                    category: "Tafkheem & Tarqeeq (التفخيم والترقيق)",
+                    name: "Laam in Lafdhul Jalalah (لام لفظ الجلالة - الله)",
+                    description: "The Laam (ل) in the name of Allah (الله / اللَّهُمَّ) is Tafkheem (heavy) if preceded by Fatha or Dammah. It is Tarqeeq (light) if preceded by Kasrah.",
+                    examples: [{ text: "قَالَ اللَّهُ (Tafkheem)" }, { text: "رَسُولُ اللَّهِ (Tafkheem)" }, { text: "بِسْمِ اللَّهِ (Tarqeeq)" }]
+                },
+                {
+                    category: "Letters (الحروف)",
+                    name: "Huroof Al-Isti'laa (حروف الاستعلاء)",
+                    description: "The seven letters that are always pronounced with Tafkheem (heaviness): خ ص ض غ ط ق ظ. Collected in: خُصَّ ضَغْطٍ قِظْ.",
+                    examples: [{ text: "خَالِقُ" }, { text: "صَادِقِينَ" }, { text: "الضَّالِّينَ" }, { text: "غَيْرِ" }, { text: "الطَّامَّةُ" }, { text: "الْقَارِعَةُ" }, { text: "ظَلَمُوا" }]
+                },
+                {
+                    category: "Letters (الحروف)",
+                    name: "Huroof Al-Istifal (حروف الاستفال)",
+                    description: "All letters other than Huroof Al-Isti'laa. These are generally pronounced with Tarqeeq (lightness), except for Alif, Laam, and Raa in certain conditions.",
+                    examples: [{ text: "بَيتٌ" }, { text: "تَعلَمُونَ" }, { text: "سَمِيعٌ" }]
+                }
+            ];
+
+            for (const rule of defaultRules) {
+                try {
+                    await addToStore(STORE_NAMES.RULES, rule);
+                } catch (addError) {
+                    // If a specific rule fails (e.g., due to a unique constraint if IDs were managed differently), log and continue
+                    console.error(`Failed to add default rule "${rule.name}":`, addError);
+                }
+            }
+            showStatusMessage(`${defaultRules.length} default Tajweed rules preloaded.`, 'success', 4000);
+            hideLoading();
+            // UI will be updated by initializeAppUI() called after this function
+        } else {
+            console.log("Tajweed rules already exist in DB. Skipping preload.");
+        }
+    } catch (error) {
+        console.error("Error checking/preloading default Tajweed rules:", error);
+        showStatusMessage(`Error preloading rules: ${error.message}`, 'error');
+        hideLoading();
+    }
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        await initDB(); // First, initialize the DB
+        //showStatusMessage('Application Ready.', 'success', 2000);
+
+        await preloadDefaultTajweedRules(); // <<-- ADD THIS LINE HERE
+
+        // Setup navigation
+        navButtons.forEach(button => {
+            button.addEventListener('click', () => showSection(button.dataset.section));
+        });
+        showSection('home-section'); // Show home section by default
+
+        // Initial data population and UI setup
+        await initializeAppUI(); // This will now load preloaded rules if they were added
+        
+        // Add one empty example field when rule modal opens for new rule
+        if (document.getElementById('ruleId').value === '') {
+             clearRuleExamples(); addRuleExampleField();
+        }
+
+    } catch (error) {
+        console.error("Initialization failed:", error);
+        showStatusMessage(`Critical error during initialization: ${error.message}. Please try refreshing.`, 'error', 10000);
+        document.body.innerHTML = `<div style="padding: 20px; text-align: center; color: red;">...error message HTML...</div>`;
+    }
+});
+    </script>
+</body>
+</html>

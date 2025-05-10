@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Quran Journey</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Roboto:wght@300;400;700&display=swap');
+
+        :root {
+            --primary-color: #4CAF50; /* Green */
+            --secondary-color: #8BC34A; /* Light Green */
+            --background-color: #E8F5E9; /* Lightest Green */
+            --card-background: #FFFFFF;
+            --text-color: #212121; /* Dark Grey */
+            --light-text-color: #757575; /* Medium Grey */
+            --border-color: #BDBDBD; /* Light Grey */
+            --progress-not-started: #E0E0E0; /* Grey */
+            --progress-reading: #FFC107; /* Amber */
+            --progress-completed: #4CAF50; /* Green */
+            --progress-memorizing: #2196F3; /* Blue */
+            --progress-memorized: #9C27B0; /* Purple */
+            --sacred-geometry-color: rgba(0, 0, 0, 0.05);
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        header h1 {
+            margin: 0;
+            font-family: 'Amiri', serif;
+            font-weight: 700;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+
+        .main-content {
+            background-color: var(--card-background);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .main-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, var(--sacred-geometry-color) 10%, transparent 10%) 0 0 / 20px 20px,
+                        radial-gradient(circle, var(--sacred-geometry-color) 10%, transparent 10%) 10px 10px / 20px 20px;
+            z-index: 0;
+            opacity: 0.3;
+        }
+
+        .main-content > * {
+            position: relative;
+            z-index: 1;
+        }
+
+
+        .sidebar {
+            background-color: var(--card-background);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+         .sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, var(--sacred-geometry-color) 10%, transparent 10%) 0 0 / 20px 20px,
+                        radial-gradient(circle, var(--sacred-geometry-color) 10%, transparent 10%) 10px 10px / 20px 20px;
+            z-index: 0;
+            opacity: 0.3;
+        }
+
+        .sidebar > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        .surah-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .surah-item {
+            background-color: #F1F8E9; /* Very Light Green */
+            border: 1px solid var(--border-color);
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .surah-item:hover {
+            transform: translateY(-3px);
+        }
+
+        .surah-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .surah-name {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: var(--text-color);
+        }
+
+        .surah-details {
+            font-size: 0.9em;
+            color: var(--light-text-color);
+        }
+
+        .surah-status-select {
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            background-color: white;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .surah-status-select option[value="Not Started"] { color: var(--progress-not-started); }
+        .surah-status-select option[value="Reading"] { color: var(--progress-reading); }
+        .surah-status-select option[value="Completed Recitation"] { color: var(--progress-completed); }
+        .surah-status-select option[value="Memorizing"] { color: var(--progress-memorizing); }
+        .surah-status-select option[value="Memorized"] { color: var(--progress-memorized); }
+
+        .surah-dates {
+            font-size: 0.8em;
+            color: var(--light-text-color);
+        }
+
+        .surah-notes-toggle {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            font-size: 0.9em;
+            text-align: left;
+            padding: 0;
+        }
+
+        .surah-notes-area {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            margin-top: 10px;
+            font-size: 0.9em;
+            resize: vertical;
+            display: none; /* Hidden by default */
+        }
+
+        .progress-visualization {
+            margin-top: 20px;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            background-color: var(--progress-not-started);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            height: 20px;
+            text-align: center;
+            line-height: 20px;
+            color: white;
+            font-size: 0.8em;
+            transition: width 0.5s ease-in-out;
+        }
+
+        .progress-bar.completed { background-color: var(--progress-completed); }
+        .progress-bar.memorized { background-color: var(--progress-memorized); }
+
+        .goals-section {
+            margin-top: 20px;
+        }
+
+        .goals-section label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .goals-section input[type="text"],
+        .goals-section input[type="date"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1em;
+        }
+
+        .daily-log-section {
+            margin-top: 20px;
+        }
+
+        .daily-log-section input[type="number"] {
+            width: 80px;
+            padding: 5px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 0.9em;
+            margin-right: 10px;
+        }
+
+        .daily-log-section button {
+            padding: 8px 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .daily-log-section button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .daily-log-entries {
+            margin-top: 15px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 10px;
+        }
+
+        .log-entry {
+            background-color: #F9FBE7; /* Lightest Yellow */
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+            border: 1px solid #F0F4C3; /* Lighter Yellow */
+        }
+
+        .log-entry strong {
+            color: var(--primary-color);
+        }
+
+        .backup-restore-section {
+            margin-top: 20px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 15px;
+        }
+
+        .backup-restore-section button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .backup-restore-section button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .backup-restore-section input[type="file"] {
+            display: none;
+        }
+
+        .backup-restore-section label {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .backup-restore-section label:hover {
+            background-color: var(--secondary-color);
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            color: var(--light-text-color);
+            font-size: 0.9em;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Chart Styling (using a simple div-based approach for single file) */
+        .chart-container {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #E8F5E9;
+            border-radius: 8px;
+            border: 1px solid var(--secondary-color);
+        }
+
+        .chart-bar {
+            height: 20px;
+            margin-bottom: 5px;
+            background-color: var(--progress-completed);
+            color: white;
+            font-size: 0.8em;
+            line-height: 20px;
+            padding-left: 5px;
+            box-sizing: border-box;
+            transition: width 0.5s ease-in-out;
+        }
+
+        .chart-label {
+            font-size: 0.9em;
+            margin-bottom: 2px;
+            color: var(--text-color);
+        }
+
+        .chart-legend {
+            margin-top: 15px;
+            font-size: 0.9em;
+            color: var(--light-text-color);
+        }
+
+        .chart-legend span {
+            display: inline-block;
+            margin-right: 15px;
+        }
+
+        .chart-legend .legend-color {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+
+        .legend-completed { background-color: var(--progress-completed); }
+        .legend-memorized { background-color: var(--progress-memorized); }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>My Quran Journey</h1>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <h2>Surah Progress Tracker</h2>
+            <ul class="surah-list" id="surah-list">
+                <!-- Surah items will be loaded here -->
+            </ul>
+        </div>
+
+        <div class="sidebar">
+            <h2>Progress & Goals</h2>
+
+            <div class="progress-visualization">
+                <h3>Overall Progress</h3>
+                <div class="progress-bar-container">
+                    <div class="progress-bar completed" id="overall-recitation-progress" style="width: 0%;">0% Recited</div>
+                </div>
+                 <div class="progress-bar-container">
+                    <div class="progress-bar memorized" id="overall-memorization-progress" style="width: 0%;">0% Memorized</div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3>Memorization Chart (by Juz)</h3>
+                <div id="memorization-chart">
+                    <!-- Chart bars will be generated here -->
+                </div>
+                 <div class="chart-legend">
+                    <span class="legend-item"><span class="legend-color legend-completed"></span>Completed Recitation</span>
+                    <span class="legend-item"><span class="legend-color legend-memorized"></span>Memorized</span>
+                </div>
+            </div>
+
+
+            <div class="goals-section">
+                <h3>Personal Goals</h3>
+                <label for="recitation-goal">Recitation Goal:</label>
+                <input type="text" id="recitation-goal" placeholder="e.g., Complete recitation by end of year">
+
+                <label for="memorization-goal">Memorization Goal:</label>
+                <input type="text" id="memorization-goal" placeholder="e.g., Memorize 5 new Surahs this month">
+
+                <label for="goal-deadline">Goal Deadline:</label>
+                <input type="date" id="goal-deadline">
+            </div>
+
+            <div class="daily-log-section">
+                <h3>Daily Reading Log</h3>
+                <label for="pages-read">Pages Read:</label>
+                <input type="number" id="pages-read" min="0" value="0">
+                <label for="ayahs-read">Ayahs Read:</label>
+                <input type="number" id="ayahs-read" min="0" value="0">
+                <button id="add-log-btn">Add Log</button>
+                <div class="daily-log-entries" id="daily-log-entries">
+                    <!-- Daily log entries will be added here -->
+                </div>
+            </div>
+
+             <div class="backup-restore-section">
+                <h3>Data Management</h3>
+                <button id="backup-btn">Backup Data</button>
+                <input type="file" id="restore-file" accept=".json">
+                <label for="restore-file">Restore Data</label>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2023 My Quran Journey. Developed by Yasin Ullah.</p>
+    </footer>
+
+    <script>
+        const DB_NAME = 'QuranJourneyDB';
+        const DB_VERSION = 1;
+        const SURAHS_STORE = 'surahs';
+        const DAILY_LOG_STORE = 'dailyLog';
+        const GOALS_STORE = 'goals';
+
+        let db;
+        let surahData = []; // Array to hold parsed Surah data from data.AM
+        const surahNames = [
+            "Al-Fatihah", "Al-Baqarah", "Al 'Imran", "An-Nisa'", "Al-Ma'idah", "Al-An'am", "Al-A'raf", "Al-Anfal", "At-Tawbah", "Yunus",
+            "Hud", "Yusuf", "Ar-Ra'd", "Ibrahim", "Al-Hijr", "An-Nahl", "Al-Isra'", "Al-Kahf", "Maryam", "Taha",
+            "Al-Anbya'", "Al-Hajj", "Al-Mu'minun", "An-Nur", "Al-Furqan", "Ash-Shu'ara'", "An-Naml", "Al-Qasas", "Al-'Ankabut", "Ar-Rum",
+            "Luqman", "As-Sajdah", "Al-Ahzab", "Saba'", "Fatir", "Ya-Sin", "As-Saffat", "Sad", "Az-Zumar", "Ghafir",
+            "Fussilat", "Ash-Shura", "Az-Zukhruf", "Ad-Dukhan", "Al-Jathiyah", "Al-Ahqaf", "Muhammad", "Al-Fath", "Al-Hujurat", "Qaf",
+            "Adh-Dhariyat", "At-Tur", "An-Najm", "Al-Qamar", "Ar-Rahman", "Al-Waqi'ah", "Al-Hadid", "Al-Mujadilah", "Al-Hashr", "Al-Mumtahanah",
+            "As-Saff", "Al-Jumu'ah", "Al-Munafiqun", "At-Taghabun", "At-Talaq", "At-Tahrim", "Al-Mulk", "Al-Qalam", "Al-Haqqah", "Al-Ma'arij",
+            "Nuh", "Al-Jinn", "Al-Muzzammil", "Al-Muddaththir", "Al-Qiyamah", "Al-Insan", "Al-Mursalat", "An-Naba'", "An-Nazi'at", "'Abasa",
+            "At-Takwir", "Al-Infitar", "Al-Mutaffifin", "Al-Inshiqaq", "Al-Buruj", "At-Tariq", "Al-A'la", "Al-Ghashiyah", "Al-Fajr", "Al-Balad",
+            "Ash-Shams", "Al-Layl", "Ad-Duha", "Ash-Sharh", "At-Tin", "Al-'Alaq", "Al-Qadr", "Al-Bayyinah", "Az-Zalzalah", "Al-'Adiyat",
+            "Al-Qari'ah", "At-Takathur", "Al-'Asr", "Al-Humazah", "Al-Fil", "Quraysh", "Al-Ma'un", "Al-Kawthar", "Al-Kafirun", "An-Nasr",
+            "Al-Masad", "Al-Ikhlas", "Al-Falaq", "An-Nas"
+        ];
+
+        const surahAyahCounts = [
+            7, 286, 200, 176, 120, 165, 206, 75, 129, 109, 123, 111, 43, 52, 99, 128, 111, 110, 98, 135, 112, 78, 118, 64, 77, 227, 93, 88, 69, 60,
+            34, 30, 73, 54, 45, 83, 182, 88, 75, 85, 54, 53, 89, 59, 37, 35, 38, 29, 18, 45, 60, 49, 62, 55, 78, 96, 29, 22, 24, 13,
+            14, 11, 11, 18, 12, 12, 30, 20, 52, 44, 28, 28, 20, 56, 40, 31, 50, 40, 46, 42, 29, 19, 36, 25, 22, 17, 19, 26, 30, 20,
+            15, 21, 11, 8, 5, 19, 5, 8, 8, 11, 11, 8, 3, 9, 5, 4, 7, 3, 6, 3, 5, 4, 5, 6
+        ];
+
+        const juzAyahRanges = [
+            { juz: 1, startSurah: 1, startAyah: 1, endSurah: 2, endAyah: 141 },
+            { juz: 2, startSurah: 2, startAyah: 142, endSurah: 2, endAyah: 252 },
+            { juz: 3, startSurah: 2, startAyah: 253, endSurah: 3, endAyah: 92 },
+            { juz: 4, startSurah: 3, startAyah: 93, endSurah: 4, endAyah: 23 },
+            { juz: 5, startSurah: 4, startAyah: 24, endSurah: 4, endAyah: 147 },
+            { juz: 6, startSurah: 4, startAyah: 148, endSurah: 5, endAyah: 82 },
+            { juz: 7, startSurah: 5, startAyah: 83, endSurah: 6, endAyah: 110 },
+            { juz: 8, startSurah: 6, startAyah: 111, endSurah: 7, endAyah: 87 },
+            { juz: 9, startSurah: 7, startAyah: 88, endSurah: 8, endAyah: 40 },
+            { juz: 10, startSurah: 8, startAyah: 41, endSurah: 9, endAyah: 92 },
+            { juz: 11, startSurah: 9, startAyah: 93, endSurah: 11, endAyah: 5 },
+            { juz: 12, startSurah: 11, startAyah: 6, endSurah: 12, endAyah: 52 },
+            { juz: 13, startSurah: 12, startAyah: 53, endSurah: 14, endAyah: 52 },
+            { juz: 14, startSurah: 15, startAyah: 1, endSurah: 16, endAyah: 128 },
+            { juz: 15, startSurah: 17, startAyah: 1, endSurah: 18, endAyah: 74 },
+            { juz: 16, startSurah: 18, startAyah: 75, endSurah: 20, endAyah: 135 },
+            { juz: 17, startSurah: 21, startAyah: 1, endSurah: 22, endAyah: 78 },
+            { juz: 18, startSurah: 23, startAyah: 1, endSurah: 25, endAyah: 20 },
+            { juz: 19, startSurah: 25, startAyah: 21, endSurah: 27, endAyah: 55 },
+            { juz: 20, startSurah: 27, startAyah: 56, endSurah: 29, endAyah: 45 },
+            { juz: 21, startSurah: 29, startAyah: 46, endSurah: 33, endAyah: 30 },
+            { juz: 22, startSurah: 33, startAyah: 31, endSurah: 36, endAyah: 21 },
+            { juz: 23, startSurah: 36, startAyah: 22, endSurah: 39, endAyah: 31 },
+            { juz: 24, startSurah: 39, startAyah: 32, endSurah: 41, endAyah: 46 },
+            { juz: 25, startSurah: 41, startAyah: 47, endSurah: 45, endAyah: 37 },
+            { juz: 26, startSurah: 46, startAyah: 1, endSurah: 51, endAyah: 30 },
+            { juz: 27, startSurah: 51, startAyah: 31, endSurah: 57, endAyah: 29 },
+            { juz: 28, startSurah: 58, startAyah: 1, endSurah: 66, endAyah: 13 },
+            { juz: 29, startSurah: 67, startAyah: 1, endSurah: 77, endAyah: 50 },
+            { juz: 30, startSurah: 78, startAyah: 1, endSurah: 114, endAyah: 6 }
+        ];
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchQuranData();
+            openDatabase();
+            setupEventListeners();
+        });
+
+        async function fetchQuranData() {
+            try {
+                const response = await fetch('data.AM');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const text = await response.text();
+                parseQuranData(text);
+            } catch (error) {
+                console.error('Error fetching Quran data:', error);
+                alert('Failed to load Quran data. The app may not function correctly.');
+            }
+        }
+
+        function parseQuranData(text) {
+            const lines = text.split('\n').filter(line => line.trim() !== '');
+            surahData = lines.map(line => {
+                const parts = line.split('<br/>');
+                if (parts.length < 2) return null;
+
+                const textPart = parts[0];
+                const metaPart = parts[1];
+
+                const textMatch = textPart.match(/(.*) ترجمہ: (.*)/);
+                if (!textMatch || textMatch.length < 3) return null;
+
+                const arabic = textMatch[1].trim();
+                const urdu = textMatch[2].trim();
+
+                const metaMatch = metaPart.match(/س (\d{3}) آ (\d{3})/);
+                if (!metaMatch || metaMatch.length < 3) return null;
+
+                const surahNum = parseInt(metaMatch[1], 10);
+                const ayahNum = parseInt(metaMatch[2], 10);
+
+                return {
+                    arabic: arabic,
+                    urdu: urdu,
+                    surah: surahNum,
+                    ayah: ayahNum
+                };
+            }).filter(item => item !== null);
+
+            console.log(`Parsed ${surahData.length} ayahs.`);
+            // Data is parsed, now proceed with DB operations and UI rendering
+            if (db) {
+                 loadSurahProgress();
+                 loadDailyLog();
+                 loadGoals();
+            }
+        }
+
+
+        function openDatabase() {
+            const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+            request.onerror = (event) => {
+                console.error('IndexedDB error:', event.target.errorCode);
+                alert('Failed to open database. Your progress may not be saved.');
+            };
+
+            request.onupgradeneeded = (event) => {
+                db = event.target.result;
+                if (!db.objectStoreNames.contains(SURAHS_STORE)) {
+                    db.createObjectStore(SURAHS_STORE, { keyPath: 'surahNumber' });
+                }
+                 if (!db.objectStoreNames.contains(DAILY_LOG_STORE)) {
+                    const logStore = db.createObjectStore(DAILY_LOG_STORE, { keyPath: 'timestamp' });
+                    logStore.createIndex('date', 'date', { unique: false });
+                }
+                 if (!db.objectStoreNames.contains(GOALS_STORE)) {
+                    db.createObjectStore(GOALS_STORE, { keyPath: 'id' });
+                }
+            };
+
+            request.onsuccess = (event) => {
+                db = event.target.result;
+                console.log('Database opened successfully');
+                if (surahData.length > 0) {
+                    loadSurahProgress();
+                    loadDailyLog();
+                    loadGoals();
+                } else {
+                    // If data wasn't fetched yet, wait for it
+                    console.log('Waiting for Quran data to load before loading progress.');
+                }
+            };
+        }
+
+        function getSurahProgress(surahNumber) {
+            return new Promise((resolve, reject) => {
+                if (!db) {
+                    reject('Database not initialized');
+                    return;
+                }
+                const transaction = db.transaction([SURAHS_STORE], 'readonly');
+                const store = transaction.objectStore(SURAHS_STORE);
+                const request = store.get(surahNumber);
+
+                request.onsuccess = (event) => {
+                    resolve(event.target.result || {
+                        surahNumber: surahNumber,
+                        status: 'Not Started',
+                        recitationCompletedDate: null,
+                        memorizedDate: null,
+                        notes: ''
+                    });
+                };
+
+                request.onerror = (event) => {
+                    reject('Error getting surah progress: ' + event.target.errorCode);
+                };
+            });
+        }
+
+        function saveSurahProgress(progress) {
+             return new Promise((resolve, reject) => {
+                if (!db) {
+                    reject('Database not initialized');
+                    return;
+                }
+                const transaction = db.transaction([SURAHS_STORE], 'readwrite');
+                const store = transaction.objectStore(SURAHS_STORE);
+                const request = store.put(progress);
+
+                request.onsuccess = () => {
+                    resolve();
+                };
+
+                request.onerror = (event) => {
+                    reject('Error saving surah progress: ' + event.target.errorCode);
+                };
+            });
+        }
+
+        async function loadSurahProgress() {
+            if (surahData.length === 0) {
+                console.warn("Quran data not loaded yet. Cannot load surah progress.");
+                return;
+            }
+
+            const surahListElement = document.getElementById('surah-list');
+            surahListElement.innerHTML = ''; // Clear existing list
+
+            const uniqueSurahs = Array.from(new Set(surahData.map(ayah => ayah.surah))).sort((a, b) => a - b);
+
+            for (const surahNum of uniqueSurahs) {
+                const progress = await getSurahProgress(surahNum);
+                renderSurahItem(surahNum, progress);
+            }
+            updateOverallProgress();
+            updateMemorizationChart();
+        }
+
+        function renderSurahItem(surahNumber, progress) {
+            const surahListElement = document.getElementById('surah-list');
+            const surahIndex = surahNumber - 1;
+            const surahName = surahNames[surahIndex] || `Surah ${surahNumber}`;
+            const ayahCount = surahAyahCounts[surahIndex] || 'N/A';
+
+            const listItem = document.createElement('li');
+            listItem.classList.add('surah-item');
+            listItem.dataset.surahNumber = surahNumber;
+
+            listItem.innerHTML = `
+                <div class="surah-header">
+                    <div>
+                        <span class="surah-name">${surahNumber}. ${surahName}</span>
+                        <span class="surah-details">(${ayahCount} Ayahs)</span>
+                    </div>
+                    <select class="surah-status-select">
+                        <option value="Not Started" ${progress.status === 'Not Started' ? 'selected' : ''}>Not Started</option>
+                        <option value="Reading" ${progress.status === 'Reading' ? 'selected' : ''}>Reading</option>
+                        <option value="Completed Recitation" ${progress.status === 'Completed Recitation' ? 'selected' : ''}>Completed Recitation</option>
+                        <option value="Memorizing" ${progress.status === 'Memorizing' ? 'selected' : ''}>Memorizing</option>
+                        <option value="Memorized" ${progress.status === 'Memorized' ? 'selected' : ''}>Memorized</option>
+                    </select>
+                </div>
+                <div class="surah-dates">
+                    ${progress.recitationCompletedDate ? `Recited: ${new Date(progress.recitationCompletedDate).toLocaleDateString()}` : ''}
+                    ${progress.memorizedDate ? ` | Memorized: ${new Date(progress.memorizedDate).toLocaleDateString()}` : ''}
+                </div>
+                <button class="surah-notes-toggle">Add/View Notes</button>
+                <textarea class="surah-notes-area" placeholder="Add notes here...">${progress.notes || ''}</textarea>
+            `;
+
+            surahListElement.appendChild(listItem);
+
+            // Add event listeners for the new elements
+            listItem.querySelector('.surah-status-select').addEventListener('change', handleStatusChange);
+            listItem.querySelector('.surah-notes-toggle').addEventListener('click', handleNotesToggle);
+            listItem.querySelector('.surah-notes-area').addEventListener('blur', handleNotesSave); // Save on blur
+        }
+
+        async function handleStatusChange(event) {
+            const selectElement = event.target;
+            const surahItem = selectElement.closest('.surah-item');
+            const surahNumber = parseInt(surahItem.dataset.surahNumber, 10);
+            const newStatus = selectElement.value;
+
+            let progress = await getSurahProgress(surahNumber);
+            progress.status = newStatus;
+
+            const now = new Date().toISOString();
+
+            if (newStatus === 'Completed Recitation' && !progress.recitationCompletedDate) {
+                progress.recitationCompletedDate = now;
+            } else if (newStatus !== 'Completed Recitation' && progress.recitationCompletedDate) {
+                 // Optionally clear date if status changes from completed
+                 // progress.recitationCompletedDate = null;
+            }
+
+            if (newStatus === 'Memorized' && !progress.memorizedDate) {
+                progress.memorizedDate = now;
+            } else if (newStatus !== 'Memorized' && progress.memorizedDate) {
+                 // Optionally clear date if status changes from memorized
+                 // progress.memorizedDate = null;
+            }
+
+            await saveSurahProgress(progress);
+            console.log(`Status updated for Surah ${surahNumber} to ${newStatus}`);
+
+            // Update dates displayed
+            const datesElement = surahItem.querySelector('.surah-dates');
+            datesElement.innerHTML = `
+                ${progress.recitationCompletedDate ? `Recited: ${new Date(progress.recitationCompletedDate).toLocaleDateString()}` : ''}
+                ${progress.memorizedDate ? ` | Memorized: ${new Date(progress.memorizedDate).toLocaleDateString()}` : ''}
+            `;
+
+            updateOverallProgress();
+            updateMemorizationChart();
+        }
+
+        function handleNotesToggle(event) {
+            const button = event.target;
+            const surahItem = button.closest('.surah-item');
+            const notesArea = surahItem.querySelector('.surah-notes-area');
+            if (notesArea.style.display === 'none' || notesArea.style.display === '') {
+                notesArea.style.display = 'block';
+                button.textContent = 'Hide Notes';
+            } else {
+                notesArea.style.display = 'none';
+                button.textContent = 'Add/View Notes';
+            }
+        }
+
+        async function handleNotesSave(event) {
+            const textarea = event.target;
+            const surahItem = textarea.closest('.surah-item');
+            const surahNumber = parseInt(surahItem.dataset.surahNumber, 10);
+            const notes = textarea.value;
+
+            let progress = await getSurahProgress(surahNumber);
+            progress.notes = notes;
+            await saveSurahProgress(progress);
+            console.log(`Notes saved for Surah ${surahNumber}`);
+        }
+
+        async function updateOverallProgress() {
+            if (!db || surahData.length === 0) return;
+
+            const transaction = db.transaction([SURAHS_STORE], 'readonly');
+            const store = transaction.objectStore(SURAHS_STORE);
+            const request = store.getAll();
+
+            request.onsuccess = (event) => {
+                const allProgress = event.target.result;
+                const totalSurahs = surahNames.length; // Assuming all 114 Surahs are tracked
+
+                const completedRecitationCount = allProgress.filter(p => p.status === 'Completed Recitation' || p.status === 'Memorizing' || p.status === 'Memorized').length;
+                const memorizedCount = allProgress.filter(p => p.status === 'Memorized').length;
+
+                const recitationPercentage = totalSurahs > 0 ? (completedRecitationCount / totalSurahs) * 100 : 0;
+                const memorizationPercentage = totalSurahs > 0 ? (memorizedCount / totalSurahs) * 100 : 0;
+
+                const recitationBar = document.getElementById('overall-recitation-progress');
+                const memorizationBar = document.getElementById('overall-memorization-progress');
+
+                recitationBar.style.width = `${recitationPercentage.toFixed(1)}%`;
+                recitationBar.textContent = `${recitationPercentage.toFixed(1)}% Recited`;
+
+                memorizationBar.style.width = `${memorizationPercentage.toFixed(1)}%`;
+                memorizationBar.textContent = `${memorizationPercentage.toFixed(1)}% Memorized`;
+            };
+
+            request.onerror = (event) => {
+                console.error('Error fetching all surah progress for overall update:', event.target.errorCode);
+            };
+        }
+
+        async function updateMemorizationChart() {
+             if (!db || surahData.length === 0) return;
+
+            const transaction = db.transaction([SURAHS_STORE], 'readonly');
+            const store = transaction.objectStore(SURAHS_STORE);
+            const request = store.getAll();
+
+            request.onsuccess = (event) => {
+                const allProgress = event.target.result;
+                const chartContainer = document.getElementById('memorization-chart');
+                chartContainer.innerHTML = ''; // Clear existing chart
+
+                const juzProgress = Array(30).fill(0).map((_, i) => ({
+                    juz: i + 1,
+                    completedRecitationAyahs: 0,
+                    memorizedAyahs: 0,
+                    totalAyahs: 0
+                }));
+
+                // Calculate total ayahs per juz and progress
+                juzAyahRanges.forEach(juzInfo => {
+                    const juzIndex = juzInfo.juz - 1;
+                    let totalJuzAyahs = 0;
+                    let completedRecitationJuzAyahs = 0;
+                    let memorizedJuzAyahs = 0;
+
+                    // Find ayahs belonging to this juz
+                    const ayahsInJuz = surahData.filter(ayah => {
+                        const surahNum = ayah.surah;
+                        const ayahNum = ayah.ayah;
+
+                        // Check if the ayah is within the juz range
+                        if (surahNum > juzInfo.startSurah && surahNum < juzInfo.endSurah) {
+                            return true;
+                        } else if (surahNum === juzInfo.startSurah && surahNum === juzInfo.endSurah) {
+                            return ayahNum >= juzInfo.startAyah && ayahNum <= juzInfo.endAyah;
+                        } else if (surahNum === juzInfo.startSurah) {
+                            return ayahNum >= juzInfo.startAyah;
+                        } else if (surahNum === juzInfo.endSurah) {
+                            return ayahNum <= juzInfo.endAyah;
+                        }
+                        return false;
+                    });
+
+                    totalJuzAyahs = ayahsInJuz.length;
+
+                    ayahsInJuz.forEach(ayah => {
+                        const surahProgress = allProgress.find(p => p.surahNumber === ayah.surah);
+                        if (surahProgress) {
+                             if (surahProgress.status === 'Completed Recitation' || surahProgress.status === 'Memorizing' || surahProgress.status === 'Memorized') {
+                                completedRecitationJuzAyahs++;
+                            }
+                            if (surahProgress.status === 'Memorized') {
+                                memorizedJuzAyahs++;
+                            }
+                        }
+                    });
+
+                    juzProgress[juzIndex].totalAyahs = totalJuzAyahs;
+                    juzProgress[juzIndex].completedRecitationAyahs = completedRecitationJuzAyahs;
+                    juzProgress[juzIndex].memorizedAyahs = memorizedJuzAyahs;
+                });
+
+
+                // Render chart bars
+                juzProgress.forEach(juz => {
+                    const recitationPercentage = juz.totalAyahs > 0 ? (juz.completedRecitationAyahs / juz.totalAyahs) * 100 : 0;
+                    const memorizationPercentage = juz.totalAyahs > 0 ? (juz.memorizedAyahs / juz.totalAyahs) * 100 : 0;
+
+                    const juzElement = document.createElement('div');
+                    juzElement.innerHTML = `
+                        <div class="chart-label">Juz ${juz.juz} (${juz.completedRecitationAyahs}/${juz.totalAyahs} Ayahs Recited, ${juz.memorizedAyahs}/${juz.totalAyahs} Ayahs Memorized)</div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar completed" style="width: ${recitationPercentage.toFixed(1)}%;"></div>
+                        </div>
+                         <div class="progress-bar-container">
+                            <div class="progress-bar memorized" style="width: ${memorizationPercentage.toFixed(1)}%;"></div>
+                        </div>
+                    `;
+                    chartContainer.appendChild(juzElement);
+                });
+            };
+
+            request.onerror = (event) => {
+                console.error('Error fetching all surah progress for chart update:', event.target.errorCode);
+            };
+        }
+
+
+        function setupEventListeners() {
+            document.getElementById('add-log-btn').addEventListener('click', addDailyLogEntry);
+            document.getElementById('backup-btn').addEventListener('click', backupData);
+            document.getElementById('restore-file').addEventListener('change', restoreData);
+
+            // Load goals on startup
+            loadGoals();
+
+            // Save goals on blur
+            document.getElementById('recitation-goal').addEventListener('blur', saveGoals);
+            document.getElementById('memorization-goal').addEventListener('blur', saveGoals);
+            document.getElementById('goal-deadline').addEventListener('blur', saveGoals);
+        }
+
+        async function addDailyLogEntry() {
+            const pagesReadInput = document.getElementById('pages-read');
+            const ayahsReadInput = document.getElementById('ayahs-read');
+            const pagesRead = parseInt(pagesReadInput.value, 10) || 0;
+            const ayahsRead = parseInt(ayahsReadInput.value, 10) || 0;
+
+            if (pagesRead <= 0 && ayahsRead <= 0) {
+                alert('Please enter pages or ayahs read.');
+                return;
+            }
+
+            const now = new Date();
+            const timestamp = now.getTime();
+            const dateString = now.toLocaleDateString();
+
+            const logEntry = {
+                timestamp: timestamp,
+                date: dateString,
+                pages: pagesRead,
+                ayahs: ayahsRead
+            };
+
+            if (!db) {
+                console.error('Database not initialized. Cannot save daily log.');
+                alert('Failed to save daily log. Database not ready.');
+                return;
+            }
+
+            const transaction = db.transaction([DAILY_LOG_STORE], 'readwrite');
+            const store = transaction.objectStore(DAILY_LOG_STORE);
+            const request = store.add(logEntry);
+
+            request.onsuccess = () => {
+                console.log('Daily log entry added');
+                renderDailyLogEntry(logEntry);
+                pagesReadInput.value = 0;
+                ayahsReadInput.value = 0;
+            };
+
+            request.onerror = (event) => {
+                console.error('Error adding daily log entry:', event.target.errorCode);
+                alert('Failed to save daily log entry.');
+            };
+        }
+
+        function renderDailyLogEntry(entry) {
+            const logEntriesElement = document.getElementById('daily-log-entries');
+            const entryElement = document.createElement('div');
+            entryElement.classList.add('log-entry');
+            entryElement.innerHTML = `
+                <strong>${entry.date}:</strong> Read ${entry.pages} pages, ${entry.ayahs} ayahs.
+            `;
+            // Add new entries at the top
+            logEntriesElement.prepend(entryElement);
+        }
+
+        async function loadDailyLog() {
+             if (!db) {
+                console.error('Database not initialized. Cannot load daily log.');
+                return;
+            }
+            const logEntriesElement = document.getElementById('daily-log-entries');
+            logEntriesElement.innerHTML = ''; // Clear existing entries
+
+            const transaction = db.transaction([DAILY_LOG_STORE], 'readonly');
+            const store = transaction.objectStore(DAILY_LOG_STORE);
+            const request = store.getAll();
+
+            request.onsuccess = (event) => {
+                const entries = event.target.result;
+                // Sort entries by timestamp descending
+                entries.sort((a, b) => b.timestamp - a.timestamp);
+                entries.forEach(entry => renderDailyLogEntry(entry));
+            };
+
+            request.onerror = (event) => {
+                console.error('Error loading daily log:', event.target.errorCode);
+            };
+        }
+
+        async function saveGoals() {
+            const recitationGoal = document.getElementById('recitation-goal').value;
+            const memorizationGoal = document.getElementById('memorization-goal').value;
+            const goalDeadline = document.getElementById('goal-deadline').value;
+
+            const goals = {
+                id: 'userGoals', // Use a fixed ID for a single goals object
+                recitationGoal: recitationGoal,
+                memorizationGoal: memorizationGoal,
+                goalDeadline: goalDeadline
+            };
+
+             if (!db) {
+                console.error('Database not initialized. Cannot save goals.');
+                return;
+            }
+
+            const transaction = db.transaction([GOALS_STORE], 'readwrite');
+            const store = transaction.objectStore(GOALS_STORE);
+            const request = store.put(goals);
+
+            request.onsuccess = () => {
+                console.log('Goals saved');
+            };
+
+            request.onerror = (event) => {
+                console.error('Error saving goals:', event.target.errorCode);
+            };
+        }
+
+        async function loadGoals() {
+             if (!db) {
+                console.error('Database not initialized. Cannot load goals.');
+                return;
+            }
+            const transaction = db.transaction([GOALS_STORE], 'readonly');
+            const store = transaction.objectStore(GOALS_STORE);
+            const request = store.get('userGoals'); // Get the single goals object
+
+            request.onsuccess = (event) => {
+                const goals = event.target.result;
+                if (goals) {
+                    document.getElementById('recitation-goal').value = goals.recitationGoal || '';
+                    document.getElementById('memorization-goal').value = goals.memorizationGoal || '';
+                    document.getElementById('goal-deadline').value = goals.goalDeadline || '';
+                }
+                 console.log('Goals loaded');
+            };
+
+            request.onerror = (event) => {
+                console.error('Error loading goals:', event.target.errorCode);
+            };
+        }
+
+
+        async function backupData() {
+            if (!db) {
+                alert('Database not ready. Cannot backup data.');
+                return;
+            }
+
+            try {
+                const surahsTransaction = db.transaction([SURAHS_STORE], 'readonly');
+                const surahsStore = surahsTransaction.objectStore(SURAHS_STORE);
+                const surahsRequest = surahsStore.getAll();
+
+                const dailyLogTransaction = db.transaction([DAILY_LOG_STORE], 'readonly');
+                const dailyLogStore = dailyLogTransaction.objectStore(DAILY_LOG_STORE);
+                const dailyLogRequest = dailyLogStore.getAll();
+
+                 const goalsTransaction = db.transaction([GOALS_STORE], 'readonly');
+                const goalsStore = goalsTransaction.objectStore(GOALS_STORE);
+                const goalsRequest = goalsStore.get('userGoals');
+
+
+                const surahsData = await new Promise((resolve, reject) => {
+                    surahsRequest.onsuccess = (event) => resolve(event.target.result);
+                    surahsRequest.onerror = (event) => reject(event.target.error);
+                });
+
+                const dailyLogData = await new Promise((resolve, reject) => {
+                    dailyLogRequest.onsuccess = (event) => resolve(event.target.result);
+                    dailyLogRequest.onerror = (event) => reject(event.target.error);
+                });
+
+                 const goalsData = await new Promise((resolve, reject) => {
+                    goalsRequest.onsuccess = (event) => resolve(event.target.result);
+                    goalsRequest.onerror = (event) => reject(event.target.error);
+                });
+
+
+                const backup = {
+                    surahs: surahsData,
+                    dailyLog: dailyLogData,
+                    goals: goalsData || { id: 'userGoals' } // Ensure goals object exists even if empty
+                };
+
+                const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'quran_journey_backup.json';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                console.log('Backup created successfully.');
+            } catch (error) {
+                console.error('Backup failed:', error);
+                alert('Failed to create backup.');
+            }
+        }
+
+        function restoreData(event) {
+            const file = event.target.files[0];
+            if (!file) {
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                try {
+                    const backup = JSON.parse(e.target.result);
+
+                    if (!db) {
+                        alert('Database not ready. Cannot restore data.');
+                        return;
+                    }
+
+                    // Clear existing data before restoring
+                    const clearTransaction = db.transaction([SURAHS_STORE, DAILY_LOG_STORE, GOALS_STORE], 'readwrite');
+                    const clearSurahsStore = clearTransaction.objectStore(SURAHS_STORE);
+                    const clearDailyLogStore = clearTransaction.objectStore(DAILY_LOG_STORE);
+                    const clearGoalsStore = clearTransaction.objectStore(GOALS_STORE);
+
+                    await new Promise((resolve, reject) => {
+                        const surahsClearReq = clearSurahsStore.clear();
+                        const dailyLogClearReq = clearDailyLogStore.clear();
+                        const goalsClearReq = clearGoalsStore.clear();
+
+                        let completed = 0;
+                        const checkCompletion = () => {
+                            completed++;
+                            if (completed === 3) resolve();
+                        };
+
+                        surahsClearReq.onsuccess = checkCompletion;
+                        surahsClearReq.onerror = reject;
+                        dailyLogClearReq.onsuccess = checkCompletion;
+                        dailyLogClearReq.onerror = reject;
+                        goalsClearReq.onsuccess = checkCompletion;
+                        goalsClearReq.onerror = reject;
+                    });
+                    console.log('Existing data cleared.');
+
+
+                    // Restore data
+                    const restoreTransaction = db.transaction([SURAHS_STORE, DAILY_LOG_STORE, GOALS_STORE], 'readwrite');
+                    const surahsStore = restoreTransaction.objectStore(SURAHS_STORE);
+                    const dailyLogStore = restoreTransaction.objectStore(DAILY_LOG_STORE);
+                    const goalsStore = restoreTransaction.objectStore(GOALS_STORE);
+
+                    if (backup.surahs && Array.isArray(backup.surahs)) {
+                        for (const surah of backup.surahs) {
+                            surahsStore.put(surah);
+                        }
+                    }
+
+                    if (backup.dailyLog && Array.isArray(backup.dailyLog)) {
+                        for (const logEntry of backup.dailyLog) {
+                            dailyLogStore.add(logEntry); // Use add for daily log as timestamp is key
+                        }
+                    }
+
+                     if (backup.goals && typeof backup.goals === 'object') {
+                        goalsStore.put(backup.goals);
+                    }
+
+
+                    restoreTransaction.oncomplete = () => {
+                        console.log('Restore complete.');
+                        alert('Data restored successfully. The app will now reload.');
+                        window.location.reload(); // Reload to reflect changes
+                    };
+
+                    restoreTransaction.onerror = (event) => {
+                        console.error('Restore failed:', event.target.error);
+                        alert('Failed to restore data.');
+                    };
+
+                } catch (error) {
+                    console.error('Error parsing or restoring backup:', error);
+                    alert('Invalid backup file or restore failed.');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+
+    </script>
+
+</body>
+</html>

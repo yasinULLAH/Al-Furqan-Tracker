@@ -1,0 +1,1872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Quran Journey</title>
+    <style>
+        /* Author: Yasin Ullah. Pakistani. */
+        :root {
+            --font-family-sans: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-family-arabic: 'KFGQPC Uthman Taha Naskh', 'Noto Naskh Arabic', 'Traditional Arabic', serif;
+
+            /* Default Theme: Oasis */
+            --bg-color: #f0f4f0; /* Light greenish beige */
+            --primary-color: #00695C; /* Teal */
+            --secondary-color: #4DB6AC; /* Lighter Teal */
+            --accent-color: #FFCA28; /* Amber/Gold */
+            --text-color: #263238; /* Dark Slate Grey */
+            --card-bg-color: #ffffff;
+            --border-color: #B2DFDB; /* Light Teal */
+            --header-bg-color: #004D40; /* Darker Teal */
+            --header-text-color: #ffffff;
+            --button-bg-color: var(--primary-color);
+            --button-text-color: #ffffff;
+            --button-hover-bg-color: var(--secondary-color);
+            --link-color: var(--primary-color);
+            --futuristic-glow: 0 0 5px var(--accent-color), 0 0 10px var(--accent-color), 0 0 15px var(--accent-color);
+            --sacred-geometry-opacity: 0.05;
+        }
+
+        [data-theme="dawn"] {
+            --bg-color: #E3F2FD; /* Light Blue */
+            --primary-color: #1976D2; /* Medium Blue */
+            --secondary-color: #64B5F6; /* Lighter Blue */
+            --accent-color: #FFB74D; /* Orange */
+            --text-color: #212121; /* Dark Grey */
+            --card-bg-color: #ffffff;
+            --border-color: #90CAF9; /* Light Blue */
+            --header-bg-color: #0D47A1; /* Dark Blue */
+        }
+
+        [data-theme="twilight"] {
+            --bg-color: #263238; /* Dark Slate Grey */
+            --primary-color: #5E35B1; /* Deep Purple */
+            --secondary-color: #7E57C2; /* Lighter Purple */
+            --accent-color: #00BCD4; /* Cyan */
+            --text-color: #ECEFF1; /* Light Grey */
+            --card-bg-color: #37474F; /* Medium Slate Grey */
+            --border-color: #455A64; /* Grey */
+            --header-bg-color: #311B92; /* Darker Purple */
+            --button-text-color: #ECEFF1;
+        }
+        
+        body {
+            font-family: var(--font-family-sans);
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        header {
+            background-color: var(--header-bg-color);
+            color: var(--header-text-color);
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        nav {
+            background-color: var(--secondary-color);
+            padding: 0.5rem 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        nav ul li {
+            margin: 0.25rem 0.5rem;
+        }
+        nav ul li button {
+            background: none;
+            border: none;
+            color: var(--header-text-color);
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        nav ul li button:hover, nav ul li button.active {
+            background-color: var(--primary-color);
+        }
+
+        main {
+            flex-grow: 1;
+            padding: 1rem;
+            position: relative;
+            overflow: hidden; /* For pseudo-element background */
+        }
+        main::before { /* Sacred geometry hint */
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12.5 0L0 12.5V87.5L12.5 100H87.5L100 87.5V12.5L87.5 0H12.5ZM18.75 6.25H81.25L93.75 18.75V81.25L81.25 93.75H18.75L6.25 81.25V18.75L18.75 6.25Z M50 12.5L12.5 50L50 87.5L87.5 50L50 12.5ZM50 25L75 50L50 75L25 50L50 25Z' fill='%23000' fill-opacity='1'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            opacity: var(--sacred-geometry-opacity);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+
+        .view { display: none; }
+        .view.active { display: block; }
+
+        .card {
+            background-color: var(--card-bg-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+        }
+        .card h2 {
+            margin-top: 0;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 0.5rem;
+        }
+
+        button, input[type="submit"], input[type="file"]::file-selector-button {
+            background-color: var(--button-bg-color);
+            color: var(--button-text-color);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.2s, box-shadow 0.2s;
+        }
+        button:hover, input[type="submit"]:hover, input[type="file"]::file-selector-button:hover {
+            background-color: var(--button-hover-bg-color);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        button.secondary {
+            background-color: var(--secondary-color);
+            color: var(--header-text-color);
+        }
+        button.secondary:hover {
+            background-color: var(--primary-color);
+        }
+        button.danger {
+            background-color: #D32F2F; /* Red */
+        }
+        button.danger:hover {
+            background-color: #C62828; /* Darker Red */
+        }
+
+        input[type="text"], input[type="date"], input[type="number"], select, textarea {
+            width: calc(100% - 22px); /* Full width minus padding and border */
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1rem;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .surah-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .surah-list-item:hover {
+            background-color: var(--secondary-color);
+            color: var(--header-text-color);
+        }
+        .surah-list-item:last-child { border-bottom: none; }
+        .surah-name { font-size: 1.1rem; }
+        .surah-status {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: white;
+        }
+        .status-NotStarted { background-color: #757575; /* Grey */ }
+        .status-Reading { background-color: #42A5F5; /* Blue */ }
+        .status-CompletedRecitation { background-color: #66BB6A; /* Green */ }
+        .status-Memorizing { background-color: #FFCA28; /* Amber */ color: #333 !important; }
+        .status-Memorized { background-color: #AB47BC; /* Purple */ }
+
+        .progress-bar-container {
+            width: 100%;
+            background-color: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            height: 20px;
+            margin: 0.5rem 0;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary-color);
+            text-align: center;
+            color: white;
+            font-size: 0.8rem;
+            line-height: 20px;
+            transition: width 0.5s ease-in-out;
+        }
+        .progress-bar.memorized { background-color: #AB47BC; }
+        .progress-bar.memorizing { background-color: #FFCA28; color: #333; }
+        .progress-bar.completed_recitation { background-color: #66BB6A; }
+        .progress-bar.reading { background-color: #42A5F5; }
+
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+        }
+        .modal-content {
+            background-color: var(--card-bg-color);
+            margin: 10% auto;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            width: 80%;
+            max-width: 600px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        .modal-close {
+            color: var(--text-color);
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .modal-close:hover, .modal-close:focus {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .ayah-display {
+            font-family: var(--font-family-arabic);
+            font-size: 1.5rem;
+            direction: rtl;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: var(--bg-color);
+        }
+        .translation-display {
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: var(--bg-color);
+            direction: rtl; /* For Urdu */
+            text-align: right;
+        }
+
+        .filter-controls {
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .filter-controls select, .filter-controls input {
+            margin-bottom: 0; /* Override general margin */
+            flex-grow: 1;
+        }
+
+        .juz-item {
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
+        }
+        .juz-header {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        .juz-surah-list span {
+            display: inline-block;
+            padding: 0.2rem 0.4rem;
+            margin: 0.1rem;
+            border-radius: 3px;
+            font-size: 0.8em;
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 300px; /* Adjust as needed */
+            background-color: var(--card-bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+        .chart-bar {
+            display: inline-block;
+            background-color: var(--primary-color);
+            margin-right: 2px;
+            position: relative; /* For tooltips or labels */
+        }
+        .chart-bar-label {
+            font-size: 0.7rem;
+            text-align: center;
+            position: absolute;
+            bottom: -1.5em;
+            width: 100%;
+            left: 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: var(--header-bg-color);
+            color: var(--header-text-color);
+            font-size: 0.8rem;
+            margin-top: auto; /* Pushes footer to bottom */
+        }
+        footer p { margin: 0.2rem 0; }
+        footer a { color: var(--accent-color); text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            header h1 { font-size: 1.5rem; }
+            nav ul { flex-direction: column; align-items: center; }
+            nav ul li { margin: 0.25rem 0; width: 90%; text-align: center;}
+            nav ul li button { width: 100%; }
+            .modal-content { width: 90%; margin: 20% auto; }
+            .filter-controls { flex-direction: column; }
+        }
+
+        #loadingIndicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            z-index: 2000; /* Above modal */
+            display: none; /* Hidden by default */
+        }
+        #loadingIndicator.show {
+            display: flex;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>My Quran Journey</h1>
+        </header>
+
+        <nav>
+            <ul>
+                <li><button data-view="dashboard" class="nav-button active">Dashboard</button></li>
+                <li><button data-view="surahs" class="nav-button">Surahs</button></li>
+                <li><button data-view="juz" class="nav-button">Juz Progress</button></li>
+                <li><button data-view="goals" class="nav-button">Goals</button></li>
+                <li><button data-view="log" class="nav-button">Reading Log</button></li>
+                <li><button data-view="settings" class="nav-button">Settings</button></li>
+            </ul>
+        </nav>
+
+        <main>
+            <!-- Dashboard View -->
+            <div id="dashboardView" class="view active card">
+                <h2>Dashboard</h2>
+                <p>Welcome to your Quran Journey!</p>
+                <div class="card">
+                    <h3>Overall Progress</h3>
+                    <label>Recitation Completion:</label>
+                    <div class="progress-bar-container">
+                        <div id="overallRecitationProgress" class="progress-bar completed_recitation" style="width: 0%;">0%</div>
+                    </div>
+                    <label>Memorization Completion:</label>
+                    <div class="progress-bar-container">
+                        <div id="overallMemorizationProgress" class="progress-bar memorized" style="width: 0%;">0%</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Quick Actions</h3>
+                    <button id="quickAddLogBtn">Add to Daily Log</button>
+                    <button id="quickSetGoalBtn">Set a New Goal</button>
+                </div>
+                 <div class="card">
+                    <h3>Memorization Status Chart</h3>
+                    <div id="memorizationChartContainer" class="chart-container">
+                        <!-- Chart will be rendered here by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Surahs View -->
+            <div id="surahsView" class="view card">
+                <h2>Surahs</h2>
+                <div class="filter-controls">
+                    <input type="text" id="surahSearchInput" placeholder="Search Surah by name or number...">
+                    <select id="surahFilterStatus">
+                        <option value="all">All Statuses</option>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Reading">Reading</option>
+                        <option value="Completed Recitation">Completed Recitation</option>
+                        <option value="Memorizing">Memorizing</option>
+                        <option value="Memorized">Memorized</option>
+                    </select>
+                </div>
+                <div id="surahListContainer">
+                    <!-- Surah list will be populated by JS -->
+                </div>
+            </div>
+
+            <!-- Juz Progress View -->
+            <div id="juzView" class="view card">
+                <h2>Juz Progress</h2>
+                <div id="juzProgressContainer">
+                    <!-- Juz progress will be populated by JS -->
+                </div>
+            </div>
+
+            <!-- Goals View -->
+            <div id="goalsView" class="view card">
+                <h2>Personal Goals</h2>
+                <button id="addGoalBtn">Add New Goal</button>
+                <div id="goalsListContainer">
+                    <!-- Goals list will be populated by JS -->
+                </div>
+            </div>
+
+            <!-- Reading Log View -->
+            <div id="logView" class="view card">
+                <h2>Daily Reading Log</h2>
+                <button id="addLogEntryBtn">Add Log Entry</button>
+                <div id="readingLogContainer">
+                    <!-- Reading log entries will be populated by JS -->
+                </div>
+            </div>
+
+            <!-- Settings View -->
+            <div id="settingsView" class="view card">
+                <h2>Settings</h2>
+                <div class="card">
+                    <h3>Quran Data (data.AM)</h3>
+                    <p>Load your Quran data file (format: `[Arabic Ayah] ترجمہ: [Urdu Translation]<br/>س SSS آ AAA`).</p>
+                    <input type="file" id="quranDataFile" accept=".AM">
+                    <button id="loadQuranDataBtn">Load File</button>
+                    <p id="quranDataStatus">Status: Not loaded.</p>
+                </div>
+                <div class="card">
+                    <h3>Data Management</h3>
+                    <button id="backupDataBtn">Backup Data</button>
+                    <input type="file" id="restoreDataFile" accept=".json" style="display: none;">
+                    <button id="restoreDataBtn">Restore Data</button>
+                </div>
+                <div class="card">
+                    <h3>Theme</h3>
+                    <select id="themeSelector">
+                        <option value="oasis">Oasis (Default)</option>
+                        <option value="dawn">Dawn</option>
+                        <option value="twilight">Twilight</option>
+                    </select>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; <span id="currentYear"></span> My Quran Journey. Developed by Yasin Ullah (Pakistani).</p>
+            <p><a href="https://github.com/yasinULLAH/">GitHub</a> | Inspired by Islamic Art & Sacred Geometry</p>
+        </footer>
+    </div>
+
+    <!-- Surah Detail Modal -->
+    <div id="surahDetailModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" id="surahDetailModalClose">&times;</span>
+            <h2 id="surahModalTitle">Surah Detail</h2>
+            <input type="hidden" id="modalSurahNumber">
+            <div>
+                <label for="surahStatusSelect">Status:</label>
+                <select id="surahStatusSelect">
+                    <option value="Not Started">Not Started</option>
+                    <option value="Reading">Reading</option>
+                    <option value="Completed Recitation">Completed Recitation</option>
+                    <option value="Memorizing">Memorizing</option>
+                    <option value="Memorized">Memorized</option>
+                </select>
+            </div>
+            <div>
+                <label for="recitationDateInput">Recitation Completion Date:</label>
+                <input type="date" id="recitationDateInput">
+            </div>
+            <div>
+                <label for="memorizationDateInput">Memorization Date:</label>
+                <input type="date" id="memorizationDateInput">
+            </div>
+            <div>
+                <label for="surahNotesInput">Notes (difficult Ayahs, reflections):</label>
+                <textarea id="surahNotesInput"></textarea>
+            </div>
+            <button id="saveSurahDetailsBtn">Save Changes</button>
+            <hr>
+            <h3>Ayahs (Sample)</h3>
+            <div id="surahAyahsPreviewContainer">
+                <!-- Ayahs will be loaded here if quranData is available -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Goal Modal -->
+    <div id="goalModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" id="goalModalClose">&times;</span>
+            <h2 id="goalModalTitle">Add/Edit Goal</h2>
+            <input type="hidden" id="goalIdInput">
+            <div>
+                <label for="goalTypeSelect">Goal Type:</label>
+                <select id="goalTypeSelect">
+                    <option value="recitation_surah">Recite Surah</option>
+                    <option value="memorization_surah">Memorize Surah</option>
+                    <option value="recitation_juz">Recite Juz</option>
+                    <option value="memorization_juz">Memorize Juz</option>
+                    <option value="reading_ayahs_daily">Read Ayahs Daily</option>
+                </select>
+            </div>
+            <div id="goalTargetSurahDiv">
+                <label for="goalTargetSurahSelect">Target Surah:</label>
+                <select id="goalTargetSurahSelect"> <!-- Options populated by JS --></select>
+            </div>
+            <div id="goalTargetJuzDiv" style="display:none;">
+                <label for="goalTargetJuzSelect">Target Juz:</label>
+                <select id="goalTargetJuzSelect"> <!-- Options 1-30 --></select>
+            </div>
+            <div id="goalTargetAyahsDiv" style="display:none;">
+                <label for="goalTargetAyahsInput">Number of Ayahs:</label>
+                <input type="number" id="goalTargetAyahsInput" min="1">
+            </div>
+            <div>
+                <label for="goalDeadlineInput">Deadline (Optional):</label>
+                <input type="date" id="goalDeadlineInput">
+            </div>
+            <button id="saveGoalBtn">Save Goal</button>
+        </div>
+    </div>
+
+    <!-- Reading Log Modal -->
+    <div id="logEntryModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" id="logEntryModalClose">&times;</span>
+            <h2>Add Reading Log Entry</h2>
+            <div>
+                <label for="logDateInput">Date:</label>
+                <input type="date" id="logDateInput" required>
+            </div>
+            <div>
+                <label for="logSurahSelect">Surah:</label>
+                <select id="logSurahSelect" required> <!-- Options populated by JS --></select>
+            </div>
+            <div>
+                <label for="logStartAyahInput">Start Ayah:</label>
+                <input type="number" id="logStartAyahInput" min="1" required>
+            </div>
+            <div>
+                <label for="logEndAyahInput">End Ayah:</label>
+                <input type="number" id="logEndAyahInput" min="1" required>
+            </div>
+            <div>
+                <label for="logMinutesInput">Minutes Spent (Optional):</label>
+                <input type="number" id="logMinutesInput" min="1">
+            </div>
+            <div>
+                <label for="logNotesInput">Notes (Optional):</label>
+                <textarea id="logNotesInput"></textarea>
+            </div>
+            <button id="saveLogEntryBtn">Save Entry</button>
+        </div>
+    </div>
+    
+    <div id="loadingIndicator">
+        <div id="loadingText">Loading...</div>
+    </div>
+
+    <script>
+        // Author: Yasin Ullah. Pakistani.
+        (function() {
+            'use strict';
+
+            const DB_NAME = 'MyQuranJourneyDB';
+            const DB_VERSION = 2; // Incremented due to schema changes/additions
+            let db;
+
+            // --- Constants: Surah and Juz Data ---
+            const surahDataList = [
+                { id: 1, name: "Al-Fatiha", arabicName: "ٱلْفَاتِحَة", tname: "Al-Fātiḥah", ename: "The Opening", type: "Meccan", ayahs: 7, order: 5 },
+                { id: 2, name: "Al-Baqarah", arabicName: "ٱلْبَقَرَة", tname: "Al-Baqarah", ename: "The Cow", type: "Medinan", ayahs: 286, order: 87 },
+                { id: 3, name: "Aal-E-Imran", arabicName: "آلِ عِمْرَان", tname: "Āl ʿImrān", ename: "Family of Imran", type: "Medinan", ayahs: 200, order: 89 },
+                { id: 4, name: "An-Nisa", arabicName: "ٱلنِّسَاء", tname: "An-Nisāʾ", ename: "The Women", type: "Medinan", ayahs: 176, order: 92 },
+                { id: 5, name: "Al-Ma'idah", arabicName: "ٱلْمَائِدَة", tname: "Al-Māʾidah", ename: "The Table Spread", type: "Medinan", ayahs: 120, order: 112 },
+                { id: 6, name: "Al-An'am", arabicName: "ٱلْأَنْعَام", tname: "Al-Anʿām", ename: "The Cattle", type: "Meccan", ayahs: 165, order: 55 },
+                { id: 7, name: "Al-A'raf", arabicName: "ٱلْأَعْرَاف", tname: "Al-Aʿrāf", ename: "The Heights", type: "Meccan", ayahs: 206, order: 39 },
+                { id: 8, name: "Al-Anfal", arabicName: "ٱلْأَنْفَال", tname: "Al-Anfāl", ename: "The Spoils of War", type: "Medinan", ayahs: 75, order: 88 },
+                { id: 9, name: "At-Tawbah", arabicName: "ٱلتَّوْبَة", tname: "At-Tawbah", ename: "The Repentance", type: "Medinan", ayahs: 129, order: 113 },
+                { id: 10, name: "Yunus", arabicName: "يُونُس", tname: "Yūnus", ename: "Jonah", type: "Meccan", ayahs: 109, order: 51 },
+                { id: 11, name: "Hud", arabicName: "هُود", tname: "Hūd", ename: "Hud", type: "Meccan", ayahs: 123, order: 52 },
+                { id: 12, name: "Yusuf", arabicName: "يُوسُف", tname: "Yūsuf", ename: "Joseph", type: "Meccan", ayahs: 111, order: 53 },
+                { id: 13, name: "Ar-Ra'd", arabicName: "ٱلرَّعْد", tname: "Ar-Raʿd", ename: "The Thunder", type: "Medinan", ayahs: 43, order: 96 },
+                { id: 14, name: "Ibrahim", arabicName: "إِبْرَاهِيم", tname: "Ibrāhīm", ename: "Abraham", type: "Meccan", ayahs: 52, order: 72 },
+                { id: 15, name: "Al-Hijr", arabicName: "ٱلْحِجْر", tname: "Al-Ḥijr", ename: "The Rocky Tract", type: "Meccan", ayahs: 99, order: 54 },
+                { id: 16, name: "An-Nahl", arabicName: "ٱلنَّحْل", tname: "An-Naḥl", ename: "The Bee", type: "Meccan", ayahs: 128, order: 70 },
+                { id: 17, name: "Al-Isra", arabicName: "ٱلْإِسْرَاء", tname: "Al-Isrāʾ", ename: "The Night Journey", type: "Meccan", ayahs: 111, order: 50 },
+                { id: 18, name: "Al-Kahf", arabicName: "ٱلْكَهْف", tname: "Al-Kahf", ename: "The Cave", type: "Meccan", ayahs: 110, order: 69 },
+                { id: 19, name: "Maryam", arabicName: "مَرْيَم", tname: "Maryam", ename: "Mary", type: "Meccan", ayahs: 98, order: 44 },
+                { id: 20, name: "Taha", arabicName: "طه", tname: "Ṭāhā", ename: "Ta-Ha", type: "Meccan", ayahs: 135, order: 45 },
+                { id: 21, name: "Al-Anbiya", arabicName: "ٱلْأَنْبِيَاء", tname: "Al-Anbiyāʾ", ename: "The Prophets", type: "Meccan", ayahs: 112, order: 73 },
+                { id: 22, name: "Al-Hajj", arabicName: "ٱلْحَجّ", tname: "Al-Ḥajj", ename: "The Pilgrimage", type: "Medinan", ayahs: 78, order: 103 },
+                { id: 23, name: "Al-Mu'minun", arabicName: "ٱلْمُؤْمِنُون", tname: "Al-Muʾminūn", ename: "The Believers", type: "Meccan", ayahs: 118, order: 74 },
+                { id: 24, name: "An-Nur", arabicName: "ٱلنُّور", tname: "An-Nūr", ename: "The Light", type: "Medinan", ayahs: 64, order: 102 },
+                { id: 25, name: "Al-Furqan", arabicName: "ٱلْفُرْقَان", tname: "Al-Furqān", ename: "The Criterion", type: "Meccan", ayahs: 77, order: 42 },
+                { id: 26, name: "Ash-Shu'ara", arabicName: "ٱلشُّعَرَاء", tname: "Ash-Shuʿarāʾ", ename: "The Poets", type: "Meccan", ayahs: 227, order: 47 },
+                { id: 27, name: "An-Naml", arabicName: "ٱلنَّمْل", tname: "An-Naml", ename: "The Ant", type: "Meccan", ayahs: 93, order: 48 },
+                { id: 28, name: "Al-Qasas", arabicName: "ٱلْقَصَص", tname: "Al-Qaṣaṣ", ename: "The Stories", type: "Meccan", ayahs: 88, order: 49 },
+                { id: 29, name: "Al-Ankabut", arabicName: "ٱلْعَنْكَبُوت", tname: "Al-ʿAnkabūt", ename: "The Spider", type: "Meccan", ayahs: 69, order: 85 },
+                { id: 30, name: "Ar-Rum", arabicName: "ٱلرُّوم", tname: "Ar-Rūm", ename: "The Romans", type: "Meccan", ayahs: 60, order: 84 },
+                { id: 31, name: "Luqman", arabicName: "لُقْمَان", tname: "Luqmān", ename: "Luqman", type: "Meccan", ayahs: 34, order: 57 },
+                { id: 32, name: "As-Sajdah", arabicName: "ٱلسَّجْدَة", tname: "As-Sajdah", ename: "The Prostration", type: "Meccan", ayahs: 30, order: 75 },
+                { id: 33, name: "Al-Ahzab", arabicName: "ٱلْأَحْزَاب", tname: "Al-Aḥzāb", ename: "The Combined Forces", type: "Medinan", ayahs: 73, order: 90 },
+                { id: 34, name: "Saba", arabicName: "سَبَأ", tname: "Sabaʾ", ename: "Sheba", type: "Meccan", ayahs: 54, order: 58 },
+                { id: 35, name: "Fatir", arabicName: "فَاطِر", tname: "Fāṭir", ename: "Originator", type: "Meccan", ayahs: 45, order: 43 },
+                { id: 36, name: "Ya-Sin", arabicName: "يس", tname: "Yā-Sīn", ename: "Ya Sin", type: "Meccan", ayahs: 83, order: 41 },
+                { id: 37, name: "As-Saffat", arabicName: "ٱلصَّافَّات", tname: "Aṣ-Ṣāffāt", ename: "Those who set the Ranks", type: "Meccan", ayahs: 182, order: 56 },
+                { id: 38, name: "Sad", arabicName: "ص", tname: "Ṣād", ename: "The Letter Sad", type: "Meccan", ayahs: 88, order: 38 },
+                { id: 39, name: "Az-Zumar", arabicName: "ٱلزُّمَر", tname: "Az-Zumar", ename: "The Troops", type: "Meccan", ayahs: 75, order: 59 },
+                { id: 40, name: "Ghafir", arabicName: "غَافِر", tname: "Ghāfir", ename: "The Forgiver", type: "Meccan", ayahs: 85, order: 60 },
+                { id: 41, name: "Fussilat", arabicName: "فُصِّلَتْ", tname: "Fuṣṣilat", ename: "Explained in Detail", type: "Meccan", ayahs: 54, order: 61 },
+                { id: 42, name: "Ash-Shura", arabicName: "ٱلشُّورَىٰ", tname: "Ash-Shūrā", ename: "The Consultation", type: "Meccan", ayahs: 53, order: 62 },
+                { id: 43, name: "Az-Zukhruf", arabicName: "ٱلزُّخْرُف", tname: "Az-Zukhruf", ename: "The Ornaments of Gold", type: "Meccan", ayahs: 89, order: 63 },
+                { id: 44, name: "Ad-Dukhan", arabicName: "ٱلدُّخَان", tname: "Ad-Dukhān", ename: "The Smoke", type: "Meccan", ayahs: 59, order: 64 },
+                { id: 45, name: "Al-Jathiyah", arabicName: "ٱلْجَاثِيَة", tname: "Al-Jāthiyah", ename: "The Crouching", type: "Meccan", ayahs: 37, order: 65 },
+                { id: 46, name: "Al-Ahqaf", arabicName: "ٱلْأَحْقَاف", tname: "Al-Aḥqāf", ename: "The Wind-Curved Sandhills", type: "Meccan", ayahs: 35, order: 66 },
+                { id: 47, name: "Muhammad", arabicName: "مُحَمَّد", tname: "Muḥammad", ename: "Muhammad", type: "Medinan", ayahs: 38, order: 95 },
+                { id: 48, name: "Al-Fath", arabicName: "ٱلْفَتْح", tname: "Al-Fatḥ", ename: "The Victory", type: "Medinan", ayahs: 29, order: 111 },
+                { id: 49, name: "Al-Hujurat", arabicName: "ٱلْحُجُرَات", tname: "Al-Ḥujurāt", ename: "The Rooms", type: "Medinan", ayahs: 18, order: 106 },
+                { id: 50, name: "Qaf", arabicName: "ق", tname: "Qāf", ename: "The Letter Qaf", type: "Meccan", ayahs: 45, order: 34 },
+                { id: 51, name: "Adh-Dhariyat", arabicName: "ٱلذَّارِيَات", tname: "Adh-Dhāriyāt", ename: "The Winnowing Winds", type: "Meccan", ayahs: 60, order: 67 },
+                { id: 52, name: "At-Tur", arabicName: "ٱلطُّور", tname: "Aṭ-Ṭūr", ename: "The Mount", type: "Meccan", ayahs: 49, order: 76 },
+                { id: 53, name: "An-Najm", arabicName: "ٱلنَّجْم", tname: "An-Najm", ename: "The Star", type: "Meccan", ayahs: 62, order: 23 },
+                { id: 54, name: "Al-Qamar", arabicName: "ٱلْقَمَر", tname: "Al-Qamar", ename: "The Moon", type: "Meccan", ayahs: 55, order: 37 },
+                { id: 55, name: "Ar-Rahman", arabicName: "ٱلرَّحْمَٰن", tname: "Ar-Raḥmān", ename: "The Beneficent", type: "Medinan", ayahs: 78, order: 97 },
+                { id: 56, name: "Al-Waqi'ah", arabicName: "ٱلْوَاقِعَة", tname: "Al-Wāqiʿah", ename: "The Inevitable", type: "Meccan", ayahs: 96, order: 46 },
+                { id: 57, name: "Al-Hadid", arabicName: "ٱلْحَدِيد", tname: "Al-Ḥadīd", ename: "The Iron", type: "Medinan", ayahs: 29, order: 94 },
+                { id: 58, name: "Al-Mujadila", arabicName: "ٱلْمُجَادِلَة", tname: "Al-Mujādilah", ename: "The Pleading Woman", type: "Medinan", ayahs: 22, order: 105 },
+                { id: 59, name: "Al-Hashr", arabicName: "ٱلْحَشْر", tname: "Al-Ḥashr", ename: "The Exile", type: "Medinan", ayahs: 24, order: 101 },
+                { id: 60, name: "Al-Mumtahanah", arabicName: "ٱلْمُمْتَحَنَة", tname: "Al-Mumtaḥanah", ename: "She that is to be examined", type: "Medinan", ayahs: 13, order: 91 },
+                { id: 61, name: "As-Saff", arabicName: "ٱلصَّفّ", tname: "Aṣ-Ṣaff", ename: "The Ranks", type: "Medinan", ayahs: 14, order: 109 },
+                { id: 62, name: "Al-Jumu'ah", arabicName: "ٱلْجُمُعَة", tname: "Al-Jumuʿah", ename: "The Congregation, Friday", type: "Medinan", ayahs: 11, order: 110 },
+                { id: 63, name: "Al-Munafiqun", arabicName: "ٱلْمُنَافِقُون", tname: "Al-Munāfiqūn", ename: "The Hypocrites", type: "Medinan", ayahs: 11, order: 104 },
+                { id: 64, name: "At-Taghabun", arabicName: "ٱلتَّغَابُن", tname: "At-Taghābun", ename: "The Mutual Disillusion", type: "Medinan", ayahs: 18, order: 108 },
+                { id: 65, name: "At-Talaq", arabicName: "ٱلطَّلَاق", tname: "Aṭ-Ṭalāq", ename: "The Divorce", type: "Medinan", ayahs: 12, order: 99 },
+                { id: 66, name: "At-Tahrim", arabicName: "ٱلتَّحْرِيم", tname: "At-Taḥrīm", ename: "The Prohibition", type: "Medinan", ayahs: 12, order: 107 },
+                { id: 67, name: "Al-Mulk", arabicName: "ٱلْمُلْك", tname: "Al-Mulk", ename: "The Sovereignty", type: "Meccan", ayahs: 30, order: 77 },
+                { id: 68, name: "Al-Qalam", arabicName: "ٱلْقَلَم", tname: "Al-Qalam", ename: "The Pen", type: "Meccan", ayahs: 52, order: 2 },
+                { id: 69, name: "Al-Haqqah", arabicName: "ٱلْحَاقَّة", tname: "Al-Ḥāqqah", ename: "The Reality", type: "Meccan", ayahs: 52, order: 78 },
+                { id: 70, name: "Al-Ma'arij", arabicName: "ٱلْمَعَارِج", tname: "Al-Maʿārij", ename: "The Ascending Stairways", type: "Meccan", ayahs: 44, order: 79 },
+                { id: 71, name: "Nuh", arabicName: "نُوح", tname: "Nūḥ", ename: "Noah", type: "Meccan", ayahs: 28, order: 71 },
+                { id: 72, name: "Al-Jinn", arabicName: "ٱلْجِنّ", tname: "Al-Jinn", ename: "The Jinn", type: "Meccan", ayahs: 28, order: 40 },
+                { id: 73, name: "Al-Muzzammil", arabicName: "ٱلْمُزَّمِّل", tname: "Al-Muzzammil", ename: "The Enshrouded One", type: "Meccan", ayahs: 20, order: 3 },
+                { id: 74, name: "Al-Muddaththir", arabicName: "ٱلْمُدَّثِّر", tname: "Al-Muddaththir", ename: "The Cloaked One", type: "Meccan", ayahs: 56, order: 4 },
+                { id: 75, name: "Al-Qiyamah", arabicName: "ٱلْقِيَامَة", tname: "Al-Qiyāmah", ename: "The Resurrection", type: "Meccan", ayahs: 40, order: 31 },
+                { id: 76, name: "Al-Insan", arabicName: "ٱلْإِنْسَان", tname: "Al-Insān", ename: "Man", type: "Medinan", ayahs: 31, order: 98 },
+                { id: 77, name: "Al-Mursalat", arabicName: "ٱلْمُرْسَلَات", tname: "Al-Mursalāt", ename: "The Emissaries", type: "Meccan", ayahs: 50, order: 33 },
+                { id: 78, name: "An-Naba", arabicName: "ٱلنَّبَأ", tname: "An-Nabaʾ", ename: "The Tidings", type: "Meccan", ayahs: 40, order: 80 },
+                { id: 79, name: "An-Nazi'at", arabicName: "ٱلنَّازِعَات", tname: "An-Nāziʿāt", ename: "Those who drag forth", type: "Meccan", ayahs: 46, order: 81 },
+                { id: 80, name: "Abasa", arabicName: "عَبَسَ", tname: "ʿAbasa", ename: "He Frowned", type: "Meccan", ayahs: 42, order: 24 },
+                { id: 81, name: "At-Takwir", arabicName: "ٱلتَّكْوِير", tname: "At-Takwīr", ename: "The Overthrowing", type: "Meccan", ayahs: 29, order: 7 },
+                { id: 82, name: "Al-Infitar", arabicName: "ٱلْإِنْفِطَار", tname: "Al-Infiṭār", ename: "The Cleaving", type: "Meccan", ayahs: 19, order: 82 },
+                { id: 83, name: "Al-Mutaffifin", arabicName: "ٱلْمُطَفِّفِين", tname: "Al-Muṭaffifīn", ename: "The Defrauding", type: "Meccan", ayahs: 36, order: 86 },
+                { id: 84, name: "Al-Inshiqaq", arabicName: "ٱلْإِنْشِقَاق", tname: "Al-Inshiqāq", ename: "The Sundering", type: "Meccan", ayahs: 25, order: 83 },
+                { id: 85, name: "Al-Buruj", arabicName: "ٱلْبُرُوج", tname: "Al-Burūj", ename: "The Mansions of the Stars", type: "Meccan", ayahs: 22, order: 27 },
+                { id: 86, name: "At-Tariq", arabicName: "ٱلطَّارِق", tname: "Aṭ-Ṭāriq", ename: "The Nightcommer", type: "Meccan", ayahs: 17, order: 36 },
+                { id: 87, name: "Al-Ala", arabicName: "ٱلْأَعْلَىٰ", tname: "Al-Aʿlā", ename: "The Most High", type: "Meccan", ayahs: 19, order: 8 },
+                { id: 88, name: "Al-Ghashiyah", arabicName: "ٱلْغَاشِيَة", tname: "Al-Ghāshiyah", ename: "The Overwhelming", type: "Meccan", ayahs: 26, order: 68 },
+                { id: 89, name: "Al-Fajr", arabicName: "ٱلْفَجْر", tname: "Al-Fajr", ename: "The Dawn", type: "Meccan", ayahs: 30, order: 10 },
+                { id: 90, name: "Al-Balad", arabicName: "ٱلْبَلَد", tname: "Al-Balad", ename: "The City", type: "Meccan", ayahs: 20, order: 35 },
+                { id: 91, name: "Ash-Shams", arabicName: "ٱلشَّمْس", tname: "Ash-Shams", ename: "The Sun", type: "Meccan", ayahs: 15, order: 26 },
+                { id: 92, name: "Al-Layl", arabicName: "ٱللَّيْل", tname: "Al-Layl", ename: "The Night", type: "Meccan", ayahs: 21, order: 9 },
+                { id: 93, name: "Ad-Duha", arabicName: "ٱلضُّحَىٰ", tname: "Aḍ-Ḍuḥā", ename: "The Morning Hours", type: "Meccan", ayahs: 11, order: 11 },
+                { id: 94, name: "Ash-Sharh", arabicName: "ٱلشَّرْح", tname: "Ash-Sharḥ", ename: "The Relief", type: "Meccan", ayahs: 8, order: 12 },
+                { id: 95, name: "At-Tin", arabicName: "ٱلتِّين", tname: "At-Tīn", ename: "The Fig", type: "Meccan", ayahs: 8, order: 28 },
+                { id: 96, name: "Al-Alaq", arabicName: "ٱلْعَلَق", tname: "Al-ʿAlaq", ename: "The Clot", type: "Meccan", ayahs: 19, order: 1 },
+                { id: 97, name: "Al-Qadr", arabicName: "ٱلْقَدْر", tname: "Al-Qadr", ename: "The Power", type: "Meccan", ayahs: 5, order: 25 },
+                { id: 98, name: "Al-Bayyinah", arabicName: "ٱلْبَيِّنَة", tname: "Al-Bayyinah", ename: "The Clear Proof", type: "Medinan", ayahs: 8, order: 100 },
+                { id: 99, name: "Az-Zalzalah", arabicName: "ٱلزَّلْزَلَة", tname: "Az-Zalzalah", ename: "The Earthquake", type: "Medinan", ayahs: 8, order: 93 },
+                { id: 100, name: "Al-Adiyat", arabicName: "ٱلْعَادِيَات", tname: "Al-ʿĀdiyāt", ename: "The Courser", type: "Meccan", ayahs: 11, order: 14 },
+                { id: 101, name: "Al-Qari'ah", arabicName: "ٱلْقَارِعَة", tname: "Al-Qāriʿah", ename: "The Calamity", type: "Meccan", ayahs: 11, order: 30 },
+                { id: 102, name: "At-Takathur", arabicName: "ٱلتَّكَاثُر", tname: "At-Takāthur", ename: "The Rivalry in world increase", type: "Meccan", ayahs: 8, order: 16 },
+                { id: 103, name: "Al-Asr", arabicName: "ٱلْعَصْر", tname: "Al-ʿAṣr", ename: "The Declining Day", type: "Meccan", ayahs: 3, order: 13 },
+                { id: 104, name: "Al-Humazah", arabicName: "ٱلْهُمَزَة", tname: "Al-Humazah", ename: "The Traducer", type: "Meccan", ayahs: 9, order: 32 },
+                { id: 105, name: "Al-Fil", arabicName: "ٱلْفِيل", tname: "Al-Fīl", ename: "The Elephant", type: "Meccan", ayahs: 5, order: 19 },
+                { id: 106, name: "Quraysh", arabicName: "قُرَيْش", tname: "Quraysh", ename: "Quraysh", type: "Meccan", ayahs: 4, order: 29 },
+                { id: 107, name: "Al-Ma'un", arabicName: "ٱلْمَاعُون", tname: "Al-Māʿūn", ename: "The Small Kindnesses", type: "Meccan", ayahs: 7, order: 17 },
+                { id: 108, name: "Al-Kawthar", arabicName: "ٱلْكَوْثَر", tname: "Al-Kawthar", ename: "The Abundance", type: "Meccan", ayahs: 3, order: 15 },
+                { id: 109, name: "Al-Kafirun", arabicName: "ٱلْكَافِرُون", tname: "Al-Kāfirūn", ename: "The Disbelievers", type: "Meccan", ayahs: 6, order: 18 },
+                { id: 110, name: "An-Nasr", arabicName: "ٱلنَّصْر", tname: "An-Naṣr", ename: "The Divine Support", type: "Medinan", ayahs: 3, order: 114 },
+                { id: 111, name: "Al-Masad", arabicName: "ٱلْمَسَد", tname: "Al-Masad", ename: "The Palm Fiber", type: "Meccan", ayahs: 5, order: 6 },
+                { id: 112, name: "Al-Ikhlas", arabicName: "ٱلْإِخْلَاص", tname: "Al-Ikhlāṣ", ename: "The Sincerity", type: "Meccan", ayahs: 4, order: 22 },
+                { id: 113, name: "Al-Falaq", arabicName: "ٱلْفَلَق", tname: "Al-Falaq", ename: "The Daybreak", type: "Meccan", ayahs: 5, order: 20 },
+                { id: 114, name: "An-Nas", arabicName: "ٱلنَّاس", tname: "An-Nās", ename: "Mankind", type: "Meccan", ayahs: 6, order: 21 }
+            ];
+
+            const juzDataList = [ // Simplified: Start Surah/Ayah, End Surah/Ayah. For detailed mapping, a more complex structure or calculation is needed.
+                // This is a placeholder. Accurate Juz data is extensive.
+                // For now, we'll list Juz numbers and users can associate Surahs manually or we can implement full mapping later.
+                // Example of more detailed structure (if needed later for precise ayah-level Juz progress):
+                // { juz: 1, start: { surah: 1, ayah: 1 }, end: { surah: 2, ayah: 141 }, totalAyahs: 148 },
+                // { juz: 2, start: { surah: 2, ayah: 142 }, end: { surah: 2, ayah: 252 }, totalAyahs: 111 },
+                // ... up to 30
+                // For now, just numbers 1-30 for selection. Juz progress display will be based on Surahs within them.
+                // A more accurate mapping of Surahs to Juz:
+                { "juz": 1, "surahs": [{ "id": 1, "startAyah": 1, "endAyah": 7 }, { "id": 2, "startAyah": 1, "endAyah": 141 }] },
+                { "juz": 2, "surahs": [{ "id": 2, "startAyah": 142, "endAyah": 252 }] },
+                { "juz": 3, "surahs": [{ "id": 2, "startAyah": 253, "endAyah": 286 }, { "id": 3, "startAyah": 1, "endAyah": 92 }] },
+                { "juz": 4, "surahs": [{ "id": 3, "startAyah": 93, "endAyah": 200 }, { "id": 4, "startAyah": 1, "endAyah": 23 }] },
+                { "juz": 5, "surahs": [{ "id": 4, "startAyah": 24, "endAyah": 147 }] },
+                { "juz": 6, "surahs": [{ "id": 4, "startAyah": 148, "endAyah": 176 }, { "id": 5, "startAyah": 1, "endAyah": 81 }] },
+                { "juz": 7, "surahs": [{ "id": 5, "startAyah": 82, "endAyah": 120 }, { "id": 6, "startAyah": 1, "endAyah": 110 }] },
+                { "juz": 8, "surahs": [{ "id": 6, "startAyah": 111, "endAyah": 165 }, { "id": 7, "startAyah": 1, "endAyah": 87 }] },
+                { "juz": 9, "surahs": [{ "id": 7, "startAyah": 88, "endAyah": 206 }, { "id": 8, "startAyah": 1, "endAyah": 40 }] },
+                { "juz": 10, "surahs": [{ "id": 8, "startAyah": 41, "endAyah": 75 }, { "id": 9, "startAyah": 1, "endAyah": 92 }] },
+                { "juz": 11, "surahs": [{ "id": 9, "startAyah": 93, "endAyah": 129 }, { "id": 10, "startAyah": 1, "endAyah": 109 }, { "id": 11, "startAyah": 1, "endAyah": 5 }] },
+                { "juz": 12, "surahs": [{ "id": 11, "startAyah": 6, "endAyah": 123 }, { "id": 12, "startAyah": 1, "endAyah": 52 }] },
+                { "juz": 13, "surahs": [{ "id": 12, "startAyah": 53, "endAyah": 111 }, { "id": 13, "startAyah": 1, "endAyah": 43 }, { "id": 14, "startAyah": 1, "endAyah": 52 }] },
+                { "juz": 14, "surahs": [{ "id": 15, "startAyah": 1, "endAyah": 99 }, { "id": 16, "startAyah": 1, "endAyah": 128 }] },
+                { "juz": 15, "surahs": [{ "id": 17, "startAyah": 1, "endAyah": 111 }, { "id": 18, "startAyah": 1, "endAyah": 74 }] },
+                { "juz": 16, "surahs": [{ "id": 18, "startAyah": 75, "endAyah": 110 }, { "id": 19, "startAyah": 1, "endAyah": 98 }, { "id": 20, "startAyah": 1, "endAyah": 135 }] },
+                { "juz": 17, "surahs": [{ "id": 21, "startAyah": 1, "endAyah": 112 }, { "id": 22, "startAyah": 1, "endAyah": 78 }] },
+                { "juz": 18, "surahs": [{ "id": 23, "startAyah": 1, "endAyah": 118 }, { "id": 24, "startAyah": 1, "endAyah": 64 }, { "id": 25, "startAyah": 1, "endAyah": 20 }] },
+                { "juz": 19, "surahs": [{ "id": 25, "startAyah": 21, "endAyah": 77 }, { "id": 26, "startAyah": 1, "endAyah": 227 }, { "id": 27, "startAyah": 1, "endAyah": 55 }] },
+                { "juz": 20, "surahs": [{ "id": 27, "startAyah": 56, "endAyah": 93 }, { "id": 28, "startAyah": 1, "endAyah": 88 }, { "id": 29, "startAyah": 1, "endAyah": 45 }] },
+                { "juz": 21, "surahs": [{ "id": 29, "startAyah": 46, "endAyah": 69 }, { "id": 30, "startAyah": 1, "endAyah": 60 }, { "id": 31, "startAyah": 1, "endAyah": 34 }, { "id": 32, "startAyah": 1, "endAyah": 30 }, { "id": 33, "startAyah": 1, "endAyah": 30 }] },
+                { "juz": 22, "surahs": [{ "id": 33, "startAyah": 31, "endAyah": 73 }, { "id": 34, "startAyah": 1, "endAyah": 54 }, { "id": 35, "startAyah": 1, "endAyah": 45 }, { "id": 36, "startAyah": 1, "endAyah": 27 }] },
+                { "juz": 23, "surahs": [{ "id": 36, "startAyah": 28, "endAyah": 83 }, { "id": 37, "startAyah": 1, "endAyah": 182 }, { "id": 38, "startAyah": 1, "endAyah": 88 }, { "id": 39, "startAyah": 1, "endAyah": 31 }] },
+                { "juz": 24, "surahs": [{ "id": 39, "startAyah": 32, "endAyah": 75 }, { "id": 40, "startAyah": 1, "endAyah": 85 }, { "id": 41, "startAyah": 1, "endAyah": 46 }] },
+                { "juz": 25, "surahs": [{ "id": 41, "startAyah": 47, "endAyah": 54 }, { "id": 42, "startAyah": 1, "endAyah": 53 }, { "id": 43, "startAyah": 1, "endAyah": 89 }, { "id": 44, "startAyah": 1, "endAyah": 59 }, { "id": 45, "startAyah": 1, "endAyah": 37 }] },
+                { "juz": 26, "surahs": [{ "id": 46, "startAyah": 1, "endAyah": 35 }, { "id": 47, "startAyah": 1, "endAyah": 38 }, { "id": 48, "startAyah": 1, "endAyah": 29 }, { "id": 49, "startAyah": 1, "endAyah": 18 }, { "id": 50, "startAyah": 1, "endAyah": 45 }, { "id": 51, "startAyah": 1, "endAyah": 30 }] },
+                { "juz": 27, "surahs": [{ "id": 51, "startAyah": 31, "endAyah": 60 }, { "id": 52, "startAyah": 1, "endAyah": 49 }, { "id": 53, "startAyah": 1, "endAyah": 62 }, { "id": 54, "startAyah": 1, "endAyah": 55 }, { "id": 55, "startAyah": 1, "endAyah": 78 }, { "id": 56, "startAyah": 1, "endAyah": 96 }, { "id": 57, "startAyah": 1, "endAyah": 29 }] },
+                { "juz": 28, "surahs": [{ "id": 58, "startAyah": 1, "endAyah": 22 }, { "id": 59, "startAyah": 1, "endAyah": 24 }, { "id": 60, "startAyah": 1, "endAyah": 13 }, { "id": 61, "startAyah": 1, "endAyah": 14 }, { "id": 62, "startAyah": 1, "endAyah": 11 }, { "id": 63, "startAyah": 1, "endAyah": 11 }, { "id": 64, "startAyah": 1, "endAyah": 18 }, { "id": 65, "startAyah": 1, "endAyah": 12 }, { "id": 66, "startAyah": 1, "endAyah": 12 }] },
+                { "juz": 29, "surahs": [{ "id": 67, "startAyah": 1, "endAyah": 30 }, { "id": 68, "startAyah": 1, "endAyah": 52 }, { "id": 69, "startAyah": 1, "endAyah": 52 }, { "id": 70, "startAyah": 1, "endAyah": 44 }, { "id": 71, "startAyah": 1, "endAyah": 28 }, { "id": 72, "startAyah": 1, "endAyah": 28 }, { "id": 73, "startAyah": 1, "endAyah": 20 }, { "id": 74, "startAyah": 1, "endAyah": 56 }, { "id": 75, "startAyah": 1, "endAyah": 40 }, { "id": 76, "startAyah": 1, "endAyah": 31 }, { "id": 77, "startAyah": 1, "endAyah": 50 }] },
+                { "juz": 30, "surahs": [{ "id": 78, "startAyah": 1, "endAyah": 40 }, { "id": 79, "startAyah": 1, "endAyah": 46 }, { "id": 80, "startAyah": 1, "endAyah": 42 }, { "id": 81, "startAyah": 1, "endAyah": 29 }, { "id": 82, "startAyah": 1, "endAyah": 19 }, { "id": 83, "startAyah": 1, "endAyah": 36 }, { "id": 84, "startAyah": 1, "endAyah": 25 }, { "id": 85, "startAyah": 1, "endAyah": 22 }, { "id": 86, "startAyah": 1, "endAyah": 17 }, { "id": 87, "startAyah": 1, "endAyah": 19 }, { "id": 88, "startAyah": 1, "endAyah": 26 }, { "id": 89, "startAyah": 1, "endAyah": 30 }, { "id": 90, "startAyah": 1, "endAyah": 20 }, { "id": 91, "startAyah": 1, "endAyah": 15 }, { "id": 92, "startAyah": 1, "endAyah": 21 }, { "id": 93, "startAyah": 1, "endAyah": 11 }, { "id": 94, "startAyah": 1, "endAyah": 8 }, { "id": 95, "startAyah": 1, "endAyah": 8 }, { "id": 96, "startAyah": 1, "endAyah": 19 }, { "id": 97, "startAyah": 1, "endAyah": 5 }, { "id": 98, "startAyah": 1, "endAyah": 8 }, { "id": 99, "startAyah": 1, "endAyah": 8 }, { "id": 100, "startAyah": 1, "endAyah": 11 }, { "id": 101, "startAyah": 1, "endAyah": 11 }, { "id": 102, "startAyah": 1, "endAyah": 8 }, { "id": 103, "startAyah": 1, "endAyah": 3 }, { "id": 104, "startAyah": 1, "endAyah": 9 }, { "id": 105, "startAyah": 1, "endAyah": 5 }, { "id": 106, "startAyah": 1, "endAyah": 4 }, { "id": 107, "startAyah": 1, "endAyah": 7 }, { "id": 108, "startAyah": 1, "endAyah": 3 }, { "id": 109, "startAyah": 1, "endAyah": 6 }, { "id": 110, "startAyah": 1, "endAyah": 3 }, { "id": 111, "startAyah": 1, "endAyah": 5 }, { "id": 112, "startAyah": 1, "endAyah": 4 }, { "id": 113, "startAyah": 1, "endAyah": 5 }, { "id": 114, "startAyah": 1, "endAyah": 6 }] }
+            ];
+
+
+            // --- DOM Elements ---
+            const views = document.querySelectorAll('.view');
+            const navButtons = document.querySelectorAll('.nav-button');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const loadingText = document.getElementById('loadingText');
+
+            // Surah List
+            const surahListContainer = document.getElementById('surahListContainer');
+            const surahSearchInput = document.getElementById('surahSearchInput');
+            const surahFilterStatus = document.getElementById('surahFilterStatus');
+
+            // Surah Detail Modal
+            const surahDetailModal = document.getElementById('surahDetailModal');
+            const surahDetailModalClose = document.getElementById('surahDetailModalClose');
+            const modalSurahNumberInput = document.getElementById('modalSurahNumber');
+            const surahModalTitle = document.getElementById('surahModalTitle');
+            const surahStatusSelect = document.getElementById('surahStatusSelect');
+            const recitationDateInput = document.getElementById('recitationDateInput');
+            const memorizationDateInput = document.getElementById('memorizationDateInput');
+            const surahNotesInput = document.getElementById('surahNotesInput');
+            const saveSurahDetailsBtn = document.getElementById('saveSurahDetailsBtn');
+            const surahAyahsPreviewContainer = document.getElementById('surahAyahsPreviewContainer');
+
+            // Settings
+            const quranDataFile = document.getElementById('quranDataFile');
+            const loadQuranDataBtn = document.getElementById('loadQuranDataBtn');
+            const quranDataStatus = document.getElementById('quranDataStatus');
+            const backupDataBtn = document.getElementById('backupDataBtn');
+            const restoreDataFile = document.getElementById('restoreDataFile');
+            const restoreDataBtn = document.getElementById('restoreDataBtn');
+            const themeSelector = document.getElementById('themeSelector');
+
+            // Dashboard
+            const overallRecitationProgress = document.getElementById('overallRecitationProgress');
+            const overallMemorizationProgress = document.getElementById('overallMemorizationProgress');
+            const memorizationChartContainer = document.getElementById('memorizationChartContainer');
+
+            // Goals
+            const addGoalBtn = document.getElementById('addGoalBtn');
+            const goalsListContainer = document.getElementById('goalsListContainer');
+            const goalModal = document.getElementById('goalModal');
+            const goalModalClose = document.getElementById('goalModalClose');
+            const goalModalTitle = document.getElementById('goalModalTitle');
+            const goalIdInput = document.getElementById('goalIdInput');
+            const goalTypeSelect = document.getElementById('goalTypeSelect');
+            const goalTargetSurahDiv = document.getElementById('goalTargetSurahDiv');
+            const goalTargetSurahSelect = document.getElementById('goalTargetSurahSelect');
+            const goalTargetJuzDiv = document.getElementById('goalTargetJuzDiv');
+            const goalTargetJuzSelect = document.getElementById('goalTargetJuzSelect');
+            const goalTargetAyahsDiv = document.getElementById('goalTargetAyahsDiv');
+            const goalTargetAyahsInput = document.getElementById('goalTargetAyahsInput');
+            const goalDeadlineInput = document.getElementById('goalDeadlineInput');
+            const saveGoalBtn = document.getElementById('saveGoalBtn');
+
+            // Reading Log
+            const addLogEntryBtn = document.getElementById('addLogEntryBtn');
+            const readingLogContainer = document.getElementById('readingLogContainer');
+            const logEntryModal = document.getElementById('logEntryModal');
+            const logEntryModalClose = document.getElementById('logEntryModalClose');
+            const logDateInput = document.getElementById('logDateInput');
+            const logSurahSelect = document.getElementById('logSurahSelect');
+            const logStartAyahInput = document.getElementById('logStartAyahInput');
+            const logEndAyahInput = document.getElementById('logEndAyahInput');
+            const logMinutesInput = document.getElementById('logMinutesInput');
+            const logNotesInput = document.getElementById('logNotesInput');
+            const saveLogEntryBtn = document.getElementById('saveLogEntryBtn');
+            
+            // Juz Progress
+            const juzProgressContainer = document.getElementById('juzProgressContainer');
+
+            // Quick Actions
+            const quickAddLogBtn = document.getElementById('quickAddLogBtn');
+            const quickSetGoalBtn = document.getElementById('quickSetGoalBtn');
+
+
+            // --- Utility Functions ---
+            function showLoading(text = "Loading...") {
+                loadingText.textContent = text;
+                loadingIndicator.classList.add('show');
+            }
+            function hideLoading() {
+                loadingIndicator.classList.remove('show');
+            }
+            function formatDate(dateString) {
+                if (!dateString) return '';
+                const date = new Date(dateString);
+                return date.toLocaleDateString(); // Adjust format as needed
+            }
+            function getSurahInfo(surahNumber) {
+                return surahDataList.find(s => s.id === parseInt(surahNumber));
+            }
+
+            // --- IndexedDB Functions ---
+            function initDB() {
+                return new Promise((resolve, reject) => {
+                    const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+                    request.onupgradeneeded = (event) => {
+                        db = event.target.result;
+                        if (!db.objectStoreNames.contains('surahProgress')) {
+                            db.createObjectStore('surahProgress', { keyPath: 'surahNumber' });
+                        }
+                        if (!db.objectStoreNames.contains('quranData')) {
+                            // ayahId will be sXXXaYYY, e.g., s001a001
+                            db.createObjectStore('quranData', { keyPath: 'id' }); 
+                        }
+                        if (!db.objectStoreNames.contains('goals')) {
+                            db.createObjectStore('goals', { keyPath: 'id', autoIncrement: true });
+                        }
+                        if (!db.objectStoreNames.contains('readingLog')) {
+                            db.createObjectStore('readingLog', { keyPath: 'id', autoIncrement: true });
+                        }
+                        if (!db.objectStoreNames.contains('appSettings')) {
+                            db.createObjectStore('appSettings', { keyPath: 'key' });
+                        }
+                    };
+
+                    request.onsuccess = (event) => {
+                        db = event.target.result;
+                        resolve(db);
+                    };
+
+                    request.onerror = (event) => {
+                        console.error("IndexedDB error:", event.target.error);
+                        reject(event.target.error);
+                    };
+                });
+            }
+
+            function crudOperation(storeName, operation, data, key) {
+                return new Promise((resolve, reject) => {
+                    if (!db) {
+                        reject("DB not initialized");
+                        return;
+                    }
+                    const transaction = db.transaction([storeName], 'readwrite');
+                    const store = transaction.objectStore(storeName);
+                    let request;
+
+                    switch (operation) {
+                        case 'add': request = store.add(data); break;
+                        case 'put': request = store.put(data); break;
+                        case 'get': request = store.get(key); break;
+                        case 'getAll': request = store.getAll(); break;
+                        case 'delete': request = store.delete(key); break;
+                        case 'clear': request = store.clear(); break;
+                        default: reject('Invalid operation'); return;
+                    }
+
+                    request.onsuccess = () => resolve(request.result);
+                    request.onerror = (event) => {
+                        console.error(`Error in ${operation} on ${storeName}:`, event.target.error);
+                        reject(event.target.error);
+                    };
+                });
+            }
+            
+            async function initializeSurahProgress() {
+                try {
+                    const existingProgress = await crudOperation('surahProgress', 'getAll');
+                    if (existingProgress.length < surahDataList.length) {
+                        const transaction = db.transaction(['surahProgress'], 'readwrite');
+                        const store = transaction.objectStore('surahProgress');
+                        for (const surah of surahDataList) {
+                            const existing = existingProgress.find(p => p.surahNumber === surah.id);
+                            if (!existing) {
+                                store.put({
+                                    surahNumber: surah.id,
+                                    status: 'Not Started',
+                                    recitationCompletionDate: null,
+                                    memorizationDate: null,
+                                    notes: ''
+                                });
+                            }
+                        }
+                        return new Promise((resolve, reject) => {
+                            transaction.oncomplete = resolve;
+                            transaction.onerror = reject;
+                        });
+                    }
+                } catch (error) {
+                    console.error("Error initializing Surah progress:", error);
+                }
+            }
+
+            // --- Quran Data (.AM file) Processing ---
+            async function handleAmFileUpload(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                showLoading("Processing Quran data file...");
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    try {
+                        await parseAndStoreQuranData(e.target.result);
+                        quranDataStatus.textContent = `Status: ${file.name} loaded successfully. Total ayahs processed.`;
+                        alert('Quran data loaded successfully!');
+                        // Refresh any views that depend on Quran data
+                        if (document.getElementById('surahsView').classList.contains('active')) {
+                            // If on surah detail modal, refresh its ayah preview
+                            const currentModalSurah = modalSurahNumberInput.value;
+                            if(currentModalSurah) renderSurahAyahsPreview(currentModalSurah);
+                        }
+                    } catch (error) {
+                        console.error("Error processing Quran data:", error);
+                        quranDataStatus.textContent = "Status: Error loading file.";
+                        alert(`Error processing file: ${error.message}`);
+                    } finally {
+                        hideLoading();
+                    }
+                };
+                reader.readAsText(file);
+            }
+
+            async function parseAndStoreQuranData(fileContent) {
+                const lines = fileContent.split('\n');
+                const ayahs = [];
+                const regex = /^(.*?) ترجمہ: (.*?)<br\/>س (\d{3}) آ (\d{3})$/;
+                
+                let processedCount = 0;
+                showLoading(`Parsing ayahs... 0/${lines.length}`);
+
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    if (!line) continue;
+
+                    const match = line.match(regex);
+                    if (match) {
+                        const arabicText = match[1].trim();
+                        const urduTranslation = match[2].trim();
+                        const surahNum = parseInt(match[3]);
+                        const ayahNum = parseInt(match[4]);
+                        ayahs.push({
+                            id: `s${match[3]}a${match[4]}`, // s001a001
+                            surah: surahNum,
+                            ayah: ayahNum,
+                            arabic: arabicText,
+                            urdu: urduTranslation
+                        });
+                    } else {
+                        console.warn(`Skipping malformed line ${i + 1}: ${line}`);
+                    }
+                    if ((i + 1) % 100 === 0 || i === lines.length - 1) {
+                         showLoading(`Parsing ayahs... ${i + 1}/${lines.length}`);
+                    }
+                }
+                
+                if (ayahs.length > 0) {
+                    showLoading(`Storing ${ayahs.length} ayahs in database...`);
+                    const transaction = db.transaction(['quranData'], 'readwrite');
+                    const store = transaction.objectStore('quranData');
+                    await store.clear().onsuccess; // Clear previous data
+
+                    for (let i = 0; i < ayahs.length; i++) {
+                        store.put(ayahs[i]);
+                         if ((i + 1) % 100 === 0 || i === ayahs.length - 1) {
+                            showLoading(`Storing ayahs... ${i + 1}/${ayahs.length}`);
+                        }
+                    }
+                    
+                    return new Promise((resolve, reject) => {
+                        transaction.oncomplete = () => {
+                            processedCount = ayahs.length;
+                            resolve(processedCount);
+                        };
+                        transaction.onerror = (event) => {
+                            console.error("Error storing Quran data:", event.target.error);
+                            reject(event.target.error);
+                        };
+                    });
+                } else {
+                    throw new Error("No valid ayahs found in the file or file format is incorrect.");
+                }
+            }
+
+            async function checkQuranDataStatus() {
+                try {
+                    const transaction = db.transaction(['quranData'], 'readonly');
+                    const store = transaction.objectStore('quranData');
+                    const countRequest = store.count();
+                    countRequest.onsuccess = () => {
+                        if (countRequest.result > 0) {
+                            quranDataStatus.textContent = `Status: Quran data loaded (${countRequest.result} ayahs).`;
+                        } else {
+                            quranDataStatus.textContent = "Status: Not loaded. Please upload data.AM file.";
+                        }
+                    };
+                    countRequest.onerror = () => {
+                         quranDataStatus.textContent = "Status: Error checking data.";
+                    }
+                } catch (error) {
+                    console.error("Error checking Quran data status:", error);
+                    quranDataStatus.textContent = "Status: Error checking data.";
+                }
+            }
+
+            // --- UI Rendering Functions ---
+            function switchView(viewId) {
+                views.forEach(view => view.classList.remove('active'));
+                navButtons.forEach(button => button.classList.remove('active'));
+
+                const activeView = document.getElementById(viewId + 'View');
+                const activeButton = document.querySelector(`button[data-view="${viewId}"]`);
+
+                if (activeView) activeView.classList.add('active');
+                if (activeButton) activeButton.classList.add('active');
+
+                // Refresh content for the new view
+                if (viewId === 'dashboard') renderDashboard();
+                if (viewId === 'surahs') renderSurahList();
+                if (viewId === 'juz') renderJuzProgress();
+                if (viewId === 'goals') renderGoalsList();
+                if (viewId === 'log') renderReadingLog();
+            }
+
+            async function renderSurahList(filterText = '', filterStatus = 'all') {
+                showLoading("Loading Surahs...");
+                try {
+                    const progressData = await crudOperation('surahProgress', 'getAll');
+                    surahListContainer.innerHTML = ''; // Clear previous list
+
+                    const filteredSurahs = surahDataList.filter(surah => {
+                        const nameMatch = surah.name.toLowerCase().includes(filterText.toLowerCase()) || 
+                                          surah.tname.toLowerCase().includes(filterText.toLowerCase()) ||
+                                          surah.id.toString().includes(filterText);
+                        const progress = progressData.find(p => p.surahNumber === surah.id);
+                        const statusMatch = filterStatus === 'all' || (progress && progress.status === filterStatus);
+                        return nameMatch && statusMatch;
+                    });
+
+                    if (filteredSurahs.length === 0) {
+                        surahListContainer.innerHTML = '<p>No Surahs match your criteria.</p>';
+                        hideLoading();
+                        return;
+                    }
+                    
+                    filteredSurahs.forEach(surah => {
+                        const progress = progressData.find(p => p.surahNumber === surah.id) || 
+                                         { status: 'Not Started' }; // Default if not found
+                        const item = document.createElement('div');
+                        item.className = 'surah-list-item';
+                        item.dataset.surahNumber = surah.id;
+                        item.innerHTML = `
+                            <span class="surah-name">${surah.id}. ${surah.name} (${surah.tname}) - ${surah.ayahs} ayahs</span>
+                            <span class="surah-status status-${progress.status.replace(/\s+/g, '')}">${progress.status}</span>
+                        `;
+                        item.addEventListener('click', () => openSurahDetailModal(surah.id));
+                        surahListContainer.appendChild(item);
+                    });
+                } catch (error) {
+                    console.error("Error rendering Surah list:", error);
+                    surahListContainer.innerHTML = '<p>Error loading Surahs. Please try again.</p>';
+                } finally {
+                    hideLoading();
+                }
+            }
+
+            async function openSurahDetailModal(surahNumber) {
+                showLoading("Loading Surah details...");
+                try {
+                    const surah = getSurahInfo(surahNumber);
+                    const progress = await crudOperation('surahProgress', 'get', null, surahNumber);
+
+                    surahModalTitle.textContent = `Surah ${surah.id}: ${surah.name} (${surah.tname})`;
+                    modalSurahNumberInput.value = surahNumber;
+                    surahStatusSelect.value = progress.status;
+                    recitationDateInput.value = progress.recitationCompletionDate || '';
+                    memorizationDateInput.value = progress.memorizationDate || '';
+                    surahNotesInput.value = progress.notes || '';
+                    
+                    await renderSurahAyahsPreview(surahNumber);
+
+                    surahDetailModal.style.display = 'block';
+                } catch (error) {
+                    console.error("Error opening Surah detail modal:", error);
+                    alert("Could not load Surah details.");
+                } finally {
+                    hideLoading();
+                }
+            }
+            
+            async function renderSurahAyahsPreview(surahNumber, count = 300) {
+                surahAyahsPreviewContainer.innerHTML = '<p>Loading ayahs...</p>';
+                try {
+                    const transaction = db.transaction(['quranData'], 'readonly');
+                    const store = transaction.objectStore('quranData');
+                    const surahInfo = getSurahInfo(surahNumber);
+                    if (!surahInfo) {
+                        surahAyahsPreviewContainer.innerHTML = '<p>Surah information not found.</p>';
+                        return;
+                    }
+
+                    let ayahsHtml = '';
+                    let ayahsFound = 0;
+                    for (let i = 1; i <= Math.min(count, surahInfo.ayahs); i++) {
+                        const ayahId = `s${String(surahNumber).padStart(3, '0')}a${String(i).padStart(3, '0')}`;
+                        const request = store.get(ayahId);
+                        const ayahData = await new Promise((resolve, reject) => {
+                            request.onsuccess = () => resolve(request.result);
+                            request.onerror = () => reject(request.error);
+                        });
+
+                        if (ayahData) {
+                            ayahsHtml += `
+                                <div class="ayah-display">${ayahData.arabic}</div>
+                                <div class="translation-display">${ayahData.urdu}</div>
+                            `;
+                            ayahsFound++;
+                        }
+                    }
+                    if (ayahsFound > 0) {
+                        surahAyahsPreviewContainer.innerHTML = ayahsHtml;
+                        if (surahInfo.ayahs > count) {
+                            surahAyahsPreviewContainer.innerHTML += `<p>Showing first ${count} of ${surahInfo.ayahs} ayahs. Full data available via data.AM.</p>`;
+                        }
+                    } else {
+                        surahAyahsPreviewContainer.innerHTML = '<p>Ayah data not found. Please ensure data.AM is loaded.</p>';
+                    }
+
+                } catch (error) {
+                    console.error("Error rendering Surah ayahs preview:", error);
+                    surahAyahsPreviewContainer.innerHTML = '<p>Error loading ayahs. Make sure Quran data is loaded in Settings.</p>';
+                }
+            }
+
+
+            function closeSurahDetailModal() {
+                surahDetailModal.style.display = 'none';
+            }
+
+            async function handleSaveSurahDetails() {
+                showLoading("Saving details...");
+                const surahNumber = parseInt(modalSurahNumberInput.value);
+                const updatedProgress = {
+                    surahNumber: surahNumber,
+                    status: surahStatusSelect.value,
+                    recitationCompletionDate: recitationDateInput.value || null,
+                    memorizationDate: memorizationDateInput.value || null,
+                    notes: surahNotesInput.value
+                };
+
+                try {
+                    await crudOperation('surahProgress', 'put', updatedProgress);
+                    closeSurahDetailModal();
+                    await renderSurahList(surahSearchInput.value, surahFilterStatus.value); // Refresh list
+                    await renderDashboard(); // Refresh dashboard progress
+                    await renderJuzProgress(); // Refresh Juz progress
+                    alert('Surah details saved successfully!');
+                } catch (error) {
+                    console.error("Error saving Surah details:", error);
+                    alert('Failed to save details. Please try again.');
+                } finally {
+                    hideLoading();
+                }
+            }
+
+            async function renderDashboard() {
+                showLoading("Loading dashboard...");
+                try {
+                    const progressData = await crudOperation('surahProgress', 'getAll');
+                    const totalSurahs = surahDataList.length;
+                    let recitedCount = 0;
+                    let memorizedCount = 0;
+                    const statusCounts = {
+                        "Not Started": 0, "Reading": 0, "Completed Recitation": 0,
+                        "Memorizing": 0, "Memorized": 0
+                    };
+
+                    progressData.forEach(p => {
+                        if (p.status === 'Completed Recitation' || p.status === 'Memorized') {
+                            recitedCount++;
+                        }
+                        if (p.status === 'Memorized') {
+                            memorizedCount++;
+                        }
+                        if (statusCounts.hasOwnProperty(p.status)) {
+                            statusCounts[p.status]++;
+                        }
+                    });
+
+                    const recitationPercentage = totalSurahs > 0 ? (recitedCount / totalSurahs * 100).toFixed(1) : 0;
+                    const memorizationPercentage = totalSurahs > 0 ? (memorizedCount / totalSurahs * 100).toFixed(1) : 0;
+
+                    overallRecitationProgress.style.width = `${recitationPercentage}%`;
+                    overallRecitationProgress.textContent = `${recitationPercentage}%`;
+                    overallMemorizationProgress.style.width = `${memorizationPercentage}%`;
+                    overallMemorizationProgress.textContent = `${memorizationPercentage}%`;
+
+                    renderMemorizationChart(statusCounts, totalSurahs);
+
+                } catch (error) {
+                    console.error("Error rendering dashboard:", error);
+                } finally {
+                    hideLoading();
+                }
+            }
+
+            function renderMemorizationChart(statusCounts, totalSurahs) {
+                memorizationChartContainer.innerHTML = ''; // Clear previous chart
+                const statuses = ['Not Started', 'Reading', 'Completed Recitation', 'Memorizing', 'Memorized'];
+                const colors = {
+                    'Not Started': '#757575', 'Reading': '#42A5F5', 
+                    'Completed Recitation': '#66BB6A', 'Memorizing': '#FFCA28', 'Memorized': '#AB47BC'
+                };
+
+                const chartHeight = 250; // Height of the chart area
+                const barGap = 5;
+                const numBars = statuses.length;
+                const barWidth = (memorizationChartContainer.clientWidth - (numBars -1) * barGap) / numBars - 10; // -10 for some padding
+
+                statuses.forEach(status => {
+                    const count = statusCounts[status] || 0;
+                    const percentage = totalSurahs > 0 ? (count / totalSurahs * 100) : 0;
+                    const barHeight = percentage > 0 ? (percentage / 100 * chartHeight) : 2; // Min height 2px
+
+                    const bar = document.createElement('div');
+                    bar.className = 'chart-bar';
+                    bar.style.width = `${barWidth}px`;
+                    bar.style.height = `${barHeight}px`;
+                    bar.style.backgroundColor = colors[status];
+                    bar.title = `${status}: ${count} Surahs (${percentage.toFixed(1)}%)`;
+
+                    const label = document.createElement('div');
+                    label.className = 'chart-bar-label';
+                    label.textContent = status.replace(' ', '\n'); // Break long labels
+                    
+                    const barWrapper = document.createElement('div');
+                    barWrapper.style.display = 'inline-block';
+                    barWrapper.style.height = `${chartHeight}px`;
+                    barWrapper.style.verticalAlign = 'bottom';
+                    barWrapper.style.marginRight = `${barGap}px`;
+                    barWrapper.appendChild(bar);
+                    barWrapper.appendChild(label);
+
+                    memorizationChartContainer.appendChild(barWrapper);
+                });
+            }
+            
+            // --- Juz Progress ---
+            async function renderJuzProgress() {
+                showLoading("Loading Juz progress...");
+                juzProgressContainer.innerHTML = '';
+                try {
+                    const surahProgressData = await crudOperation('surahProgress', 'getAll');
+                    
+                    for (const juz of juzDataList) {
+                        const juzDiv = document.createElement('div');
+                        juzDiv.className = 'juz-item card';
+                        
+                        let juzTotalAyahs = 0;
+                        let juzMemorizedAyahs = 0;
+                        let juzRecitedAyahs = 0; // Completed Recitation or Memorized
+                        
+                        const surahListHtmlParts = [];
+
+                        for (const surahMap of juz.surahs) {
+                            const surahInfo = getSurahInfo(surahMap.id);
+                            if (!surahInfo) continue;
+
+                            const progress = surahProgressData.find(p => p.surahNumber === surahMap.id) || { status: 'Not Started' };
+                            
+                            let ayahsInJuzForThisSurah = 0;
+                            if (surahMap.startAyah && surahMap.endAyah) {
+                                ayahsInJuzForThisSurah = surahMap.endAyah - surahMap.startAyah + 1;
+                            } else { // Full surah in this juz part
+                                ayahsInJuzForThisSurah = surahInfo.ayahs;
+                            }
+                            juzTotalAyahs += ayahsInJuzForThisSurah;
+
+                            if (progress.status === 'Memorized') {
+                                juzMemorizedAyahs += ayahsInJuzForThisSurah;
+                                juzRecitedAyahs += ayahsInJuzForThisSurah;
+                            } else if (progress.status === 'Completed Recitation') {
+                                juzRecitedAyahs += ayahsInJuzForThisSurah;
+                            }
+                            
+                            surahListHtmlParts.push(`<span class="surah-status status-${progress.status.replace(/\s+/g, '')}">${surahInfo.name}</span>`);
+                        }
+
+                        const memorizationPercentage = juzTotalAyahs > 0 ? (juzMemorizedAyahs / juzTotalAyahs * 100).toFixed(1) : 0;
+                        const recitationPercentage = juzTotalAyahs > 0 ? (juzRecitedAyahs / juzTotalAyahs * 100).toFixed(1) : 0;
+
+                        juzDiv.innerHTML = `
+                            <div class="juz-header">Juz ${juz.juz} (${juzTotalAyahs} Ayahs)</div>
+                            <div>Surahs: ${surahListHtmlParts.join(' ')}</div>
+                            <label>Recitation Progress:</label>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar completed_recitation" style="width: ${recitationPercentage}%;">${recitationPercentage}%</div>
+                            </div>
+                            <label>Memorization Progress:</label>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar memorized" style="width: ${memorizationPercentage}%;">${memorizationPercentage}%</div>
+                            </div>
+                        `;
+                        juzProgressContainer.appendChild(juzDiv);
+                    }
+
+                } catch (error) {
+                    console.error("Error rendering Juz progress:", error);
+                    juzProgressContainer.innerHTML = '<p>Error loading Juz progress.</p>';
+                } finally {
+                    hideLoading();
+                }
+            }
+
+
+            // --- Goals Functions ---
+            function populateGoalSelectors() {
+                goalTargetSurahSelect.innerHTML = surahDataList.map(s => `<option value="${s.id}">${s.id}. ${s.name}</option>`).join('');
+                goalTargetJuzSelect.innerHTML = '';
+                for (let i = 1; i <= 30; i++) {
+                    goalTargetJuzSelect.innerHTML += `<option value="${i}">Juz ${i}</option>`;
+                }
+            }
+
+            function handleGoalTypeChange() {
+                const type = goalTypeSelect.value;
+                goalTargetSurahDiv.style.display = type.includes('_surah') ? 'block' : 'none';
+                goalTargetJuzDiv.style.display = type.includes('_juz') ? 'block' : 'none';
+                goalTargetAyahsDiv.style.display = type.includes('_ayahs_daily') ? 'block' : 'none';
+            }
+
+            function openGoalModal(goal = null) {
+                goalIdInput.value = goal ? goal.id : '';
+                goalModalTitle.textContent = goal ? 'Edit Goal' : 'Add New Goal';
+                goalTypeSelect.value = goal ? goal.type : 'memorization_surah';
+                
+                handleGoalTypeChange(); // Set initial visibility of target inputs
+
+                if (goal) {
+                    if (goal.type.includes('_surah')) goalTargetSurahSelect.value = goal.targetValue;
+                    else if (goal.type.includes('_juz')) goalTargetJuzSelect.value = goal.targetValue;
+                    else if (goal.type.includes('_ayahs_daily')) goalTargetAyahsInput.value = goal.targetValue;
+                    goalDeadlineInput.value = goal.deadlineDate || '';
+                } else {
+                    // Defaults for new goal
+                    goalTargetSurahSelect.value = '1';
+                    goalTargetJuzSelect.value = '1';
+                    goalTargetAyahsInput.value = '10';
+                    goalDeadlineInput.value = '';
+                }
+                goalModal.style.display = 'block';
+            }
+            function closeGoalModal() {
+                goalModal.style.display = 'none';
+            }
+
+            async function saveGoal() {
+                showLoading("Saving goal...");
+                const id = goalIdInput.value ? parseInt(goalIdInput.value) : null;
+                const type = goalTypeSelect.value;
+                let targetValue;
+                if (type.includes('_surah')) targetValue = goalTargetSurahSelect.value;
+                else if (type.includes('_juz')) targetValue = goalTargetJuzSelect.value;
+                else if (type.includes('_ayahs_daily')) targetValue = goalTargetAyahsInput.value;
+
+                const goalData = {
+                    type: type,
+                    targetValue: targetValue,
+                    deadlineDate: goalDeadlineInput.value || null,
+                    creationDate: id ? (await crudOperation('goals', 'get', null, id)).creationDate : new Date().toISOString().split('T')[0],
+                    isCompleted: false, // This would be updated separately
+                    completionDate: null
+                };
+
+                try {
+                    if (id) {
+                        goalData.id = id; // Ensure ID is part of the object for 'put'
+                        await crudOperation('goals', 'put', goalData);
+                    } else {
+                        await crudOperation('goals', 'add', goalData);
+                    }
+                    closeGoalModal();
+                    await renderGoalsList();
+                    alert('Goal saved successfully!');
+                } catch (error) {
+                    console.error("Error saving goal:", error);
+                    alert('Failed to save goal.');
+                } finally {
+                    hideLoading();
+                }
+            }
+
+            async function renderGoalsList() {
+                showLoading("Loading goals...");
+                goalsListContainer.innerHTML = '';
+                try {
+                    const goals = await crudOperation('goals', 'getAll');
+                    if (goals.length === 0) {
+                        goalsListContainer.innerHTML = '<p>No goals set yet. Click "Add New Goal" to start!</p>';
+                        hideLoading();
+                        return;
+                    }
+                    goals.sort((a,b) => new Date(b.creationDate) - new Date(a.creationDate)); // Show newest first
+
+                    goals.forEach(goal => {
+                        const goalCard = document.createElement('div');
+                        goalCard.className = 'card'; // Re-use card style for individual goals
+                        let targetText = '';
+                        if (goal.type.includes('_surah')) {
+                            const surah = getSurahInfo(goal.targetValue);
+                            targetText = surah ? surah.name : `Surah ID ${goal.targetValue}`;
+                        } else if (goal.type.includes('_juz')) {
+                            targetText = `Juz ${goal.targetValue}`;
+                        } else if (goal.type.includes('_ayahs_daily')) {
+                            targetText = `${goal.targetValue} Ayahs Daily`;
+                        }
+                        
+                        let typeText = goal.type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+
+                        goalCard.innerHTML = `
+                            <h4>${typeText}: ${targetText}</h4>
+                            <p>Created: ${formatDate(goal.creationDate)}</p>
+                            ${goal.deadlineDate ? `<p>Deadline: ${formatDate(goal.deadlineDate)}</p>` : ''}
+                            <p>Status: ${goal.isCompleted ? `Completed on ${formatDate(goal.completionDate)}` : 'In Progress'}</p>
+                            ${!goal.isCompleted ? `<button class="mark-goal-complete" data-id="${goal.id}">Mark as Complete</button>` : ''}
+                            <button class="edit-goal" data-id="${goal.id}">Edit</button>
+                            <button class="delete-goal danger" data-id="${goal.id}">Delete</button>
+                        `;
+                        goalsListContainer.appendChild(goalCard);
+                    });
+
+                    // Add event listeners for goal actions
+                    document.querySelectorAll('.mark-goal-complete').forEach(btn => btn.addEventListener('click', (e) => toggleGoalComplete(parseInt(e.target.dataset.id))));
+                    document.querySelectorAll('.edit-goal').forEach(btn => btn.addEventListener('click', async (e) => {
+                        const goal = await crudOperation('goals', 'get', null, parseInt(e.target.dataset.id));
+                        openGoalModal(goal);
+                    }));
+                    document.querySelectorAll('.delete-goal').forEach(btn => btn.addEventListener('click', (e) => deleteGoal(parseInt(e.target.dataset.id))));
+
+                } catch (error) {
+                    console.error("Error rendering goals list:", error);
+                    goalsListContainer.innerHTML = '<p>Error loading goals.</p>';
+                } finally {
+                    hideLoading();
+                }
+            }
+
+            async function toggleGoalComplete(goalId) {
+                showLoading("Updating goal...");
+                try {
+                    const goal = await crudOperation('goals', 'get', null, goalId);
+                    goal.isCompleted = !goal.isCompleted;
+                    goal.completionDate = goal.isCompleted ? new Date().toISOString().split('T')[0] : null;
+                    await crudOperation('goals', 'put', goal);
+                    await renderGoalsList();
+                } catch (error) {
+                    console.error("Error updating goal completion:", error);
+                    alert("Failed to update goal status.");
+                } finally {
+                    hideLoading();
+                }
+            }
+            async function deleteGoal(goalId) {
+                if (!confirm("Are you sure you want to delete this goal?")) return;
+                showLoading("Deleting goal...");
+                try {
+                    await crudOperation('goals', 'delete', null, goalId);
+                    await renderGoalsList();
+                    alert("Goal deleted.");
+                } catch (error) {
+                    console.error("Error deleting goal:", error);
+                    alert("Failed to delete goal.");
+                } finally {
+                    hideLoading();
+                }
+            }
+
+            // --- Reading Log Functions ---
+            function populateLogSurahSelect() {
+                logSurahSelect.innerHTML = surahDataList.map(s => `<option value="${s.id}">${s.id}. ${s.name}</option>`).join('');
+            }
+
+            function openLogEntryModal() {
+                logDateInput.value = new Date().toISOString().split('T')[0]; // Default to today
+                logSurahSelect.value = '1'; // Default to Al-Fatiha
+                logStartAyahInput.value = '';
+                logEndAyahInput.value = '';
+                logMinutesInput.value = '';
+                logNotesInput.value = '';
+                logEntryModal.style.display = 'block';
+            }
+            function closeLogEntryModal() {
+                logEntryModal.style.display = 'none';
+            }
+
+            async function saveLogEntry() {
+                const surahId = parseInt(logSurahSelect.value);
+                const surahInfo = getSurahInfo(surahId);
+                const startAyah = parseInt(logStartAyahInput.value);
+                const endAyah = parseInt(logEndAyahInput.value);
+
+                if (!logDateInput.value || !logSurahSelect.value || !logStartAyahInput.value || !logEndAyahInput.value) {
+                    alert("Please fill in Date, Surah, Start Ayah, and End Ayah.");
+                    return;
+                }
+                if (startAyah <= 0 || endAyah <= 0 || endAyah < startAyah) {
+                    alert("Invalid Ayah range. End Ayah must be greater than or equal to Start Ayah, and both must be positive.");
+                    return;
+                }
+                if (surahInfo && (startAyah > surahInfo.ayahs || endAyah > surahInfo.ayahs)) {
+                    alert(`Invalid Ayah number for ${surahInfo.name}. It has ${surahInfo.ayahs} ayahs.`);
+                    return;
+                }
+                
+                showLoading("Saving log entry...");
+                const logEntry = {
+                    date: logDateInput.value,
+                    surahNumber: surahId,
+                    startAyah: startAyah,
+                    endAyah: endAyah,
+                    minutesSpent: logMinutesInput.value ? parseInt(logMinutesInput.value) : null,
+                    notes: logNotesInput.value
+                };
+
+                try {
+                    await crudOperation('readingLog', 'add', logEntry);
+                    closeLogEntryModal();
+                    await renderReadingLog();
+                    alert('Log entry saved successfully!');
+                } catch (error) {
+                    console.error("Error saving log entry:", error);
+                    alert('Failed to save log entry.');
+                } finally {
+                    hideLoading();
+                }
+            }
+
+            async function renderReadingLog() {
+                showLoading("Loading reading log...");
+                readingLogContainer.innerHTML = '';
+                try {
+                    const logs = await crudOperation('readingLog', 'getAll');
+                    if (logs.length === 0) {
+                        readingLogContainer.innerHTML = '<p>No reading log entries yet. Click "Add Log Entry" to record your reading.</p>';
+                        hideLoading();
+                        return;
+                    }
+                    logs.sort((a,b) => new Date(b.date) - new Date(a.date)); // Show newest first
+
+                    logs.forEach(log => {
+                        const logCard = document.createElement('div');
+                        logCard.className = 'card';
+                        const surah = getSurahInfo(log.surahNumber);
+                        const surahName = surah ? surah.name : `Surah ID ${log.surahNumber}`;
+                        logCard.innerHTML = `
+                            <h4>${formatDate(log.date)}: ${surahName} (Ayah ${log.startAyah}-${log.endAyah})</h4>
+                            ${log.minutesSpent ? `<p>Time Spent: ${log.minutesSpent} minutes</p>` : ''}
+                            ${log.notes ? `<p>Notes: ${log.notes.replace(/\n/g, '<br>')}</p>` : ''}
+                            <button class="delete-log-entry danger" data-id="${log.id}">Delete</button>
+                        `;
+                        readingLogContainer.appendChild(logCard);
+                    });
+                    
+                    document.querySelectorAll('.delete-log-entry').forEach(btn => btn.addEventListener('click', (e) => deleteLogEntry(parseInt(e.target.dataset.id))));
+
+                } catch (error) {
+                    console.error("Error rendering reading log:", error);
+                    readingLogContainer.innerHTML = '<p>Error loading reading log.</p>';
+                } finally {
+                    hideLoading();
+                }
+            }
+            
+            async function deleteLogEntry(logId) {
+                if (!confirm("Are you sure you want to delete this log entry?")) return;
+                showLoading("Deleting log entry...");
+                try {
+                    await crudOperation('readingLog', 'delete', null, logId);
+                    await renderReadingLog();
+                    alert("Log entry deleted.");
+                } catch (error) {
+                    console.error("Error deleting log entry:", error);
+                    alert("Failed to delete log entry.");
+                } finally {
+                    hideLoading();
+                }
+            }
+
+            // --- Backup & Restore Functions ---
+            async function backupData() {
+                showLoading("Backing up data...");
+                try {
+                    const dataToBackup = {};
+                    const storesToBackup = ['surahProgress', 'quranData', 'goals', 'readingLog', 'appSettings'];
+                    for (const storeName of storesToBackup) {
+                        dataToBackup[storeName] = await crudOperation(storeName, 'getAll');
+                    }
+
+                    const jsonString = JSON.stringify(dataToBackup, null, 2);
+                    const blob = new Blob([jsonString], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `MyQuranJourney_Backup_${new Date().toISOString().split('T')[0]}.json`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    alert('Backup successful! File downloaded.');
+                } catch (error) {
+                    console.error("Backup error:", error);
+                    alert('Backup failed. See console for details.');
+                } finally {
+                    hideLoading();
+                }
+            }
+
+            function triggerRestore() {
+                restoreDataFile.click(); // Open file dialog
+            }
+
+            async function handleRestoreData(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                if (!confirm("Restoring data will overwrite all current data. Are you sure you want to proceed?")) {
+                    restoreDataFile.value = ''; // Reset file input
+                    return;
+                }
+
+                showLoading("Restoring data...");
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    try {
+                        const restoredData = JSON.parse(e.target.result);
+                        const storesToRestore = ['surahProgress', 'quranData', 'goals', 'readingLog', 'appSettings'];
+
+                        for (const storeName of storesToRestore) {
+                            if (restoredData[storeName]) {
+                                await crudOperation(storeName, 'clear'); // Clear existing data
+                                const transaction = db.transaction([storeName], 'readwrite');
+                                const store = transaction.objectStore(storeName);
+                                for (const item of restoredData[storeName]) {
+                                    store.put(item); // Use put to handle existing keys if any (though clear should prevent this)
+                                }
+                                await new Promise((resolve, reject) => { // Wait for transaction to complete
+                                    transaction.oncomplete = resolve;
+                                    transaction.onerror = reject;
+                                });
+                            }
+                        }
+                        alert('Data restored successfully! The app will now reload.');
+                        location.reload(); // Reload to apply changes and re-initialize
+                    } catch (error) {
+                        console.error("Restore error:", error);
+                        alert(`Restore failed: ${error.message}. See console for details.`);
+                    } finally {
+                        hideLoading();
+                        restoreDataFile.value = ''; // Reset file input
+                    }
+                };
+                reader.readAsText(file);
+            }
+
+            // --- Theme Management ---
+            function applyTheme(themeName) {
+                document.documentElement.setAttribute('data-theme', themeName);
+            }
+
+            async function saveThemePreference(themeName) {
+                try {
+                    await crudOperation('appSettings', 'put', { key: 'theme', value: themeName });
+                } catch (error) {
+                    console.error("Error saving theme preference:", error);
+                }
+            }
+
+            async function loadThemePreference() {
+                try {
+                    const setting = await crudOperation('appSettings', 'get', null, 'theme');
+                    if (setting && setting.value) {
+                        applyTheme(setting.value);
+                        themeSelector.value = setting.value;
+                    } else {
+                        applyTheme('oasis'); // Default theme
+                    }
+                } catch (error) {
+                    console.error("Error loading theme preference:", error);
+                    applyTheme('oasis'); // Fallback to default
+                }
+            }
+
+            // --- Event Listeners Setup ---
+            function setupEventListeners() {
+                navButtons.forEach(button => {
+                    button.addEventListener('click', () => switchView(button.dataset.view));
+                });
+
+                // Surah List
+                surahSearchInput.addEventListener('input', (e) => renderSurahList(e.target.value, surahFilterStatus.value));
+                surahFilterStatus.addEventListener('change', (e) => renderSurahList(surahSearchInput.value, e.target.value));
+
+                // Surah Detail Modal
+                surahDetailModalClose.addEventListener('click', closeSurahDetailModal);
+                saveSurahDetailsBtn.addEventListener('click', handleSaveSurahDetails);
+                window.addEventListener('click', (event) => { // Close modal if clicked outside
+                    if (event.target == surahDetailModal) closeSurahDetailModal();
+                    if (event.target == goalModal) closeGoalModal();
+                    if (event.target == logEntryModal) closeLogEntryModal();
+                });
+
+                // Settings
+                loadQuranDataBtn.addEventListener('click', () => quranDataFile.click());
+                quranDataFile.addEventListener('change', handleAmFileUpload);
+                backupDataBtn.addEventListener('click', backupData);
+                restoreDataBtn.addEventListener('click', triggerRestore);
+                restoreDataFile.addEventListener('change', handleRestoreData);
+                themeSelector.addEventListener('change', (e) => {
+                    applyTheme(e.target.value);
+                    saveThemePreference(e.target.value);
+                });
+
+                // Goals
+                addGoalBtn.addEventListener('click', () => openGoalModal());
+                goalModalClose.addEventListener('click', closeGoalModal);
+                goalTypeSelect.addEventListener('change', handleGoalTypeChange);
+                saveGoalBtn.addEventListener('click', saveGoal);
+
+                // Reading Log
+                addLogEntryBtn.addEventListener('click', openLogEntryModal);
+                logEntryModalClose.addEventListener('click', closeLogEntryModal);
+                saveLogEntryBtn.addEventListener('click', saveLogEntry);
+                
+                // Quick Actions
+                quickAddLogBtn.addEventListener('click', () => {
+                    switchView('log');
+                    openLogEntryModal();
+                });
+                quickSetGoalBtn.addEventListener('click', () => {
+                    switchView('goals');
+                    openGoalModal();
+                });
+
+                document.getElementById('currentYear').textContent = new Date().getFullYear();
+            }
+
+            // --- Initialization ---
+            async function main() {
+                showLoading("Initializing App...");
+                try {
+                    await initDB();
+                    await loadThemePreference(); // Apply theme early
+                    await initializeSurahProgress();
+                    await checkQuranDataStatus();
+                    
+                    populateGoalSelectors(); // For goal modal
+                    populateLogSurahSelect(); // For log modal
+
+                    setupEventListeners();
+                    switchView('dashboard'); // Load initial view
+                } catch (error) {
+                    console.error("Initialization failed:", error);
+                    document.body.innerHTML = "<p>Error initializing application. Please try refreshing or clearing application data. Check console for details.</p>";
+                } finally {
+                    hideLoading();
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', main);
+
+        })();
+    </script>
+</body>
+</html>

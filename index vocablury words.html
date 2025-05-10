@@ -1,0 +1,1843 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Yasin Ullah">
+    <meta name="description" content="Quranic Root Words - An offline tool for building Quranic Arabic vocabulary. Pakistani.">
+    <title>Quranic Root Words</title>
+    <style>
+        /* Global Resets and Base Styles */
+        :root {
+            --font-primary: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-arabic: 'Noto Naskh Arabic', 'Amiri Quran', 'KFGQPC Uthman Taha Naskh', serif;
+            
+            /* Light Theme (Default) */
+            --bg-color: #f4f7f9;
+            --text-color: #333;
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #1abc9c;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+            --header-bg: #34495e;
+            --header-text-color: #ecf0f1;
+            --button-bg: var(--secondary-color);
+            --button-text-color: #fff;
+            --button-hover-bg: #2980b9;
+            --input-bg: #fff;
+            --input-border: #ccc;
+            --link-color: var(--secondary-color);
+            --shadow-color: rgba(0,0,0,0.1);
+            --geometric-pattern-color1: rgba(0,0,0,0.03);
+            --geometric-pattern-color2: rgba(0,0,0,0.05);
+
+            /* WCAG AA Contrast: Ensure text has at least 4.5:1 against background */
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #2c3e50;
+            --text-color: #ecf0f1;
+            --primary-color: #ecf0f1;
+            --secondary-color: #3498db; /* Keep some vibrant colors */
+            --accent-color: #1abc9c;
+            --card-bg: #34495e;
+            --border-color: #4a627a;
+            --header-bg: #1f2b38;
+            --header-text-color: #ecf0f1;
+            --button-bg: var(--secondary-color);
+            --button-text-color: #fff;
+            --button-hover-bg: #2980b9;
+            --input-bg: #4a627a;
+            --input-border: #5e7a97;
+            --link-color: var(--accent-color);
+            --shadow-color: rgba(0,0,0,0.3);
+            --geometric-pattern-color1: rgba(255,255,255,0.03);
+            --geometric-pattern-color2: rgba(255,255,255,0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            font-size: 16px; /* Base font size for rem calculations */
+        }
+        
+        /* Geometric Background Pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.7;
+            background-image: 
+                linear-gradient(45deg, var(--geometric-pattern-color1) 25%, transparent 25%), 
+                linear-gradient(-45deg, var(--geometric-pattern-color1) 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, var(--geometric-pattern-color2) 75%),
+                linear-gradient(-45deg, transparent 75%, var(--geometric-pattern-color2) 75%);
+            background-size: 60px 60px;
+            background-position: 0 0, 0 30px, 30px -30px, -30px 0px;
+        }
+
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px var(--shadow-color);
+        }
+
+        header {
+            background-color: var(--header-bg);
+            color: var(--header-text-color);
+            padding: 1rem 0;
+            text-align: center;
+            box-shadow: 0 2px 4px var(--shadow-color);
+        }
+
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        nav button, .button {
+            background-color: var(--button-bg);
+            color: var(--button-text-color);
+            border: none;
+            padding: 0.75rem 1.25rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+            text-decoration: none; /* For <a> styled as button */
+            display: inline-block; /* For <a> styled as button */
+        }
+
+        nav button:hover, .button:hover {
+            background-color: var(--button-hover-bg);
+            transform: translateY(-1px);
+        }
+        nav button.active {
+            background-color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        .section {
+            display: none; /* Hidden by default, shown by JS */
+            padding: 1rem;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+        }
+
+        /* Form Elements */
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        input[type="text"],
+        input[type="search"],
+        input[type="file"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--input-border);
+            border-radius: 5px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            font-size: 1rem;
+        }
+        
+        input[type="text"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
+        /* Arabic Text Styling */
+        .arabic-text, [lang="ar"] {
+            font-family: var(--font-arabic);
+            font-size: 1.5rem; /* Larger for readability */
+            direction: rtl;
+            text-align: right;
+        }
+        
+        .urdu-text {
+            font-family: 'Noto Nastaliq Urdu', var(--font-arabic); /* Fallback to Arabic font */
+            font-size: 1.2rem;
+            direction: rtl;
+            text-align: right;
+        }
+
+        /* Flashcard Styling */
+        .flashcard-container {
+            perspective: 1000px;
+            min-height: 250px;
+            margin-bottom: 1.5rem;
+        }
+        .flashcard {
+            width: 100%;
+            height: 250px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+        .flashcard.is-flipped {
+            transform: rotateY(180deg);
+        }
+        .flashcard-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+            border-radius: 10px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+        }
+        .flashcard-front {
+            /* Styles for front face */
+        }
+        .flashcard-back {
+            transform: rotateY(180deg);
+        }
+        .flashcard-word {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .flashcard-details p {
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        .flashcard-details strong {
+            color: var(--primary-color);
+        }
+        .flashcard-actions {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Word List Table */
+        #word-list-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        #word-list-table th, #word-list-table td {
+            border: 1px solid var(--border-color);
+            padding: 0.75rem;
+            text-align: left;
+        }
+        #word-list-table th {
+            background-color: var(--primary-color);
+            color: var(--header-text-color);
+            font-weight: 600;
+        }
+        #word-list-table tr:nth-child(even) {
+            background-color: var(--bg-color); /* Slightly different for striping */
+        }
+        #word-list-table td.arabic-cell {
+            font-family: var(--font-arabic);
+            font-size: 1.2rem;
+            direction: rtl;
+        }
+
+        /* Quiz Mode */
+        .quiz-question {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .quiz-options button {
+            display: block;
+            width: 100%;
+            margin-bottom: 0.75rem;
+            text-align: center;
+        }
+        .quiz-options button.arabic-option {
+            font-family: var(--font-arabic);
+            font-size: 1.3rem;
+        }
+
+        /* Notifications */
+        #notifications {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .toast {
+            background-color: var(--primary-color);
+            color: var(--header-text-color);
+            padding: 1rem 1.5rem;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px var(--shadow-color);
+            opacity: 0;
+            transform: translateX(100%);
+            animation: slideInAndFadeOut 5s forwards;
+        }
+        .toast.error {
+            background-color: #e74c3c; /* Red for errors */
+        }
+        .toast.success {
+            background-color: var(--accent-color); /* Green for success */
+        }
+        @keyframes slideInAndFadeOut {
+            0% { opacity: 0; transform: translateX(100%); }
+            10% { opacity: 1; transform: translateX(0); }
+            90% { opacity: 1; transform: translateX(0); }
+            100% { opacity: 0; transform: translateX(100%); }
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: auto; /* Pushes footer to bottom */
+            background-color: var(--header-bg);
+            color: var(--header-text-color);
+            font-size: 0.9rem;
+        }
+        footer p { margin: 0.3rem 0; }
+        footer a { color: var(--accent-color); text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                margin: 1rem auto;
+                padding: 1rem;
+            }
+            header h1 {
+                font-size: 1.5rem;
+            }
+            nav {
+                flex-direction: column;
+                align-items: center;
+            }
+            nav button, .button {
+                width: 80%;
+                margin-bottom: 0.5rem;
+            }
+            .flashcard-word {
+                font-size: 2rem;
+            }
+            .arabic-text, [lang="ar"] {
+                font-size: 1.3rem;
+            }
+            .urdu-text {
+                font-size: 1.1rem;
+            }
+            #word-list-table th, #word-list-table td {
+                padding: 0.5rem;
+                font-size: 0.9rem;
+            }
+            #word-list-table td.arabic-cell {
+                font-size: 1.1rem;
+            }
+        }
+        
+        /* Accessibility: Focus visible */
+        *:focus-visible {
+            outline: 3px solid var(--secondary-color);
+            outline-offset: 2px;
+        }
+
+        /* Utility classes */
+        .hidden { display: none !important; }
+        .text-center { text-align: center; }
+        .mt-1 { margin-top: 1rem; }
+        .mb-1 { margin-bottom: 1rem; }
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Quranic Root Words</h1>
+        <p style="font-size: 0.9em; opacity: 0.8;">An offline tool for Quranic Arabic vocabulary</p>
+    </header>
+
+    <div class="container">
+        <nav id="main-nav">
+            <button data-section="dashboard-section" class="nav-button active">Dashboard</button>
+            <button data-section="data-loader-section" class="nav-button">Load Quran Data</button>
+            <button data-section="vocabulary-section" class="nav-button">Vocabulary</button>
+            <button data-section="flashcards-section" class="nav-button">Flashcards</button>
+            <button data-section="quiz-section" class="nav-button">Quiz</button>
+            <button data-section="settings-section" class="nav-button">Settings</button>
+        </nav>
+
+        <main id="app-content">
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="section active">
+                <h2>Dashboard</h2>
+                <p>Welcome to Quranic Root Words! Your personal tool for building Quranic vocabulary.</p>
+                <div id="dashboard-stats" class="mt-1">
+                    <p>Total Words: <span id="stats-total-words">0</span></p>
+                    <p>Words Learning: <span id="stats-learning-words">0</span></p>
+                    <p>Words Known: <span id="stats-known-words">0</span></p>
+                    <p>Words Due for Review: <span id="stats-due-review">0</span></p>
+                </div>
+                <div id="quran-data-status" class="mt-1">
+                    <p>Quran Ayah Data: <span id="quran-data-loaded-status">Not loaded</span></p>
+                </div>
+                <div class="mt-1">
+                    <button id="start-review-button" class="button">Start Review Session</button>
+                    <button id="add-new-word-dashboard" class="button">Add New Word</button>
+                </div>
+            </section>
+
+            <!-- Data Loader Section -->
+            <section id="data-loader-section" class="section">
+                <h2>Load Quran Data (data.AM)</h2>
+                <p>Please load your <code>data.AM</code> file to populate Ayah examples. This is a one-time setup.</p>
+                <p>Format: <code>[Arabic Ayah] ترجمہ: [Urdu Translation]<br/>س [Surah Number] آ [Ayah Number]</code></p>
+                <input type="file" id="data-am-file-input" accept=".AM">
+                <button id="process-data-am-button" class="button">Process File</button>
+                <div id="data-am-progress" class="mt-1"></div>
+            </section>
+
+            <!-- Vocabulary Section -->
+            <section id="vocabulary-section" class="section">
+                <h2>Vocabulary Management</h2>
+                <div id="add-word-form-container">
+                    <h3>Add/Edit Word</h3>
+                    <form id="add-word-form">
+                        <input type="hidden" id="word-id">
+                        <div>
+                            <label for="arabic-word">Arabic Word:</label>
+                            <input type="text" id="arabic-word" class="arabic-text" lang="ar" dir="rtl" required>
+                        </div>
+                        <div>
+                            <label for="root-letters">Root Letters (e.g., ح م د):</label>
+                            <input type="text" id="root-letters" class="arabic-text" lang="ar" dir="rtl">
+                        </div>
+                        <div>
+                            <label for="meaning">Meaning (English):</label>
+                            <input type="text" id="meaning" required>
+                        </div>
+                        <div>
+                            <label for="example-ayah-surah">Example Ayah - Surah:</label>
+                            <select id="example-ayah-surah"></select>
+                        </div>
+                        <div>
+                            <label for="example-ayah-ayah">Example Ayah - Ayah Number:</label>
+                            <select id="example-ayah-ayah"></select>
+                        </div>
+                        <div id="example-preview" class="mt-1 mb-1" style="padding:10px; border:1px solid var(--border-color); border-radius:5px;">
+                            <p><strong>Preview:</strong></p>
+                            <p lang="ar" dir="rtl" id="example-preview-arabic" class="arabic-text"></p>
+                            <p lang="ur" dir="rtl" id="example-preview-urdu" class="urdu-text"></p>
+                        </div>
+                        <div>
+                            <label for="word-status">Status:</label>
+                            <select id="word-status">
+                                <option value="learning">Learning</option>
+                                <option value="known">Known</option>
+                                <option value="new">New</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="button">Save Word</button>
+                        <button type="button" id="cancel-edit-word-button" class="button hidden">Cancel Edit</button>
+                    </form>
+                </div>
+                <h3 class="mt-1">Word List</h3>
+                <input type="search" id="search-word-input" placeholder="Search words..." class="mt-1 mb-1">
+                <table id="word-list-table">
+                    <thead>
+                        <tr>
+                            <th>Arabic Word</th>
+                            <th>Root</th>
+                            <th>Meaning</th>
+                            <th>Status</th>
+                            <th>Next Review</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="word-list-tbody">
+                        <!-- Word rows will be populated by JS -->
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Flashcards Section -->
+            <section id="flashcards-section" class="section">
+                <h2>Flashcard Study</h2>
+                <div id="flashcard-study-area">
+                    <p id="no-flashcards-message">No words available for study or review. Add some words first!</p>
+                    <div class="flashcard-container hidden">
+                        <div class="flashcard" id="study-flashcard">
+                            <div class="flashcard-face flashcard-front">
+                                <p id="flashcard-front-text" class="flashcard-word arabic-text" lang="ar"></p>
+                            </div>
+                            <div class="flashcard-face flashcard-back">
+                                <div id="flashcard-back-content" class="flashcard-details">
+                                    <p><strong>Root:</strong> <span id="flashcard-root" class="arabic-text" lang="ar"></span></p>
+                                    <p><strong>Meaning:</strong> <span id="flashcard-meaning"></span></p>
+                                    <p><strong>Example:</strong> <span id="flashcard-example-ref"></span></p>
+                                    <p id="flashcard-example-arabic" class="arabic-text" lang="ar"></p>
+                                    <p id="flashcard-example-urdu" class="urdu-text" lang="ur"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="srs-controls" class="flashcard-actions text-center mt-1 hidden">
+                        <p>How well did you recall?</p>
+                        <button class="button srs-rating" data-rating="0">Again (Fail)</button>
+                        <button class="button srs-rating" data-rating="3">Hard</button>
+                        <button class="button srs-rating" data-rating="4">Good</button>
+                        <button class="button srs-rating" data-rating="5">Easy</button>
+                    </div>
+                     <div id="flashcard-nav-buttons" class="text-center mt-1 hidden">
+                        <button id="reveal-answer-button" class="button">Reveal Answer</button>
+                        <button id="next-flashcard-button" class="button hidden">Next Card</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quiz Section -->
+            <section id="quiz-section" class="section">
+                <h2>Quiz Mode</h2>
+                <p>Quiz functionality is under development. Check back soon!</p>
+                <!-- Basic quiz structure -->
+                <div id="quiz-setup">
+                    <label for="quiz-type">Quiz Type:</label>
+                    <select id="quiz-type">
+                        <option value="word-to-meaning">Word to Meaning</option>
+                        <option value="meaning-to-word">Meaning to Word</option>
+                        <option value="root-to-word">Root to Word</option>
+                    </select>
+                    <label for="quiz-word-count">Number of Questions:</label>
+                    <input type="number" id="quiz-word-count" value="10" min="5" max="50">
+                    <button id="start-quiz-button" class="button">Start Quiz</button>
+                </div>
+                <div id="quiz-area" class="hidden">
+                    <div id="quiz-question-area" class="quiz-question"></div>
+                    <div id="quiz-options-area" class="quiz-options"></div>
+                    <div id="quiz-feedback-area" class="mt-1"></div>
+                    <button id="next-quiz-question-button" class="button hidden">Next Question</button>
+                </div>
+                <div id="quiz-results-area" class="hidden">
+                    <h3>Quiz Results</h3>
+                    <p>Score: <span id="quiz-score"></span>/<span id="quiz-total-questions"></span></p>
+                    <button id="retake-quiz-button" class="button">Retake Quiz</button>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings-section" class="section">
+                <h2>Settings</h2>
+                <div>
+                    <h3>Theme</h3>
+                    <label for="theme-switcher">Select Theme:</label>
+                    <select id="theme-switcher">
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <div class="mt-1">
+                    <h3>Data Management</h3>
+                    <button id="backup-data-button" class="button">Backup Data</button>
+                    <label for="restore-data-input" class="button" style="display:inline-block; margin-top:0.5rem;">Restore Data</label>
+                    <input type="file" id="restore-data-input" accept=".json" class="hidden">
+                </div>
+                <div class="mt-1">
+                    <h3>Reset Application</h3>
+                    <p>Warning: This will delete all your words and progress.</p>
+                    <button id="reset-app-button" class="button" style="background-color: #e74c3c;">Reset Application Data</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <footer class="container">
+        <p>© <span id="current-year"></span> Quranic Root Words. Developed by Yasin Ullah (Pakistani).</p>
+        <p>An offline tool for Quranic Arabic vocabulary building.</p>
+        <p><a href="https://github.com/yasinulah/quranic-root-words-app" target="_blank" rel="noopener noreferrer">View on GitHub (Example Link)</a></p>
+    </footer>
+
+    <div id="notifications"></div>
+
+    <script>
+    (function() {
+        'use strict';
+
+        // --- CONFIGURATION ---
+        const DB_NAME = 'QuranicRootWordsDB';
+        const DB_VERSION = 1; // Increment if schema changes
+        const PRELOADED_WORDS = [
+            { arabicWord: "الْحَمْدُ", rootLetters: "ح م د", meaning: "All praise", exampleAyahRef: "001:002", status: "learning" },
+            { arabicWord: "رَبِّ", rootLetters: "ر ب ب", meaning: "Lord", exampleAyahRef: "001:002", status: "learning" },
+            { arabicWord: "الْعَالَمِينَ", rootLetters: "ع ل م", meaning: "The worlds", exampleAyahRef: "001:002", status: "learning" },
+            { arabicWord: "الرَّحْمَٰنِ", rootLetters: "ر ح م", meaning: "The Entirely Merciful", exampleAyahRef: "001:003", status: "learning" },
+            { arabicWord: "الرَّحِيمِ", rootLetters: "ر ح م", meaning: "The Especially Merciful", exampleAyahRef: "001:003", status: "learning" },
+        ];
+
+        // --- DOM ELEMENTS ---
+        let db;
+        const mainNav = document.getElementById('main-nav');
+        const appContent = document.getElementById('app-content');
+        const sections = document.querySelectorAll('.section');
+        const themeSwitcher = document.getElementById('theme-switcher');
+        
+        // Data Loader
+        const dataAmFileInput = document.getElementById('data-am-file-input');
+        const processDataAmButton = document.getElementById('process-data-am-button');
+        const dataAmProgress = document.getElementById('data-am-progress');
+        const quranDataLoadedStatus = document.getElementById('quran-data-loaded-status');
+
+        // Vocabulary
+        const addWordForm = document.getElementById('add-word-form');
+        const wordIdInput = document.getElementById('word-id');
+        const arabicWordInput = document.getElementById('arabic-word');
+        const rootLettersInput = document.getElementById('root-letters');
+        const meaningInput = document.getElementById('meaning');
+        const exampleAyahSurahSelect = document.getElementById('example-ayah-surah');
+        const exampleAyahAyahSelect = document.getElementById('example-ayah-ayah');
+        const examplePreviewArabic = document.getElementById('example-preview-arabic');
+        const examplePreviewUrdu = document.getElementById('example-preview-urdu');
+        const wordStatusInput = document.getElementById('word-status');
+        const cancelEditWordButton = document.getElementById('cancel-edit-word-button');
+        const wordListTbody = document.getElementById('word-list-tbody');
+        const searchWordInput = document.getElementById('search-word-input');
+        const addNewWordDashboardButton = document.getElementById('add-new-word-dashboard');
+
+        // Flashcards
+        const flashcardStudyArea = document.getElementById('flashcard-study-area');
+        const noFlashcardsMessage = document.getElementById('no-flashcards-message');
+        const studyFlashcardContainer = flashcardStudyArea.querySelector('.flashcard-container');
+        const studyFlashcard = document.getElementById('study-flashcard');
+        const flashcardFrontText = document.getElementById('flashcard-front-text');
+        const flashcardRoot = document.getElementById('flashcard-root');
+        const flashcardMeaning = document.getElementById('flashcard-meaning');
+        const flashcardExampleRef = document.getElementById('flashcard-example-ref');
+        const flashcardExampleArabic = document.getElementById('flashcard-example-arabic');
+        const flashcardExampleUrdu = document.getElementById('flashcard-example-urdu');
+        const srsControls = document.getElementById('srs-controls');
+        const revealAnswerButton = document.getElementById('reveal-answer-button');
+        const nextFlashcardButton = document.getElementById('next-flashcard-button');
+        const flashcardNavButtons = document.getElementById('flashcard-nav-buttons');
+        const startReviewButton = document.getElementById('start-review-button');
+
+
+        // Quiz
+        const quizSection = document.getElementById('quiz-section'); // Placeholder for now
+        const startQuizButton = document.getElementById('start-quiz-button');
+        const quizArea = document.getElementById('quiz-area');
+        const quizQuestionArea = document.getElementById('quiz-question-area');
+        const quizOptionsArea = document.getElementById('quiz-options-area');
+        const quizFeedbackArea = document.getElementById('quiz-feedback-area');
+        const nextQuizQuestionButton = document.getElementById('next-quiz-question-button');
+        const quizResultsArea = document.getElementById('quiz-results-area');
+        const quizScoreEl = document.getElementById('quiz-score');
+        const quizTotalQuestionsEl = document.getElementById('quiz-total-questions');
+
+
+        // Settings
+        const backupDataButton = document.getElementById('backup-data-button');
+        const restoreDataInput = document.getElementById('restore-data-input');
+        const resetAppButton = document.getElementById('reset-app-button');
+
+        // Dashboard
+        const statsTotalWords = document.getElementById('stats-total-words');
+        const statsLearningWords = document.getElementById('stats-learning-words');
+        const statsKnownWords = document.getElementById('stats-known-words');
+        const statsDueReview = document.getElementById('stats-due-review');
+
+        // Notifications
+        const notificationsContainer = document.getElementById('notifications');
+
+        // --- STATE ---
+        let currentFlashcardWord = null;
+        let currentFlashcardIndex = 0;
+        let wordsForReview = [];
+        let surahData = {}; // To store { surahNum: { name: "Al-Fatiha", ayahs: count } } - can be prefilled or derived
+        let allQuranAyahs = []; // For populating Ayah dropdowns quickly
+        let quizWords = [];
+        let currentQuizQuestionIndex = 0;
+        let quizScore = 0;
+
+
+        // --- DATABASE MODULE ---
+        const DB = {
+            init: function() {
+                return new Promise((resolve, reject) => {
+                    const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+                    request.onupgradeneeded = function(event) {
+                        const dbInstance = event.target.result;
+                        if (!dbInstance.objectStoreNames.contains('quranData')) {
+                            const quranStore = dbInstance.createObjectStore('quranData', { keyPath: 'id' }); // id = "SURAH_AYAH"
+                            quranStore.createIndex('surah', 'surah', { unique: false });
+                        }
+                        if (!dbInstance.objectStoreNames.contains('words')) {
+                            const wordStore = dbInstance.createObjectStore('words', { keyPath: 'id', autoIncrement: true });
+                            wordStore.createIndex('arabicWord', 'arabicWord', { unique: false }); // Words can be repeated if user adds them differently
+                            wordStore.createIndex('rootLetters', 'rootLetters', { unique: false });
+                            wordStore.createIndex('status', 'status', { unique: false });
+                            wordStore.createIndex('srs_nextReview', 'srs_nextReview', { unique: false });
+                        }
+                        if (!dbInstance.objectStoreNames.contains('appSettings')) {
+                            dbInstance.createObjectStore('appSettings', { keyPath: 'key' });
+                        }
+                        // Add other stores like customLists if needed in future versions
+                        showNotification('Database upgraded.', 'success');
+                    };
+
+                    request.onsuccess = function(event) {
+                        db = event.target.result;
+                        showNotification('Database initialized successfully.', 'success');
+                        resolve(db);
+                    };
+
+                    request.onerror = function(event) {
+                        console.error('Database error:', event.target.errorCode);
+                        showNotification('Database error: ' + event.target.errorCode, 'error');
+                        reject(event.target.errorCode);
+                    };
+                });
+            },
+
+            // --- Quran Data Methods ---
+            addQuranAyah: function(ayahData) { // ayahData = {id, surah, ayah, arabicText, urduTranslation}
+                return new Promise((resolve, reject) => {
+                    if (!db) return reject("DB not initialized");
+                    const transaction = db.transaction(['quranData'], 'readwrite');
+                    const store = transaction.objectStore('quranData');
+                    const request = store.put(ayahData);
+                    request.onsuccess = () => resolve();
+                    request.onerror = (event) => reject(event.target.error);
+                });
+            },
+            getQuranAyah: function(surahNum, ayahNum) {
+                return new Promise((resolve, reject) => {
+                    if (!db) return reject("DB not initialized");
+                    const transaction = db.transaction(['quranData'], 'readonly');
+                    const store = transaction.objectStore('quranData');
+                    const id = `${String(surahNum).padStart(3, '0')}_${String(ayahNum).padStart(3, '0')}`;
+                    const request = store.get(id);
+                    request.onsuccess = () => resolve(request.result);
+                    request.onerror = (event) => reject(event.target.error);
+                });
+            },
+            getAllQuranAyahsBrief: function() { // For populating dropdowns
+                 return new Promise((resolve, reject) => {
+                    if (!db) return reject("DB not initialized");
+                    const transaction = db.transaction(['quranData'], 'readonly');
+                    const store = transaction.objectStore('quranData');
+                    const request = store.getAll();
+                    request.onsuccess = () => {
+                        allQuranAyahs = request.result.map(item => ({
+                            id: item.id,
+                            surah: item.surah,
+                            ayah: item.ayah
+                        })).sort((a,b) => a.id.localeCompare(b.id)); // Sort them
+                        resolve(allQuranAyahs);
+                    };
+                    request.onerror = (event) => reject(event.target.error);
+                });
+            },
+            countQuranAyahs: function() {
+                return new Promise((resolve, reject) => {
+                    if (!db) return reject("DB not initialized");
+                    const transaction = db.transaction(['quranData'], 'readonly');
+                    const store = transaction.objectStore('quranData');
+                    const request = store.count();
+                    request.onsuccess = () => resolve(request.result);
+                    request.onerror = (event) => reject(event.target.error);
+                });
+            },
+
+            // --- Word Methods ---
+            addOrUpdateWord: function(wordData) {
+                return new Promise((resolve, reject) => {
+                    if (!db) return reject("DB not initialized");
+                    const transaction = db.transaction(['words'], 'readwrite');
+                    const store = transaction.objectStore('words');
+                    if (!wordData.dateAdded) wordData.dateAdded = new Date().toISOString();
+                    if (!wordData.srs_efactor) wordData.srs_efactor = 2.5; // Default E-Factor
+                    if (!wordData.srs_interval) wordData.srs_interval = 0;
+                    if (!wordData.srs_repetitions) wordData.srs_repetitions = 0;
+                    
+                    const request = wordData.id ? store.put(wordData) : store.add(wordData);
+                    request.onsuccess = (event) => resolve(event.target.result || wordData.id); // For add, result is new ID
+                    request.onerror = (event) => reject(event.target.error);
+                });
+            },
+            getWord: function(id) {
+                return new Promise((resolve, reject) => {
+                    if (!db) return reject("DB not initialized");
+                    const transaction = db.transaction(['words'], 'readonly');
+                    const store = transaction.objectStore('words');
+                    const request = store.get(Number(id)); // Ensure ID is number if autoIncrement
+                    request.onsuccess = () => resolve(request.result);
+                    request.onerror = (event) => reject(event.target.error);
+                });
+            },
+            getAllWords: function() {
+                return new Promise((resolve, reject) => {
+                    if (!db) return reject("DB not initialized");
+                    const transaction = db.transaction(['words'], 'readonly');
+                    const store = transaction.objectStore('words');
+                    const request = store.getAll();
+                    request.onsuccess = () => resolve(request.result);
+                    request.onerror = (event) => reject(event.target.error);
+                });
+            },
+            deleteWord: function(id) {
+                return new Promise((resolve, reject) => {
+                    if (!db) return reject("DB not initialized");
+                    const transaction = db.transaction(['words'], 'readwrite');
+                    const store = transaction.objectStore('words');
+                    const request = store.delete(Number(id));
+                    request.onsuccess = () => resolve();
+                    request.onerror = (event) => reject(event.target.error);
+                });
+            },
+            getWordsForReview: function() {
+                return new Promise((resolve, reject) => {
+                    if (!db) return reject("DB not initialized");
+                    const transaction = db.transaction(['words'], 'readonly');
+                    const store = transaction.objectStore('words');
+                    const index = store.index('srs_nextReview');
+                    const now = new Date().toISOString();
+                    // Get all words where srs_nextReview is less than or equal to now, or null (new words)
+                    const request = index.getAll(IDBKeyRange.upperBound(now)); 
+                    
+                    request.onsuccess = () => {
+                        let dueWords = request.result;
+                        // Also fetch words with null srs_nextReview (new words not yet in SRS)
+                        const allWordsRequest = store.getAll();
+                        allWordsRequest.onsuccess = () => {
+                            const newWords = allWordsRequest.result.filter(w => !w.srs_nextReview && w.status !== 'known');
+                            // Combine and remove duplicates if any (though logic should prevent it)
+                            const combined = [...dueWords, ...newWords];
+                            const uniqueWords = Array.from(new Set(combined.map(w => w.id))).map(id => combined.find(w => w.id === id));
+                            resolve(uniqueWords.sort((a,b) => (a.srs_nextReview || '0') < (b.srs_nextReview || '0') ? -1 : 1)); // Prioritize due ones
+                        };
+                        allWordsRequest.onerror = (event) => reject(event.target.error);
+                    };
+                    request.onerror = (event) => reject(event.target.error);
+                });
+            },
+            countWordsByStatus: function() {
+                return new Promise(async (resolve, reject) => {
+                    if (!db) return reject("DB not initialized");
+                    try {
+                        const allWords = await this.getAllWords();
+                        const total = allWords.length;
+                        const learning = allWords.filter(w => w.status === 'learning').length;
+                        const known = allWords.filter(w => w.status === 'known').length;
+                        const now = new Date().toISOString();
+                        const dueReview = allWords.filter(w => w.srs_nextReview && w.srs_nextReview <= now && w.status !== 'known').length;
+                        resolve({ total, learning, known, dueReview });
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            },
+
+            // --- Settings Methods ---
+            getSetting: function(key) {
+                return new Promise((resolve, reject) => {
+                    if (!db) return reject("DB not initialized");
+                    const transaction = db.transaction(['appSettings'], 'readonly');
+                    const store = transaction.objectStore('appSettings');
+                    const request = store.get(key);
+                    request.onsuccess = () => resolve(request.result ? request.result.value : undefined);
+                    request.onerror = (event) => reject(event.target.error);
+                });
+            },
+            setSetting: function(key, value) {
+                return new Promise((resolve, reject) => {
+                    if (!db) return reject("DB not initialized");
+                    const transaction = db.transaction(['appSettings'], 'readwrite');
+                    const store = transaction.objectStore('appSettings');
+                    const request = store.put({ key, value });
+                    request.onsuccess = () => resolve();
+                    request.onerror = (event) => reject(event.target.error);
+                });
+            },
+            
+            // --- Backup & Restore ---
+            backupData: async function() {
+                if (!db) throw new Error("DB not initialized");
+                const words = await this.getAllWords();
+                // const customLists = await this.getAllCustomLists(); // If implemented
+                const settingsToBackup = {};
+                const theme = await this.getSetting('theme');
+                if (theme) settingsToBackup.theme = theme;
+                // Add other relevant settings
+
+                return {
+                    words: words,
+                    // customLists: customLists,
+                    appSettings: settingsToBackup,
+                    backupDate: new Date().toISOString()
+                };
+            },
+            restoreData: async function(data) {
+                if (!db) throw new Error("DB not initialized");
+                if (!data || !data.words) throw new Error("Invalid backup data format.");
+
+                const wordTx = db.transaction(['words'], 'readwrite');
+                const wordStore = wordTx.objectStore('words');
+                await new Promise((res, rej) => { // Promisify clear
+                    const req = wordStore.clear();
+                    req.onsuccess = res;
+                    req.onerror = rej;
+                });
+                for (const word of data.words) {
+                    // Remove 'id' if it's auto-incrementing to let DB assign new one, or keep if IDs are meant to be preserved
+                    // For simplicity, let's assume we want to preserve IDs if they exist and are valid.
+                    // However, if 'id' was auto-generated, it's better to let DB re-assign.
+                    // Let's remove ID to ensure fresh auto-increment.
+                    const { id, ...wordWithoutId } = word; 
+                    await new Promise((res, rej) => {
+                        const req = wordStore.add(wordWithoutId);
+                        req.onsuccess = res;
+                        req.onerror = rej;
+                    });
+                }
+                
+                // Restore settings
+                if (data.appSettings) {
+                    for (const key in data.appSettings) {
+                        await this.setSetting(key, data.appSettings[key]);
+                    }
+                    if (data.appSettings.theme) {
+                        applyTheme(data.appSettings.theme);
+                        themeSwitcher.value = data.appSettings.theme;
+                    }
+                }
+                showNotification('Data restored successfully.', 'success');
+            },
+            resetAllData: async function() {
+                if (!db) throw new Error("DB not initialized");
+                const storesToClear = ['words', 'quranData', 'appSettings']; // Add 'customLists' etc.
+                const transaction = db.transaction(storesToClear, 'readwrite');
+                for (const storeName of storesToClear) {
+                    const store = transaction.objectStore(storeName);
+                    await new Promise((resolve, reject) => {
+                        const request = store.clear();
+                        request.onsuccess = resolve;
+                        request.onerror = reject;
+                    });
+                }
+                showNotification('All application data has been reset.', 'success');
+            }
+        };
+
+        // --- QURAN DATA PARSER MODULE ---
+        const QuranParser = {
+            parseAndStore: async function(fileContent) {
+                const lines = fileContent.split('\n');
+                let ayahsProcessed = 0;
+                const totalLines = lines.length;
+                dataAmProgress.textContent = `Processing 0/${totalLines} ayahs...`;
+
+                for (let i = 0; i < totalLines; i++) {
+                    const line = lines[i].trim();
+                    if (!line) continue;
+
+                    try {
+                        const parts = line.split('<br/>');
+                        if (parts.length < 2) {
+                            console.warn(`Skipping malformed line (no <br/>): ${line}`);
+                            continue;
+                        }
+                        
+                        const textPart = parts[0];
+                        const refPart = parts[1];
+
+                        const textSplit = textPart.split(' ترجمہ: ');
+                        if (textSplit.length < 2) {
+                            console.warn(`Skipping malformed line (no ' ترجمہ: '): ${line}`);
+                            continue;
+                        }
+                        const arabicText = textSplit[0].trim();
+                        const urduTranslation = textSplit.slice(1).join(' ترجمہ: ').trim(); // Handle cases where 'ترجمہ:' might be in translation
+
+                        const refMatch = refPart.match(/س\s*(\d{3})\s*آ\s*(\d{3})/);
+                        if (!refMatch) {
+                            console.warn(`Skipping malformed line (no Surah/Ayah match): ${line}`);
+                            continue;
+                        }
+                        const surah = refMatch[1];
+                        const ayah = refMatch[2];
+                        const id = `${surah}_${ayah}`;
+
+                        await DB.addQuranAyah({ id, surah, ayah, arabicText, urduTranslation });
+                        ayahsProcessed++;
+
+                        if (i % 100 === 0 || i === totalLines - 1) { // Update progress periodically
+                            dataAmProgress.textContent = `Processing ${ayahsProcessed}/${totalLines} ayahs...`;
+                            await new Promise(r => setTimeout(r, 0)); // Allow UI to update
+                        }
+                    } catch (error) {
+                        console.error(`Error processing line: ${line}`, error);
+                        showNotification(`Error processing line: ${line.substring(0,30)}...`, 'error');
+                    }
+                }
+                dataAmProgress.textContent = `Processed ${ayahsProcessed} ayahs successfully.`;
+                await DB.setSetting('dataAmLoaded', true);
+                await DB.setSetting('dataAmLoadDate', new Date().toISOString());
+                updateQuranDataStatus();
+                populateAyahDropdowns(); // After data is loaded
+                showNotification('Quran data processed and stored.', 'success');
+                checkAndLoadPreloadedWords(); // Load preloaded words after Quran data is ready
+            }
+        };
+        
+        // --- SRS MODULE ---
+        const SRS = {
+            // SM-2 Algorithm variant
+            calculateNextReview: function(word, quality) { // quality: 0-5
+                let { srs_efactor, srs_interval, srs_repetitions } = word;
+
+                if (quality < 3) { // Failed recall
+                    srs_repetitions = 0;
+                    srs_interval = 1; // Review again tomorrow
+                } else {
+                    srs_repetitions = (srs_repetitions || 0) + 1;
+                    if (srs_repetitions === 1) {
+                        srs_interval = 1;
+                    } else if (srs_repetitions === 2) {
+                        srs_interval = 6;
+                    } else {
+                        srs_interval = Math.round((srs_interval || 1) * srs_efactor);
+                    }
+                    // Update E-Factor
+                    srs_efactor = srs_efactor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
+                    if (srs_efactor < 1.3) srs_efactor = 1.3; // Minimum E-Factor
+                }
+                
+                const nextReviewDate = new Date();
+                nextReviewDate.setDate(nextReviewDate.getDate() + srs_interval);
+                
+                return {
+                    srs_efactor: parseFloat(srs_efactor.toFixed(2)),
+                    srs_interval: srs_interval,
+                    srs_repetitions: srs_repetitions,
+                    srs_nextReview: nextReviewDate.toISOString(),
+                    lastReviewed: new Date().toISOString(),
+                    status: (quality >= 4 && srs_repetitions > 3) ? 'known' : 'learning' // Example: mark as known if good recall after few reps
+                };
+            }
+        };
+
+        // --- UI MODULE & APP LOGIC ---
+
+        function showNotification(message, type = 'info') { // type can be 'info', 'success', 'error'
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            notificationsContainer.appendChild(toast);
+            // Remove toast after animation ends (5s)
+            setTimeout(() => {
+                toast.remove();
+            }, 5000);
+        }
+
+        function switchView(sectionId) {
+            sections.forEach(section => {
+                section.classList.remove('active');
+                if (section.id === sectionId) {
+                    section.classList.add('active');
+                }
+            });
+            document.querySelectorAll('.nav-button').forEach(button => {
+                button.classList.remove('active');
+                if (button.dataset.section === sectionId) {
+                    button.classList.add('active');
+                }
+            });
+            // Specific actions when switching views
+            if (sectionId === 'vocabulary-section') {
+                renderWordList();
+            } else if (sectionId === 'dashboard-section') {
+                updateDashboardStats();
+            } else if (sectionId === 'flashcards-section') {
+                loadWordsForReview();
+            }
+        }
+
+        function applyTheme(themeName) {
+            document.documentElement.setAttribute('data-theme', themeName);
+            DB.setSetting('theme', themeName).catch(err => console.error("Error saving theme", err));
+        }
+
+        async function populateAyahDropdowns() {
+            try {
+                const ayahsBrief = await DB.getAllQuranAyahsBrief();
+                if (!ayahsBrief || ayahsBrief.length === 0) {
+                    exampleAyahSurahSelect.innerHTML = '<option value="">Load Quran Data First</option>';
+                    exampleAyahAyahSelect.innerHTML = '<option value="">Load Quran Data First</option>';
+                    return;
+                }
+
+                const surahs = {};
+                ayahsBrief.forEach(item => {
+                    if (!surahs[item.surah]) {
+                        surahs[item.surah] = { count: 0, name: `Surah ${parseInt(item.surah)}` }; // Placeholder name, can be improved
+                    }
+                    surahs[item.surah].count++;
+                });
+
+                exampleAyahSurahSelect.innerHTML = '<option value="">Select Surah</option>';
+                Object.keys(surahs).sort().forEach(surahNum => {
+                    const option = document.createElement('option');
+                    option.value = surahNum;
+                    // TODO: Add Surah names if available. For now, just numbers.
+                    option.textContent = `Surah ${parseInt(surahNum, 10)}`; 
+                    exampleAyahSurahSelect.appendChild(option);
+                });
+
+                exampleAyahSurahSelect.onchange = () => {
+                    const selectedSurah = exampleAyahSurahSelect.value;
+                    exampleAyahAyahSelect.innerHTML = '<option value="">Select Ayah</option>';
+                    examplePreviewArabic.textContent = '';
+                    examplePreviewUrdu.textContent = '';
+                    if (selectedSurah) {
+                        const ayahsInSurah = ayahsBrief.filter(item => item.surah === selectedSurah);
+                        ayahsInSurah.forEach(item => {
+                            const option = document.createElement('option');
+                            option.value = item.ayah;
+                            option.textContent = `Ayah ${parseInt(item.ayah, 10)}`;
+                            exampleAyahAyahSelect.appendChild(option);
+                        });
+                    }
+                };
+                
+                exampleAyahAyahSelect.onchange = async () => {
+                    const selectedSurah = exampleAyahSurahSelect.value;
+                    const selectedAyah = exampleAyahAyahSelect.value;
+                    if (selectedSurah && selectedAyah) {
+                        const ayahData = await DB.getQuranAyah(selectedSurah, selectedAyah);
+                        if (ayahData) {
+                            examplePreviewArabic.textContent = ayahData.arabicText;
+                            examplePreviewUrdu.textContent = ayahData.urduTranslation;
+                        } else {
+                            examplePreviewArabic.textContent = 'Ayah not found.';
+                            examplePreviewUrdu.textContent = '';
+                        }
+                    } else {
+                        examplePreviewArabic.textContent = '';
+                        examplePreviewUrdu.textContent = '';
+                    }
+                };
+
+            } catch (error) {
+                console.error("Error populating Ayah dropdowns:", error);
+                showNotification("Could not load Ayah list for examples.", "error");
+            }
+        }
+        
+        async function updateQuranDataStatus() {
+            const loaded = await DB.getSetting('dataAmLoaded');
+            const count = await DB.countQuranAyahs();
+            if (loaded && count > 0) {
+                quranDataLoadedStatus.textContent = `Loaded (${count} Ayahs)`;
+                quranDataLoadedStatus.style.color = 'var(--accent-color)';
+            } else {
+                quranDataLoadedStatus.textContent = 'Not loaded. Please go to "Load Quran Data" section.';
+                quranDataLoadedStatus.style.color = '#e74c3c';
+            }
+        }
+
+        async function checkAndLoadPreloadedWords() {
+            const words = await DB.getAllWords();
+            const quranDataLoaded = await DB.getSetting('dataAmLoaded');
+
+            if (quranDataLoaded && words.length === 0 && PRELOADED_WORDS.length > 0) {
+                showNotification('Adding some common words to get you started...', 'info');
+                for (const word of PRELOADED_WORDS) {
+                    try {
+                        // Ensure exampleAyahRef is valid before adding
+                        if (word.exampleAyahRef) {
+                            const [s, a] = word.exampleAyahRef.split(':');
+                            const ayahExists = await DB.getQuranAyah(s, a);
+                            if (!ayahExists) {
+                                console.warn(`Preloaded word "${word.arabicWord}" example Ayah ${word.exampleAyahRef} not found. Skipping example.`);
+                                delete word.exampleAyahRef; // Or handle differently
+                            }
+                        }
+                        await DB.addOrUpdateWord(word);
+                    } catch (error) {
+                        console.error("Error adding preloaded word:", word.arabicWord, error);
+                    }
+                }
+                showNotification('Preloaded words added.', 'success');
+                renderWordList();
+                updateDashboardStats();
+            }
+        }
+
+        // Vocabulary Management
+        addWordForm.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const id = wordIdInput.value ? Number(wordIdInput.value) : null;
+            const exampleAyahRef = (exampleAyahSurahSelect.value && exampleAyahAyahSelect.value) ? 
+                `${exampleAyahSurahSelect.value}:${exampleAyahAyahSelect.value}` : null;
+
+            const wordData = {
+                arabicWord: arabicWordInput.value.trim(),
+                rootLetters: rootLettersInput.value.trim(),
+                meaning: meaningInput.value.trim(),
+                exampleAyahRef: exampleAyahRef,
+                status: wordStatusInput.value,
+            };
+
+            if (id) wordData.id = id; // For updates, include existing ID
+
+            try {
+                // If it's a new word or status is not 'known', ensure SRS fields are initialized or reset for learning
+                if (!id || wordData.status !== 'known') {
+                    const existingWord = id ? await DB.getWord(id) : null;
+                    if (!existingWord || !existingWord.srs_nextReview) { // New word or word not yet in SRS
+                        wordData.srs_efactor = 2.5;
+                        wordData.srs_interval = 0; // Will be set to 1 on first review if not 'known'
+                        wordData.srs_repetitions = 0;
+                        wordData.srs_nextReview = null; // New words start as null, reviewed based on status
+                        wordData.lastReviewed = null;
+                    } else { // Preserve existing SRS if only other fields are changing
+                        wordData.srs_efactor = existingWord.srs_efactor;
+                        wordData.srs_interval = existingWord.srs_interval;
+                        wordData.srs_repetitions = existingWord.srs_repetitions;
+                        wordData.srs_nextReview = existingWord.srs_nextReview;
+                        wordData.lastReviewed = existingWord.lastReviewed;
+                    }
+                } else if (wordData.status === 'known') { // If explicitly set to known
+                    wordData.srs_nextReview = null; // Known words are not scheduled by SRS this way
+                }
+
+
+                await DB.addOrUpdateWord(wordData);
+                showNotification(`Word "${wordData.arabicWord}" ${id ? 'updated' : 'added'} successfully.`, 'success');
+                addWordForm.reset();
+                wordIdInput.value = '';
+                examplePreviewArabic.textContent = '';
+                examplePreviewUrdu.textContent = '';
+                cancelEditWordButton.classList.add('hidden');
+                renderWordList();
+                updateDashboardStats();
+            } catch (error) {
+                console.error('Error saving word:', error);
+                showNotification('Error saving word: ' + error.message, 'error');
+            }
+        });
+        
+        cancelEditWordButton.addEventListener('click', () => {
+            addWordForm.reset();
+            wordIdInput.value = '';
+            examplePreviewArabic.textContent = '';
+            examplePreviewUrdu.textContent = '';
+            cancelEditWordButton.classList.add('hidden');
+            arabicWordInput.focus();
+        });
+
+        async function renderWordList(searchTerm = '') {
+            const words = await DB.getAllWords();
+            wordListTbody.innerHTML = ''; // Clear existing rows
+
+            const filteredWords = words.filter(word => 
+                word.arabicWord.includes(searchTerm) ||
+                word.rootLetters.includes(searchTerm) ||
+                word.meaning.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+
+            if (filteredWords.length === 0) {
+                wordListTbody.innerHTML = '<tr><td colspan="6">No words found.</td></tr>';
+                return;
+            }
+
+            filteredWords.sort((a,b) => (a.dateAdded > b.dateAdded) ? -1 : 1); // Show newest first
+
+            for (const word of filteredWords) {
+                const row = wordListTbody.insertRow();
+                row.insertCell().textContent = word.arabicWord;
+                row.cells[0].classList.add('arabic-cell');
+                row.insertCell().textContent = word.rootLetters;
+                row.cells[1].classList.add('arabic-cell');
+                row.insertCell().textContent = word.meaning;
+                row.insertCell().textContent = word.status;
+                
+                let nextReviewDisplay = 'N/A';
+                if (word.srs_nextReview) {
+                    const reviewDate = new Date(word.srs_nextReview);
+                    if (reviewDate <= new Date() && word.status !== 'known') {
+                        nextReviewDisplay = 'Due Now';
+                    } else if (word.status !== 'known') {
+                        nextReviewDisplay = reviewDate.toLocaleDateString();
+                    }
+                } else if (word.status === 'learning' || word.status === 'new') {
+                    nextReviewDisplay = 'Ready to learn';
+                }
+                row.insertCell().textContent = nextReviewDisplay;
+
+                const actionsCell = row.insertCell();
+                const editButton = document.createElement('button');
+                editButton.textContent = 'Edit';
+                editButton.classList.add('button', 'small-button');
+                editButton.onclick = () => loadWordForEditing(word.id);
+                actionsCell.appendChild(editButton);
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.classList.add('button', 'small-button');
+                deleteButton.style.backgroundColor = '#c0392b'; // Danger color
+                deleteButton.onclick = () => deleteWord(word.id, word.arabicWord);
+                actionsCell.appendChild(deleteButton);
+            }
+        }
+        
+        searchWordInput.addEventListener('input', (e) => {
+            renderWordList(e.target.value.trim());
+        });
+
+        async function loadWordForEditing(id) {
+            const word = await DB.getWord(id);
+            if (word) {
+                wordIdInput.value = word.id;
+                arabicWordInput.value = word.arabicWord;
+                rootLettersInput.value = word.rootLetters;
+                meaningInput.value = word.meaning;
+                wordStatusInput.value = word.status;
+
+                if (word.exampleAyahRef) {
+                    const [surah, ayah] = word.exampleAyahRef.split(':');
+                    exampleAyahSurahSelect.value = surah;
+                    // Trigger change to populate ayah select, then set ayah value
+                    const changeEvent = new Event('change');
+                    exampleAyahSurahSelect.dispatchEvent(changeEvent);
+                    // Need a slight delay for ayah options to populate if async
+                    setTimeout(async () => {
+                        exampleAyahAyahSelect.value = ayah;
+                        // Trigger change on ayah select to update preview
+                        exampleAyahAyahSelect.dispatchEvent(changeEvent);
+                        const ayahData = await DB.getQuranAyah(surah, ayah);
+                        if (ayahData) {
+                            examplePreviewArabic.textContent = ayahData.arabicText;
+                            examplePreviewUrdu.textContent = ayahData.urduTranslation;
+                        }
+                    }, 100); // Adjust delay if needed
+                } else {
+                    exampleAyahSurahSelect.value = '';
+                    exampleAyahAyahSelect.innerHTML = '<option value="">Select Ayah</option>';
+                    examplePreviewArabic.textContent = '';
+                    examplePreviewUrdu.textContent = '';
+                }
+                cancelEditWordButton.classList.remove('hidden');
+                arabicWordInput.focus();
+                // Scroll to form if needed
+                addWordForm.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        async function deleteWord(id, wordName) {
+            if (confirm(`Are you sure you want to delete the word "${wordName}"?`)) {
+                try {
+                    await DB.deleteWord(id);
+                    showNotification(`Word "${wordName}" deleted.`, 'success');
+                    renderWordList();
+                    updateDashboardStats();
+                } catch (error) {
+                    console.error('Error deleting word:', error);
+                    showNotification('Error deleting word.', 'error');
+                }
+            }
+        }
+
+        // Flashcard Study Logic
+        async function loadWordsForReview() {
+            studyFlashcard.classList.remove('is-flipped');
+            revealAnswerButton.classList.remove('hidden');
+            nextFlashcardButton.classList.add('hidden');
+            srsControls.classList.add('hidden');
+
+            try {
+                wordsForReview = await DB.getWordsForReview();
+                if (wordsForReview.length === 0) {
+                    noFlashcardsMessage.style.display = 'block';
+                    studyFlashcardContainer.classList.add('hidden');
+                    flashcardNavButtons.classList.add('hidden');
+                    return;
+                }
+                noFlashcardsMessage.style.display = 'none';
+                studyFlashcardContainer.classList.remove('hidden');
+                flashcardNavButtons.classList.remove('hidden');
+                currentFlashcardIndex = 0;
+                displayFlashcard();
+            } catch (error) {
+                console.error("Error loading words for review:", error);
+                showNotification("Could not load words for review.", "error");
+                noFlashcardsMessage.style.display = 'block';
+                studyFlashcardContainer.classList.add('hidden');
+                flashcardNavButtons.classList.add('hidden');
+            }
+        }
+
+        async function displayFlashcard() {
+            if (currentFlashcardIndex >= wordsForReview.length) {
+                noFlashcardsMessage.textContent = "No more words to review for now! Great job!";
+                noFlashcardsMessage.style.display = 'block';
+                studyFlashcardContainer.classList.add('hidden');
+                flashcardNavButtons.classList.add('hidden');
+                srsControls.classList.add('hidden');
+                updateDashboardStats(); // Refresh stats after review session
+                return;
+            }
+
+            currentFlashcardWord = wordsForReview[currentFlashcardIndex];
+            flashcardFrontText.textContent = currentFlashcardWord.arabicWord;
+            flashcardRoot.textContent = currentFlashcardWord.rootLetters || 'N/A';
+            flashcardMeaning.textContent = currentFlashcardWord.meaning;
+
+            if (currentFlashcardWord.exampleAyahRef) {
+                flashcardExampleRef.textContent = `(Reference: ${currentFlashcardWord.exampleAyahRef.replace(':', ' Surah, Ayah ' )})`;
+                const [s, a] = currentFlashcardWord.exampleAyahRef.split(':');
+                const ayahData = await DB.getQuranAyah(s, a);
+                if (ayahData) {
+                    flashcardExampleArabic.textContent = ayahData.arabicText;
+                    flashcardExampleUrdu.textContent = ayahData.urduTranslation;
+                } else {
+                    flashcardExampleArabic.textContent = 'Example Ayah not found.';
+                    flashcardExampleUrdu.textContent = '';
+                }
+            } else {
+                flashcardExampleRef.textContent = '';
+                flashcardExampleArabic.textContent = '';
+                flashcardExampleUrdu.textContent = '';
+            }
+            
+            studyFlashcard.classList.remove('is-flipped');
+            revealAnswerButton.classList.remove('hidden');
+            nextFlashcardButton.classList.add('hidden');
+            srsControls.classList.add('hidden');
+        }
+
+        studyFlashcard.addEventListener('click', () => {
+            if (!srsControls.classList.contains('hidden')) return; // Don't flip if SRS controls are shown
+            studyFlashcard.classList.toggle('is-flipped');
+            if (studyFlashcard.classList.contains('is-flipped')) {
+                revealAnswerButton.classList.add('hidden'); // Hide reveal when flipped
+                srsControls.classList.remove('hidden'); // Show SRS controls after flipping
+            } else {
+                 // If user flips back to front, hide SRS and show reveal
+                srsControls.classList.add('hidden');
+                revealAnswerButton.classList.remove('hidden');
+            }
+        });
+        
+        revealAnswerButton.addEventListener('click', () => {
+            studyFlashcard.classList.add('is-flipped');
+            revealAnswerButton.classList.add('hidden');
+            srsControls.classList.remove('hidden');
+        });
+
+        srsControls.addEventListener('click', async (event) => {
+            if (event.target.classList.contains('srs-rating')) {
+                const quality = parseInt(event.target.dataset.rating);
+                const srsUpdates = SRS.calculateNextReview(currentFlashcardWord, quality);
+                
+                const updatedWord = { ...currentFlashcardWord, ...srsUpdates };
+                
+                try {
+                    await DB.addOrUpdateWord(updatedWord);
+                    showNotification(`Word "${updatedWord.arabicWord}" updated. Next review: ${new Date(updatedWord.srs_nextReview).toLocaleDateString()}`, 'info');
+                    currentFlashcardIndex++;
+                    displayFlashcard(); // Display next card
+                } catch (error) {
+                    console.error("Error updating word after SRS review:", error);
+                    showNotification("Error saving review progress.", "error");
+                }
+            }
+        });
+        
+        nextFlashcardButton.addEventListener('click', () => { // This button might be redundant if SRS controls lead to next
+            currentFlashcardIndex++;
+            displayFlashcard();
+        });
+
+
+        // Quiz Logic (Simplified)
+        let currentQuiz = {
+            questions: [],
+            currentIndex: 0,
+            score: 0,
+            type: ''
+        };
+
+        async function generateQuizQuestions(type, count) {
+            const allWords = await DB.getAllWords();
+            if (allWords.length < 4) { // Need at least 4 words for decent multiple choice
+                showNotification("Not enough words for a quiz. Add at least 4 words.", "error");
+                return [];
+            }
+
+            // Shuffle words and pick 'count' words
+            const shuffled = allWords.sort(() => 0.5 - Math.random());
+            const selectedWords = shuffled.slice(0, Math.min(count, shuffled.length));
+            
+            const questions = [];
+            for (const word of selectedWords) {
+                const question = {
+                    wordData: word,
+                    questionText: '',
+                    options: [],
+                    correctAnswer: ''
+                };
+
+                // Create distractors
+                let distractors = allWords
+                    .filter(dw => dw.id !== word.id) // Exclude the correct word
+                    .sort(() => 0.5 - Math.random()) // Shuffle distractors
+                    .slice(0, 3); // Pick 3 distractors
+
+                if (type === 'word-to-meaning') {
+                    question.questionText = `What is the meaning of <span class="arabic-text" lang="ar">${word.arabicWord}</span>?`;
+                    question.correctAnswer = word.meaning;
+                    question.options = [word.meaning, ...distractors.map(d => d.meaning)].sort(() => 0.5 - Math.random());
+                } else if (type === 'meaning-to-word') {
+                    question.questionText = `Which word means "${word.meaning}"?`;
+                    question.correctAnswer = word.arabicWord;
+                    question.options = [word.arabicWord, ...distractors.map(d => d.arabicWord)].sort(() => 0.5 - Math.random());
+                } else if (type === 'root-to-word' && word.rootLetters) {
+                    question.questionText = `Which word comes from the root <span class="arabic-text" lang="ar">${word.rootLetters}</span>?`;
+                    question.correctAnswer = word.arabicWord;
+                    // Filter distractors that also have roots, or use any word if not enough
+                    distractors = distractors.filter(d => d.rootLetters && d.rootLetters !== word.rootLetters);
+                    if (distractors.length < 3) { // Fallback if not enough distinct roots
+                        distractors = allWords.filter(dw => dw.id !== word.id).sort(() => 0.5 - Math.random()).slice(0,3);
+                    }
+                    question.options = [word.arabicWord, ...distractors.map(d => d.arabicWord)].sort(() => 0.5 - Math.random());
+                } else {
+                    continue; // Skip if type not supported or data missing (e.g. root-to-word but no root)
+                }
+                // Ensure 4 unique options
+                question.options = [...new Set(question.options)];
+                while(question.options.length < 2 && allWords.length >=2) { // Ensure at least 2 options
+                     const randomWord = allWords[Math.floor(Math.random() * allWords.length)];
+                     const optionToAdd = type.includes('meaning') ? randomWord.meaning : randomWord.arabicWord;
+                     if(!question.options.includes(optionToAdd)) question.options.push(optionToAdd);
+                }
+                 while(question.options.length < 4 && allWords.length >=4) { // Pad to 4 options if possible
+                     const randomWord = allWords[Math.floor(Math.random() * allWords.length)];
+                     const optionToAdd = type.includes('meaning') ? randomWord.meaning : randomWord.arabicWord;
+                     if(!question.options.includes(optionToAdd)) question.options.push(optionToAdd);
+                }
+
+
+                questions.push(question);
+            }
+            return questions;
+        }
+
+        function displayQuizQuestion() {
+            if (currentQuiz.currentIndex >= currentQuiz.questions.length) {
+                showQuizResults();
+                return;
+            }
+            const q = currentQuiz.questions[currentQuiz.currentIndex];
+            quizQuestionArea.innerHTML = q.questionText; // Use innerHTML for span
+            quizOptionsArea.innerHTML = '';
+            q.options.forEach(option => {
+                const button = document.createElement('button');
+                button.classList.add('button');
+                if (currentQuiz.type === 'meaning-to-word' || currentQuiz.type === 'root-to-word') {
+                    button.classList.add('arabic-option');
+                    button.lang = 'ar';
+                }
+                button.textContent = option;
+                button.addEventListener('click', () => handleQuizAnswer(option, q.correctAnswer));
+                quizOptionsArea.appendChild(button);
+            });
+            quizFeedbackArea.textContent = '';
+            nextQuizQuestionButton.classList.add('hidden');
+        }
+
+        function handleQuizAnswer(selectedAnswer, correctAnswer) {
+            if (selectedAnswer === correctAnswer) {
+                quizFeedbackArea.textContent = "Correct!";
+                quizFeedbackArea.style.color = 'var(--accent-color)';
+                currentQuiz.score++;
+            } else {
+                quizFeedbackArea.textContent = `Incorrect. The correct answer was: ${correctAnswer}`;
+                quizFeedbackArea.style.color = '#e74c3c';
+            }
+            // Disable option buttons
+            quizOptionsArea.querySelectorAll('button').forEach(btn => btn.disabled = true);
+            nextQuizQuestionButton.classList.remove('hidden');
+        }
+        
+        nextQuizQuestionButton.addEventListener('click', () => {
+            currentQuiz.currentIndex++;
+            displayQuizQuestion();
+        });
+
+        function showQuizResults() {
+            quizArea.classList.add('hidden');
+            quizResultsArea.classList.remove('hidden');
+            quizScoreEl.textContent = currentQuiz.score;
+            quizTotalQuestionsEl.textContent = currentQuiz.questions.length;
+        }
+
+        startQuizButton.addEventListener('click', async () => {
+            const quizType = document.getElementById('quiz-type').value;
+            const numQuestions = parseInt(document.getElementById('quiz-word-count').value);
+
+            currentQuiz.questions = await generateQuizQuestions(quizType, numQuestions);
+            if (currentQuiz.questions.length === 0) {
+                if (await DB.countWords() >=4) showNotification("Could not generate quiz. Try a different type or add more words with roots.", "error");
+                return;
+            }
+            currentQuiz.currentIndex = 0;
+            currentQuiz.score = 0;
+            currentQuiz.type = quizType;
+
+            document.getElementById('quiz-setup').classList.add('hidden');
+            quizArea.classList.remove('hidden');
+            quizResultsArea.classList.add('hidden');
+            displayQuizQuestion();
+        });
+        
+        document.getElementById('retake-quiz-button').addEventListener('click', () => {
+            quizResultsArea.classList.add('hidden');
+            document.getElementById('quiz-setup').classList.remove('hidden');
+        });
+
+
+        // Settings Logic
+        themeSwitcher.addEventListener('change', function() {
+            applyTheme(this.value);
+        });
+
+        backupDataButton.addEventListener('click', async () => {
+            try {
+                const data = await DB.backupData();
+                const jsonString = JSON.stringify(data, null, 2);
+                const blob = new Blob([jsonString], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `quranic_roots_backup_${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showNotification('Data backup successful. File downloaded.', 'success');
+            } catch (error) {
+                console.error('Backup error:', error);
+                showNotification('Error during backup: ' + error.message, 'error');
+            }
+        });
+
+        restoreDataInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                if (!confirm("Restoring data will overwrite existing words and settings. Are you sure?")) {
+                    this.value = null; // Reset file input
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = async function(e) {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        await DB.restoreData(data);
+                        // Refresh UI elements
+                        renderWordList();
+                        updateDashboardStats();
+                        populateAyahDropdowns(); // Repopulate based on potentially new settings/data
+                        // Switch to dashboard or relevant view
+                        switchView('dashboard-section');
+                    } catch (error) {
+                        console.error('Restore error:', error);
+                        showNotification('Error restoring data: ' + error.message, 'error');
+                    } finally {
+                        restoreDataInput.value = null; // Reset file input
+                    }
+                };
+                reader.readAsText(file);
+            }
+        });
+        
+        resetAppButton.addEventListener('click', async () => {
+            if (confirm("ARE YOU ABSOLUTELY SURE? This will delete ALL data including Quran ayahs, words, and settings. This action cannot be undone.")) {
+                if (confirm("SECOND CONFIRMATION: Are you really, really sure you want to delete everything?")) {
+                    try {
+                        await DB.resetAllData();
+                        // Re-initialize critical settings or state
+                        await DB.setSetting('theme', 'light'); // Reset theme to default
+                        applyTheme('light');
+                        themeSwitcher.value = 'light';
+                        await DB.setSetting('dataAmLoaded', false);
+                        updateQuranDataStatus();
+                        renderWordList(); // Will show empty
+                        updateDashboardStats(); // Will show zeros
+                        populateAyahDropdowns(); // Will show load data message
+                        switchView('data-loader-section'); // Guide user to reload data
+                        showNotification('Application has been reset to its initial state.', 'success');
+                    } catch (error) {
+                        console.error('Error resetting application:', error);
+                        showNotification('Error resetting application: ' + error.message, 'error');
+                    }
+                }
+            }
+        });
+
+        // Dashboard
+        async function updateDashboardStats() {
+            try {
+                const stats = await DB.countWordsByStatus();
+                statsTotalWords.textContent = stats.total;
+                statsLearningWords.textContent = stats.learning;
+                statsKnownWords.textContent = stats.known;
+                statsDueReview.textContent = stats.dueReview;
+            } catch (error) {
+                console.error("Error updating dashboard stats:", error);
+            }
+        }
+        
+        addNewWordDashboardButton.addEventListener('click', () => switchView('vocabulary-section'));
+        startReviewButton.addEventListener('click', () => switchView('flashcards-section'));
+
+
+        // --- APP INITIALIZATION ---
+        async function initApp() {
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+
+            try {
+                await DB.init();
+                
+                // Load theme preference
+                const savedTheme = await DB.getSetting('theme') || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                themeSwitcher.value = savedTheme;
+                applyTheme(savedTheme);
+
+                await updateQuranDataStatus();
+                const quranDataIsLoaded = await DB.getSetting('dataAmLoaded');
+
+                if (!quranDataIsLoaded) {
+                    switchView('data-loader-section');
+                    showNotification('Please load the data.AM file to begin.', 'info');
+                } else {
+                    switchView('dashboard-section'); // Default view
+                    await populateAyahDropdowns();
+                    await checkAndLoadPreloadedWords(); // Check after Quran data status is confirmed
+                }
+                
+                renderWordList(); // Initial render for vocabulary section
+                updateDashboardStats(); // Initial dashboard stats
+
+            } catch (error) {
+                console.error('App initialization error:', error);
+                showNotification('Application failed to initialize properly.', 'error');
+                // Fallback: show data loader or a generic error message
+                switchView('data-loader-section'); 
+                dataAmProgress.textContent = "Error initializing application. Please try refreshing or clearing browser data for this site if issues persist.";
+            }
+
+            // Setup navigation
+            mainNav.addEventListener('click', function(event) {
+                if (event.target.tagName === 'BUTTON') {
+                    const sectionId = event.target.dataset.section;
+                    if (sectionId) {
+                        switchView(sectionId);
+                    }
+                }
+            });
+
+            // Setup data.AM processing
+            processDataAmButton.addEventListener('click', async () => {
+                const file = dataAmFileInput.files[0];
+                if (!file) {
+                    showNotification('Please select a data.AM file first.', 'error');
+                    return;
+                }
+                processDataAmButton.disabled = true;
+                processDataAmButton.textContent = 'Processing...';
+                try {
+                    const fileContent = await file.text();
+                    await QuranParser.parseAndStore(fileContent);
+                    // After processing, maybe switch to dashboard
+                    switchView('dashboard-section');
+                } catch (error) {
+                    console.error('Error processing data.AM file:', error);
+                    showNotification('Error processing file: ' + error.message, 'error');
+                    dataAmProgress.textContent = `Error: ${error.message}`;
+                } finally {
+                    processDataAmButton.disabled = false;
+                    processDataAmButton.textContent = 'Process File';
+                    dataAmFileInput.value = null; // Reset file input
+                }
+            });
+        }
+
+        // --- STARTUP ---
+        document.addEventListener('DOMContentLoaded', initApp);
+
+    })();
+    </script>
+</body>
+</html>
