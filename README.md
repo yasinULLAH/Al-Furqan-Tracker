@@ -1,4 +1,4 @@
-# My Quran Journey 📖 | میرا قرآنی سفر 📖
+# My Quran(Al-Furqan) Journey 📖 | میرا قرآنی سفر 📖
 
 A personal, offline-first single HTML file app to track your Quran recitation and memorization progress. Built with love by Yasin Ullah. | آپ کی تلاوت قرآن اور حفظ کی پیشرفت کو ٹریک کرنے کے لیے ایک ذاتی، آف لائن فرسٹ سنگل ایچ ٹی ایم ایل فائل ایپ۔ یاسین اللہ کی محبت سے تیار کردہ۔
 
