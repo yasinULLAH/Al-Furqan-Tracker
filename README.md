@@ -68,6 +68,101 @@ A personal, offline-first single HTML file app to track your Quran recitation an
 
 ---
 
+Project no 2
+
+# My Dua Diary 🕌 | میری دعا ڈائری 🕌
+
+**Author: Yasin Ullah (Pakistani 🇵🇰) | مصنف: یاسین اللہ (پاکستانی 🇵🇰)**
+
+A private, offline-first journal for users to write, collect, and organize personal Duas (supplications) and Adhkar (remembrances), with integrated Quran data. | صارفین کے لیے ذاتی دعائیں اور اذکار لکھنے، جمع کرنے اور منظم کرنے کے لیے ایک نجی، آف لائن-فرسٹ جریدہ، جس میں قرآن کا ڈیٹا بھی شامل ہے۔
+
+---
+
+## ✨ Core Functionality | ✨ بنیادی خصوصیات
+
+*   **✍️ Rich Text Editor for Personal Duas** | **✍️ ذاتی دعاؤں کے لیے رچ ٹیکسٹ ایڈیٹر**
+    *   Write and format your personal supplications with ease. | اپنی ذاتی التجائیں آسانی سے لکھیں اور فارمیٹ کریں۔
+*   **📚 Collect Common/Masnoon Duas** | **📚 عام/مسنون دعائیں جمع کریں**
+    *   Input Duas with Arabic text, translation, transliteration, and source/reference. | عربی متن، ترجمہ، نقل حرفی، اور ماخذ/حوالہ کے ساتھ دعائیں درج کریں۔
+*   **🗂️ Categorize Duas/Adhkar** | **🗂️ دعاؤں/اذکار کی درجہ بندی کریں**
+    *   Organize your entries (e.g., "Morning," "Evening," "For Study," "For Hardship"). | اپنی اندراجات کو منظم کریں (مثلاً "صبح"، "شام"، "پڑھائی کے لیے"، "مشکلات کے لیے")۔
+*   **⭐ Mark Favorites** | **⭐ پسندیدہ نشان زد کریں**
+    *   Quickly access your most cherished Duas. | اپنی سب سے پیاری دعاؤں تک فوری رسائی حاصل کریں۔
+
+## 🚀 Advanced Features | 🚀 جدید خصوصیات
+
+*   **🔔 Set Reminders for Adhkar** | **🔔 اذکار کے لیے یاد دہانیاں ترتیب دیں**
+    *   Utilizes the Notification API to remind you of specific Adhkar at set times. | مقررہ اوقات پر مخصوص اذکار کی یاد دہانی کے لیے نوٹیفکیشن API کا استعمال کرتا ہے۔
+*   **📊 Track Recitation Frequency** | **📊 تلاوت کی تعداد کو ٹریک کریں**
+    *   Manually count and track how often specific Duas are recited. | دستی طور پر شمار کریں اور ٹریک کریں کہ مخصوص دعائیں کتنی بار پڑھی جاتی ہیں۔
+*   **🔍 Search Duas** | **🔍 دعائیں تلاش کریں**
+    *   Find Duas by keyword or category quickly. | کلیدی الفاظ یا زمرے کے لحاظ سے دعائیں تیزی سے تلاش کریں۔
+*   **💖 Dua of the Day** | **💖 آج کی دعا**
+    *   Displays a randomly selected Dua from your favorites or a specific category. | آپ کی پسندیدہ یا کسی مخصوص زمرے سے تصادفی طور پر منتخب کردہ دعا دکھاتا ہے۔
+
+## 📖 Quran Integration | 📖 قرآن کا انضمام
+
+*   **🕋 Auto-load Quran Data (`data.AM`)** | **🕋 قرآن ڈیٹا کا خودکار لوڈ (`data.AM`)**
+    *   Automatically loads and parses Quranic ayahs from the `data.AM` file on first run. | پہلی بار چلانے پر `data.AM` فائل سے قرآنی آیات کو خود بخود لوڈ اور پارس کرتا ہے۔
+    *   Structure: `[Arabic Ayah] ترجمہ: [Urdu Translation]<br/>س [Surah Number] آ [Ayah Number]` | ساخت: `[عربی آیت] ترجمہ: [اردو ترجمہ]<br/>س [سورۃ نمبر] آ [آیت نمبر]`
+*   **🌐 Browse & Search Quran** | **🌐 قرآن کو براؤز اور تلاش کریں**
+    *   Explore Surahs and Ayahs, and search by keyword or Surah:Ayah reference. | سورتیں اور آیات دریافت کریں، اور کلیدی الفاظ یا سورۃ:آیت کے حوالے سے تلاش کریں۔
+*   **➕ Add Ayahs as Duas** | **➕ آیات کو بطور دعا شامل کریں**
+    *   Easily convert any Quranic Ayah into a Dua entry in your diary. | کسی بھی قرآنی آیت کو آسانی سے اپنی ڈائری میں دعا کے اندراج میں تبدیل کریں۔
+
+## 💾 Data Management | 💾 ڈیٹا کا انتظام
+
+*   **🔒 IndexedDB Storage** | **🔒 انڈیکسڈ ڈی بی اسٹوریج**
+    *   All Duas, Adhkar, categories, favorites, recitation logs, and Quran data are stored locally in your browser using IndexedDB. | تمام دعائیں، اذکار، زمرے، پسندیدہ، تلاوت کے نوشتہ جات، اور قرآن کا ڈیٹا IndexedDB کا استعمال کرتے ہوئے مقامی طور پر آپ کے براؤزر میں محفوظ کیا جاتا ہے۔
+*   **🔄 Backup and Restore** | **🔄 بیک اپ اور بحال کریں**
+    *   Essential feature to backup your entire diary to a JSON file and restore it when needed. | اپنی پوری ڈائری کا JSON فائل میں بیک اپ لینے اور ضرورت پڑنے پر اسے بحال کرنے کے لیے ضروری خصوصیت۔
+
+## ✈️ Offline-First | ✈️ آف لائن-فرسٹ
+
+*   **🌍 Fully Operational Offline** | **🌍 مکمل طور پر آف لائن آپریشنل**
+    *   The app works completely offline once loaded. No internet connection required for daily use. | ایپ لوڈ ہونے کے بعد مکمل طور پر آف لائن کام کرتی ہے۔ روزانہ استعمال کے لیے انٹرنیٹ کنکشن کی ضرورت نہیں۔
+
+## 🎨 UI/UX | 🎨 یوزر انٹرفیس/یوزر تجربہ
+
+*   **✨ Serene & Futuristic Design** | **✨ پرسکون اور مستقبل پر مبنی ڈیزائن**
+    *   Inspired by "digital prayer beads" with a personal touch. | "ڈیجیٹل تسبیح" سے متاثر ذاتی ٹچ کے ساتھ۔
+*   **🎨 Calming Color Palettes** | **🎨 پرسکون رنگ پیلیٹ**
+    *   Visually soothing interface to enhance your spiritual experience. | آپ کے روحانی تجربے کو بڑھانے کے لیے بصری طور پر آرام دہ انٹرفیس۔
+*   **🖋️ Beautiful Arabic Calligraphy Display** | **🖋️ خوبصورت عربی خطاطی کا ڈسپلے**
+    *   Clear and aesthetically pleasing display of Arabic text. | عربی متن کا واضح اور جمالیاتی طور پر خوشگوار ڈسپلے۔
+*   **📱 Responsive Design** | **📱 ریسپانسیو ڈیزائن**
+    *   Adapts to different screen sizes for use on desktops, tablets, and mobile phones. | ڈیسک ٹاپ، ٹیبلیٹ، اور موبائل فون پر استعمال کے لیے مختلف اسکرین سائز کے مطابق۔
+*   **👓 Highly Accessible Text Options** | **👓 انتہائی قابل رسائی ٹیکسٹ آپشنز**
+    *   Adjustable font sizes for comfortable reading. | آرام دہ پڑھنے کے لیے ایڈجسٹ ایبل فونٹ سائز۔
+
+## 🛠️ Technology Stack | 🛠️ ٹیکنالوجی اسٹیک
+
+*   HTML | ایچ ٹی ایم ایل
+*   CSS | سی ایس ایس
+*   JavaScript (Vanilla) | جاوا اسکرپٹ (ونیلا)
+*   IndexedDB | انڈیکسڈ ڈی بی
+*   Notification API | نوٹیفکیشن API
+
+## 🚀 How to Use | 🚀 استعمال کرنے کا طریقہ
+
+1.  **Download the `dua and quran.html` file.** | **`dua and quran.html` فائل ڈاؤن لوڈ کریں۔**
+2.  **(Optional but Recommended for Quran Features) Download the `data.AM` file and place it in the SAME directory as the HTML file.** | **(اختیاری لیکن قرآنی خصوصیات کے لیے تجویز کردہ) `data.AM` فائل ڈاؤن لوڈ کریں اور اسے HTML فائل والی ڈائرکٹری میں ہی رکھیں۔**
+3.  **Open the `dua and quran.html` file in your web browser (Chrome, Firefox, Edge recommended).** | **`dua and quran.html` فائل کو اپنے ویب براؤزر (کروم، فائر فاکس، ایج تجویز کردہ) میں کھولیں۔**
+4.  **The app will automatically load Quran data from `data.AM` on its first run if the file is present.** | **اگر فائل موجود ہو تو ایپ پہلی بار چلانے پر `data.AM` سے قرآن کا ڈیٹا خود بخود لوڈ کر لے گی۔**
+5.  **Start journaling your Duas!** | **اپنی دعائیں لکھنا شروع کریں!**
+
+## 🤝 Contributing | 🤝 شراکت داری
+
+Contributions, issues, and feature requests are welcome! Feel free to check the issues page. | شراکتیں، مسائل، اور خصوصیات کی درخواستیں خوش آئند ہیں! مسائل کا صفحہ بلا جھجھک چیک کریں۔
+
+## 📜 License | 📜 لائسنس
+
+This project is unlicensed and free to use. | یہ پروجیکٹ بغیر لائسنس کے ہے اور استعمال کے لیے مفت ہے۔
+
+
+---
+Made with ❤️ by Yasin Ullah | ❤️ یاسین اللہ کی طرف سے بنایا گیا
+
 ## 🤝 Contributing | 🤝 شراکت
 Contributions, issues, and feature requests are welcome! Feel free to check the issues page. | شراکتیں، مسائل، اور فیچر کی درخواستوں کا خیرمقدم ہے! مسائل کا صفحہ بلا جھجھک چیک کریں۔
 
