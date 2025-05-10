@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dua Diary</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Lateef&display=swap');
+
+        body {
+            font-family: 'Lateef', serif;
+            background-color: #f0f4f8;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #4a90e2;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            flex-grow: 1;
+            padding: 1rem;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .dua-entry, .quran-ayah {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid #4a90e2;
+        }
+
+        .dua-entry h3, .quran-ayah h3 {
+            margin-top: 0;
+            color: #4a90e2;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .dua-entry .arabic, .quran-ayah .arabic {
+            font-family: 'Amiri', serif;
+            font-size: 1.8em;
+            text-align: right;
+            direction: rtl;
+            margin-bottom: 0.8rem;
+            line-height: 2;
+        }
+
+        .dua-entry .translation, .quran-ayah .translation {
+            font-size: 1.1em;
+            color: #555;
+            margin-bottom: 0.5rem;
+        }
+
+        .dua-entry .meta, .quran-ayah .meta {
+            font-size: 0.9em;
+            color: #777;
+            margin-top: 0.5rem;
+        }
+
+        .dua-entry .actions, .quran-ayah .actions {
+            margin-top: 1rem;
+            text-align: right;
+        }
+
+        .dua-entry .actions button, .quran-ayah .actions button {
+            background-color: #e0e0e0;
+            border: none;
+            padding: 0.5rem 1rem;
+            margin-left: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .dua-entry .actions button:hover, .quran-ayah .actions button:hover {
+            background-color: #d5d5d5;
+        }
+
+        .dua-entry .actions .favorite.active {
+            color: gold;
+        }
+
+        .form-section {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-section h2 {
+            margin-top: 0;
+            color: #4a90e2;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .form-group input[type="text"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .form-group button {
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .form-group button:hover {
+            background-color: #3a7bd5;
+        }
+
+        .filter-section {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background-color: #eef;
+            border-radius: 8px;
+        }
+
+        .filter-section label {
+            margin-right: 1rem;
+        }
+
+        .filter-section select, .filter-section input[type="text"] {
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .dua-of-day {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .dua-of-day h3 {
+            color: #155724;
+            margin-top: 0;
+        }
+
+        .dua-of-day .arabic {
+            font-family: 'Amiri', serif;
+            font-size: 2em;
+            text-align: center;
+            direction: rtl;
+            margin-bottom: 1rem;
+        }
+
+        .dua-of-day .translation {
+            font-size: 1.2em;
+            margin-bottom: 1rem;
+        }
+
+        .dua-of-day .meta {
+            font-size: 1em;
+            color: #155724;
+        }
+
+        .recitation-counter {
+            display: inline-block;
+            margin-left: 1rem;
+            font-weight: bold;
+        }
+
+        .recitation-counter button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 0.5rem;
+        }
+
+        .recitation-counter button:hover {
+            background-color: #45a049;
+        }
+
+        .backup-restore {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #ffecb3;
+            border-radius: 8px;
+        }
+
+        .backup-restore button {
+            background-color: #ff9800;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 1rem;
+        }
+
+        .backup-restore button:hover {
+            background-color: #f57c00;
+        }
+
+        .backup-restore input[type="file"] {
+            display: none;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            margin-top: 2rem;
+            color: #777;
+            font-size: 0.9em;
+        }
+
+        /* Accessibility */
+        .text-size-controls {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background-color: #eef;
+            border-radius: 8px;
+        }
+
+        .text-size-controls button {
+            padding: 0.5rem 1rem;
+            margin-right: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .text-size-controls button:hover {
+            background-color: #ddd;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .tab-button {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            background-color: transparent;
+            border-bottom: 2px solid transparent;
+            font-size: 1.1em;
+        }
+
+        .tab-button.active {
+            border-bottom-color: #4a90e2;
+            font-weight: bold;
+            color: #4a90e2;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>My Dua Diary</h1>
+    </header>
+
+    <div class="container">
+        <div class="text-size-controls">
+            <label>Text Size:</label>
+            <button onclick="changeTextSize(1)">A+</button>
+            <button onclick="changeTextSize(-1)">A-</button>
+            <button onclick="resetTextSize()">Reset</button>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="openTab('my-duas')">My Duas</button>
+            <button class="tab-button" onclick="openTab('add-dua')">Add New Dua</button>
+            <button class="tab-button" onclick="openTab('quran-ayahs')">Quran Ayahs</button>
+            <button class="tab-button" onclick="openTab('settings')">Settings</button>
+        </div>
+
+        <div id="my-duas" class="tab-content active">
+            <div class="dua-of-day" id="dua-of-day">
+                <h3>Dua of the Day</h3>
+                <div class="arabic">Loading...</div>
+                <div class="translation"></div>
+                <div class="meta"></div>
+            </div>
+
+            <div class="filter-section">
+                <label for="category-filter">Filter by Category:</label>
+                <select id="category-filter" onchange="displayDuas()">
+                    <option value="">All Categories</option>
+                </select>
+                <label for="search-filter">Search:</label>
+                <input type="text" id="search-filter" oninput="displayDuas()" placeholder="Search Duas...">
+            </div>
+
+            <div id="dua-list">
+                <!-- Duas will be loaded here -->
+            </div>
+        </div>
+
+        <div id="add-dua" class="tab-content">
+            <div class="form-section">
+                <h2>Add New Dua/Adhkar</h2>
+                <div class="form-group">
+                    <label for="dua-title">Title (Optional):</label>
+                    <input type="text" id="dua-title">
+                </div>
+                <div class="form-group">
+                    <label for="dua-arabic">Arabic Text:</label>
+                    <textarea id="dua-arabic" dir="rtl" lang="ar"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="dua-translation">Translation:</label>
+                    <textarea id="dua-translation"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="dua-transliteration">Transliteration (Optional):</label>
+                    <input type="text" id="dua-transliteration">
+                </div>
+                <div class="form-group">
+                    <label for="dua-source">Source/Reference (Optional):</label>
+                    <input type="text" id="dua-source">
+                </div>
+                <div class="form-group">
+                    <label for="dua-category">Category:</label>
+                    <select id="dua-category">
+                        <option value="">Select Category</option>
+                        <option value="Morning">Morning</option>
+                        <option value="Evening">Evening</option>
+                        <option value="For Study">For Study</option>
+                        <option value="For Hardship">For Hardship</option>
+                        <option value="Personal">Personal</option>
+                        <!-- Add more default categories -->
+                    </select>
+                    <input type="text" id="new-category" placeholder="Or add new category">
+                    <button onclick="addNewCategory()">Add Category</button>
+                </div>
+                <div class="form-group">
+                    <button onclick="saveDua()">Save Dua</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="quran-ayahs" class="tab-content">
+            <div class="filter-section">
+                <label for="surah-filter">Filter by Surah:</label>
+                <select id="surah-filter" onchange="displayQuranAyahs()">
+                    <option value="">All Surahs</option>
+                    <!-- Surah options will be populated here -->
+                </select>
+                <label for="quran-search-filter">Search:</label>
+                <input type="text" id="quran-search-filter" oninput="displayQuranAyahs()" placeholder="Search Ayahs...">
+            </div>
+            <div id="quran-list">
+                <!-- Quran Ayahs will be loaded here -->
+            </div>
+        </div>
+
+        <div id="settings" class="tab-content">
+            <div class="backup-restore">
+                <h2>Backup & Restore</h2>
+                <button onclick="backupData()">Backup Data</button>
+                <button onclick="document.getElementById('restore-file').click()">Restore Data</button>
+                <input type="file" id="restore-file" accept=".json" onchange="restoreData(event)">
+            </div>
+            <!-- Reminder settings could go here -->
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2023 My Dua Diary. Developed by Yasin Ullah.</p>
+    </footer>
+
+    <script>
+        const DB_NAME = 'MyDuaDiaryDB';
+        const DB_VERSION = 1;
+        let db;
+        let quranData = [];
+        let currentTextSize = 1; // 1 is default, can be increased or decreased
+
+        const openDB = () => {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+                request.onupgradeneeded = (event) => {
+                    db = event.target.result;
+                    if (!db.objectStoreNames.contains('duas')) {
+                        db.createObjectStore('duas', { keyPath: 'id', autoIncrement: true });
+                    }
+                    if (!db.objectStoreNames.contains('categories')) {
+                        db.createObjectStore('categories', { keyPath: 'name' });
+                    }
+                    if (!db.objectStoreNames.contains('recitationLogs')) {
+                        db.createObjectStore('recitationLogs', { keyPath: 'duaId' });
+                    }
+                    if (!db.objectStoreNames.contains('quranAyahs')) {
+                         db.createObjectStore('quranAyahs', { keyPath: 'id', autoIncrement: true });
+                    }
+                };
+
+                request.onsuccess = (event) => {
+                    db = event.target.result;
+                    console.log('IndexedDB opened successfully');
+                    resolve(db);
+                };
+
+                request.onerror = (event) => {
+                    console.error('IndexedDB error:', event.target.errorCode);
+                    reject(event.target.errorCode);
+                };
+            });
+        };
+
+        const addData = (storeName, data) => {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([storeName], 'readwrite');
+                const store = transaction.objectStore(storeName);
+                const request = store.add(data);
+
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = (event) => reject(event.target.error);
+            });
+        };
+
+        const getAllData = (storeName) => {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([storeName], 'readonly');
+                const store = transaction.objectStore(storeName);
+                const request = store.getAll();
+
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = (event) => reject(event.target.error);
+            });
+        };
+
+        const updateData = (storeName, data) => {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([storeName], 'readwrite');
+                const store = transaction.objectStore(storeName);
+                const request = store.put(data);
+
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = (event) => reject(event.target.error);
+            });
+        };
+
+        const deleteData = (storeName, id) => {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([storeName], 'readwrite');
+                const store = transaction.objectStore(storeName);
+                const request = store.delete(id);
+
+                request.onsuccess = () => resolve();
+                request.onerror = (event) => reject(event.target.error);
+            });
+        };
+
+        const getSingleData = (storeName, id) => {
+             return new Promise((resolve, reject) => {
+                const transaction = db.transaction([storeName], 'readonly');
+                const store = transaction.objectStore(storeName);
+                const request = store.get(id);
+
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = (event) => reject(event.target.error);
+            });
+        }
+
+        const saveDua = async () => {
+            const title = document.getElementById('dua-title').value;
+            const arabic = document.getElementById('dua-arabic').value;
+            const translation = document.getElementById('dua-translation').value;
+            const transliteration = document.getElementById('dua-transliteration').value;
+            const source = document.getElementById('dua-source').value;
+            const category = document.getElementById('dua-category').value;
+
+            if (!arabic || !translation) {
+                alert('Arabic text and translation are required.');
+                return;
+            }
+
+            const newDua = {
+                title,
+                arabic,
+                translation,
+                transliteration,
+                source,
+                category,
+                isFavorite: false,
+                createdAt: new Date()
+            };
+
+            try {
+                await addData('duas', newDua);
+                alert('Dua saved successfully!');
+                clearDuaForm();
+                await loadCategories();
+                displayDuas();
+            } catch (error) {
+                console.error('Error saving dua:', error);
+                alert('Failed to save dua.');
+            }
+        };
+
+        const clearDuaForm = () => {
+            document.getElementById('dua-title').value = '';
+            document.getElementById('dua-arabic').value = '';
+            document.getElementById('dua-translation').value = '';
+            document.getElementById('dua-transliteration').value = '';
+            document.getElementById('dua-source').value = '';
+            document.getElementById('dua-category').value = '';
+            document.getElementById('new-category').value = '';
+        };
+
+        const loadCategories = async () => {
+            try {
+                const categories = await getAllData('categories');
+                const duaCategorySelect = document.getElementById('dua-category');
+                const categoryFilterSelect = document.getElementById('category-filter');
+
+                // Clear existing options except the default ones
+                duaCategorySelect.innerHTML = '<option value="">Select Category</option><option value="Morning">Morning</option><option value="Evening">Evening</option><option value="For Study">For Study</option><option value="For Hardship">For Hardship</option><option value="Personal">Personal</option>';
+                 categoryFilterSelect.innerHTML = '<option value="">All Categories</option>';
+
+
+                categories.forEach(cat => {
+                    const option1 = document.createElement('option');
+                    option1.value = cat.name;
+                    option1.textContent = cat.name;
+                    duaCategorySelect.appendChild(option1);
+
+                    const option2 = document.createElement('option');
+                    option2.value = cat.name;
+                    option2.textContent = cat.name;
+                    categoryFilterSelect.appendChild(option2);
+                });
+
+            } catch (error) {
+                console.error('Error loading categories:', error);
+            }
+        };
+
+        const addNewCategory = async () => {
+            const newCategoryName = document.getElementById('new-category').value.trim();
+            if (newCategoryName) {
+                try {
+                    await addData('categories', { name: newCategoryName });
+                    document.getElementById('new-category').value = '';
+                    await loadCategories();
+                    alert(`Category "${newCategoryName}" added.`);
+                } catch (error) {
+                    console.error('Error adding new category:', error);
+                    alert('Failed to add new category. It might already exist.');
+                }
+            } else {
+                alert('Please enter a category name.');
+            }
+        };
+
+        const displayDuas = async () => {
+            const duaListDiv = document.getElementById('dua-list');
+            duaListDiv.innerHTML = '';
+            const categoryFilter = document.getElementById('category-filter').value;
+            const searchFilter = document.getElementById('search-filter').value.toLowerCase();
+
+            try {
+                const duas = await getAllData('duas');
+                const recitationLogs = await getAllData('recitationLogs');
+                const recitationMap = recitationLogs.reduce((acc, log) => {
+                    acc[log.duaId] = log.count;
+                    return acc;
+                }, {});
+
+                const filteredDuas = duas.filter(dua => {
+                    const matchesCategory = categoryFilter === '' || dua.category === categoryFilter;
+                    const matchesSearch = searchFilter === '' ||
+                                          (dua.title && dua.title.toLowerCase().includes(searchFilter)) ||
+                                          dua.arabic.toLowerCase().includes(searchFilter) ||
+                                          dua.translation.toLowerCase().includes(searchFilter) ||
+                                          (dua.transliteration && dua.transliteration.toLowerCase().includes(searchFilter)) ||
+                                          (dua.source && dua.source.toLowerCase().includes(searchFilter));
+                    return matchesCategory && matchesSearch;
+                });
+
+
+                if (filteredDuas.length === 0) {
+                    duaListDiv.innerHTML = '<p>No Duas found matching your criteria.</p>';
+                    return;
+                }
+
+                filteredDuas.forEach(dua => {
+                    const duaElement = document.createElement('div');
+                    duaElement.classList.add('dua-entry');
+                    duaElement.innerHTML = `
+                        ${dua.title ? `<h3>${dua.title}</h3>` : ''}
+                        <div class="arabic">${dua.arabic}</div>
+                        <div class="translation"><strong>Translation:</strong> ${dua.translation}</div>
+                        ${dua.transliteration ? `<div class="meta"><strong>Transliteration:</strong> ${dua.transliteration}</div>` : ''}
+                        ${dua.source ? `<div class="meta"><strong>Source:</strong> ${dua.source}</div>` : ''}
+                        ${dua.category ? `<div class="meta"><strong>Category:</strong> ${dua.category}</div>` : ''}
+                        <div class="actions">
+                            <button class="favorite ${dua.isFavorite ? 'active' : ''}" onclick="toggleFavorite(${dua.id})">⭐</button>
+                            <button onclick="editDua(${dua.id})">Edit</button>
+                            <button onclick="deleteDua(${dua.id})">Delete</button>
+                            <span class="recitation-counter">Recited: <span id="recite-count-${dua.id}">${recitationMap[dua.id] || 0}</span> <button onclick="incrementRecitation(${dua.id})">+</button></span>
+                        </div>
+                    `;
+                    duaListDiv.appendChild(duaElement);
+                });
+
+            } catch (error) {
+                console.error('Error displaying duas:', error);
+                duaListDiv.innerHTML = '<p>Error loading duas.</p>';
+            }
+        };
+
+        const toggleFavorite = async (id) => {
+            try {
+                const dua = await getSingleData('duas', id);
+                if (dua) {
+                    dua.isFavorite = !dua.isFavorite;
+                    await updateData('duas', dua);
+                    displayDuas(); // Refresh the list
+                    displayDuaOfTheDay(); // Update Dua of the Day if needed
+                }
+            } catch (error) {
+                console.error('Error toggling favorite:', error);
+            }
+        };
+
+        const deleteDua = async (id) => {
+            if (confirm('Are you sure you want to delete this Dua?')) {
+                try {
+                    await deleteData('duas', id);
+                    // Also delete recitation log if exists
+                    try {
+                         await deleteData('recitationLogs', id);
+                    } catch (logError) {
+                        // Ignore if log doesn't exist
+                    }
+                    displayDuas(); // Refresh the list
+                    displayDuaOfTheDay(); // Update Dua of the Day if needed
+                } catch (error) {
+                    console.error('Error deleting dua:', error);
+                    alert('Failed to delete dua.');
+                }
+            }
+        };
+
+        const editDua = async (id) => {
+            try {
+                const dua = await getSingleData('duas', id);
+                if (dua) {
+                    // Switch to Add Dua tab
+                    openTab('add-dua');
+
+                    // Populate the form
+                    document.getElementById('dua-title').value = dua.title || '';
+                    document.getElementById('dua-arabic').value = dua.arabic;
+                    document.getElementById('dua-translation').value = dua.translation;
+                    document.getElementById('dua-transliteration').value = dua.transliteration || '';
+                    document.getElementById('dua-source').value = dua.source || '';
+                    document.getElementById('dua-category').value = dua.category || '';
+
+                    // Change the save button to update button
+                    const saveButton = document.querySelector('#add-dua button');
+                    saveButton.textContent = 'Update Dua';
+                    saveButton.onclick = () => updateExistingDua(id);
+                }
+            } catch (error) {
+                console.error('Error fetching dua for edit:', error);
+                alert('Failed to load dua for editing.');
+            }
+        };
+
+        const updateExistingDua = async (id) => {
+            const title = document.getElementById('dua-title').value;
+            const arabic = document.getElementById('dua-arabic').value;
+            const translation = document.getElementById('dua-translation').value;
+            const transliteration = document.getElementById('dua-transliteration').value;
+            const source = document.getElementById('dua-source').value;
+            const category = document.getElementById('dua-category').value;
+
+             if (!arabic || !translation) {
+                alert('Arabic text and translation are required.');
+                return;
+            }
+
+            try {
+                const existingDua = await getSingleData('duas', id);
+                if (existingDua) {
+                    existingDua.title = title;
+                    existingDua.arabic = arabic;
+                    existingDua.translation = translation;
+                    existingDua.transliteration = transliteration;
+                    existingDua.source = source;
+                    existingDua.category = category;
+
+                    await updateData('duas', existingDua);
+                    alert('Dua updated successfully!');
+                    clearDuaForm();
+                    // Reset the button
+                    const saveButton = document.querySelector('#add-dua button');
+                    saveButton.textContent = 'Save Dua';
+                    saveButton.onclick = saveDua;
+                    displayDuas(); // Refresh the list
+                    displayDuaOfTheDay(); // Update Dua of the Day if needed
+                    openTab('my-duas'); // Switch back to My Duas tab
+                }
+            } catch (error) {
+                console.error('Error updating dua:', error);
+                alert('Failed to update dua.');
+            }
+        };
+
+        const incrementRecitation = async (duaId) => {
+            try {
+                let log = await getSingleData('recitationLogs', duaId);
+                if (!log) {
+                    log = { duaId: duaId, count: 0 };
+                }
+                log.count++;
+                await updateData('recitationLogs', log);
+                document.getElementById(`recite-count-${duaId}`).textContent = log.count;
+            } catch (error) {
+                console.error('Error incrementing recitation count:', error);
+            }
+        };
+
+        const displayDuaOfTheDay = async () => {
+            const duaOfDayDiv = document.getElementById('dua-of-day');
+            try {
+                const duas = await getAllData('duas');
+                const favoriteDuas = duas.filter(dua => dua.isFavorite);
+
+                let selectedDua = null;
+                if (favoriteDuas.length > 0) {
+                    const randomIndex = Math.floor(Math.random() * favoriteDuas.length);
+                    selectedDua = favoriteDuas[randomIndex];
+                } else if (duas.length > 0) {
+                     // If no favorites, pick a random one from all duas
+                    const randomIndex = Math.floor(Math.random() * duas.length);
+                    selectedDua = duas[randomIndex];
+                }
+
+                if (selectedDua) {
+                    duaOfDayDiv.innerHTML = `
+                        <h3>Dua of the Day</h3>
+                        ${selectedDua.title ? `<h4>${selectedDua.title}</h4>` : ''}
+                        <div class="arabic">${selectedDua.arabic}</div>
+                        <div class="translation"><strong>Translation:</strong> ${selectedDua.translation}</div>
+                        ${selectedDua.transliteration ? `<div class="meta"><strong>Transliteration:</strong> ${selectedDua.transliteration}</div>` : ''}
+                        ${selectedDua.source ? `<div class="meta"><strong>Source:</strong> ${selectedDua.source}</div>` : ''}
+                        ${selectedDua.category ? `<div class="meta"><strong>Category:</strong> ${selectedDua.category}</div>` : ''}
+                    `;
+                } else {
+                    duaOfDayDiv.innerHTML = `
+                        <h3>Dua of the Day</h3>
+                        <p>Add some Duas to see the Dua of the Day!</p>
+                    `;
+                }
+
+            } catch (error) {
+                console.error('Error displaying Dua of the Day:', error);
+                duaOfDayDiv.innerHTML = `
+                    <h3>Dua of the Day</h3>
+                    <p>Error loading Dua of the Day.</p>
+                `;
+            }
+        };
+
+        const backupData = async () => {
+            try {
+                const duas = await getAllData('duas');
+                const categories = await getAllData('categories');
+                const recitationLogs = await getAllData('recitationLogs');
+                const quranAyahs = await getAllData('quranAyahs'); // Include Quran data in backup
+
+                const backup = {
+                    duas,
+                    categories,
+                    recitationLogs,
+                    quranAyahs,
+                    timestamp: new Date().toISOString()
+                };
+
+                const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `dua_diary_backup_${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                alert('Backup created successfully!');
+            } catch (error) {
+                console.error('Error creating backup:', error);
+                alert('Failed to create backup.');
+            }
+        };
+
+        const restoreData = (event) => {
+            const file = event.target.files[0];
+            if (!file) {
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                try {
+                    const backup = JSON.parse(e.target.result);
+
+                    if (!confirm('Restoring will overwrite your current data. Are you sure?')) {
+                        return;
+                    }
+
+                    const transaction = db.transaction(['duas', 'categories', 'recitationLogs', 'quranAyahs'], 'readwrite');
+                    const duasStore = transaction.objectStore('duas');
+                    const categoriesStore = transaction.objectStore('categories');
+                    const recitationLogsStore = transaction.objectStore('recitationLogs');
+                    const quranAyahsStore = transaction.objectStore('quranAyahs');
+
+                    // Clear existing data
+                    await new Promise((resolve, reject) => {
+                        const clearDuas = duasStore.clear();
+                        const clearCategories = categoriesStore.clear();
+                        const clearLogs = recitationLogsStore.clear();
+                        const clearQuran = quranAyahsStore.clear();
+
+                        let clearedCount = 0;
+                        const totalStores = 4;
+
+                        clearDuas.onsuccess = () => { clearedCount++; if (clearedCount === totalStores) resolve(); };
+                        clearCategories.onsuccess = () => { clearedCount++; if (clearedCount === totalStores) resolve(); };
+                        clearLogs.onsuccess = () => { clearedCount++; if (clearedCount === totalStores) resolve(); };
+                        clearQuran.onsuccess = () => { clearedCount++; if (clearedCount === totalStores) resolve(); };
+
+                        clearDuas.onerror = reject;
+                        clearCategories.onerror = reject;
+                        clearLogs.onerror = reject;
+                        clearQuran.onerror = reject;
+                    });
+
+                    // Add data from backup
+                    const addPromises = [];
+                    if (backup.duas) {
+                        backup.duas.forEach(dua => addPromises.push(addData('duas', dua)));
+                    }
+                    if (backup.categories) {
+                        backup.categories.forEach(cat => addPromises.push(addData('categories', cat)));
+                    }
+                    if (backup.recitationLogs) {
+                        backup.recitationLogs.forEach(log => addPromises.push(addData('recitationLogs', log)));
+                    }
+                     if (backup.quranAyahs) {
+                        backup.quranAyahs.forEach(ayah => addPromises.push(addData('quranAyahs', ayah)));
+                    }
+
+
+                    await Promise.all(addPromises);
+
+                    alert('Data restored successfully!');
+                    loadCategories();
+                    displayDuas();
+                    displayDuaOfTheDay();
+                    displayQuranAyahs(); // Refresh Quran list
+                } catch (error) {
+                    console.error('Error restoring data:', error);
+                    alert('Failed to restore data. Make sure the file is a valid backup.');
+                }
+            };
+            reader.readAsText(file);
+        };
+
+        const changeTextSize = (change) => {
+            currentTextSize += change * 0.1; // Adjust size by 10%
+            if (currentTextSize < 0.5) currentTextSize = 0.5; // Minimum size
+            if (currentTextSize > 2) currentTextSize = 2; // Maximum size
+
+            document.body.style.fontSize = `${currentTextSize * 16}px`; // Base font size 16px
+            document.querySelectorAll('.dua-entry .arabic, .quran-ayah .arabic').forEach(el => {
+                el.style.fontSize = `${currentTextSize * 1.8}em`;
+            });
+             document.querySelectorAll('.dua-of-day .arabic').forEach(el => {
+                el.style.fontSize = `${currentTextSize * 2}em`;
+            });
+             document.querySelectorAll('.dua-entry .translation, .quran-ayah .translation').forEach(el => {
+                el.style.fontSize = `${currentTextSize * 1.1}em`;
+            });
+             document.querySelectorAll('.dua-of-day .translation').forEach(el => {
+                el.style.fontSize = `${currentTextSize * 1.2}em`;
+            });
+             document.querySelectorAll('.dua-entry .meta, .quran-ayah .meta, .dua-of-day .meta').forEach(el => {
+                el.style.fontSize = `${currentTextSize * 0.9}em`;
+            });
+        };
+
+        const resetTextSize = () => {
+            currentTextSize = 1;
+            document.body.style.fontSize = ''; // Reset to default
+             document.querySelectorAll('.dua-entry .arabic, .quran-ayah .arabic').forEach(el => {
+                el.style.fontSize = '';
+            });
+             document.querySelectorAll('.dua-of-day .arabic').forEach(el => {
+                el.style.fontSize = '';
+            });
+             document.querySelectorAll('.dua-entry .translation, .quran-ayah .translation').forEach(el => {
+                el.style.fontSize = '';
+            });
+             document.querySelectorAll('.dua-of-day .translation').forEach(el => {
+                el.style.fontSize = '';
+            });
+             document.querySelectorAll('.dua-entry .meta, .quran-ayah .meta, .dua-of-day .meta').forEach(el => {
+                el.style.fontSize = '';
+            });
+        };
+
+        const openTab = (tabId) => {
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => button.classList.remove('active'));
+
+            document.getElementById(tabId).classList.add('active');
+            document.querySelector(`.tab-button[onclick="openTab('${tabId}')"]`).classList.add('active');
+
+            // Refresh content when tab is opened
+            if (tabId === 'my-duas') {
+                displayDuas();
+                displayDuaOfTheDay();
+            } else if (tabId === 'quran-ayahs') {
+                 displayQuranAyahs();
+            }
+        };
+
+        const loadQuranData = async () => {
+            try {
+                const storedQuran = await getAllData('quranAyahs');
+                if (storedQuran && storedQuran.length > 0) {
+                    quranData = storedQuran;
+                    console.log('Quran data loaded from IndexedDB.');
+                } else {
+                    console.log('Loading Quran data from data.AM...');
+                    // Fetch the data.AM file
+                    const response = await fetch('data.AM');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const text = await response.text();
+                    const lines = text.split('\n').filter(line => line.trim() !== '');
+
+                    const parsedData = lines.map((line, index) => {
+                        const parts = line.split(' ترجمہ: ');
+                        if (parts.length < 2) {
+                            console.warn(`Skipping malformed line ${index + 1}: ${line}`);
+                            return null;
+                        }
+                        const arabicPart = parts[0].trim();
+                        const translationPart = parts[1].trim();
+
+                        const metaMatch = translationPart.match(/<br\/>س (\d{3}) آ (\d{3})$/);
+                        if (!metaMatch) {
+                             console.warn(`Skipping line with missing metadata ${index + 1}: ${line}`);
+                             return null;
+                        }
+
+                        const urduTranslation = translationPart.replace(/<br\/>س \d{3} آ \d{3}$/, '').trim();
+                        const surahNumber = parseInt(metaMatch[1], 10);
+                        const ayahNumber = parseInt(metaMatch[2], 10);
+
+                        return {
+                            arabic: arabicPart,
+                            translation: urduTranslation,
+                            surah: surahNumber,
+                            ayah: ayahNumber
+                        };
+                    }).filter(item => item !== null); // Filter out null entries
+
+                    quranData = parsedData;
+
+                    // Store in IndexedDB for future use
+                    const transaction = db.transaction(['quranAyahs'], 'readwrite');
+                    const store = transaction.objectStore('quranAyahs');
+                    parsedData.forEach(ayah => store.add(ayah));
+
+                    transaction.oncomplete = () => console.log('Quran data stored in IndexedDB.');
+                    transaction.onerror = (event) => console.error('Error storing Quran data:', event.target.error);
+                }
+
+                populateSurahFilter();
+                displayQuranAyahs();
+
+            } catch (error) {
+                console.error('Error loading Quran data:', error);
+                document.getElementById('quran-list').innerHTML = '<p>Error loading Quran data.</p>';
+            }
+        };
+
+        const populateSurahFilter = () => {
+            const surahFilterSelect = document.getElementById('surah-filter');
+            surahFilterSelect.innerHTML = '<option value="">All Surahs</option>'; // Keep default
+
+            if (quranData.length === 0) return;
+
+            const surahs = [...new Set(quranData.map(ayah => ayah.surah))].sort((a, b) => a - b);
+
+            surahs.forEach(surahNum => {
+                const option = document.createElement('option');
+                option.value = surahNum;
+                option.textContent = `Surah ${surahNum}`; // You might want to add Surah names later
+                surahFilterSelect.appendChild(option);
+            });
+        };
+
+        const displayQuranAyahs = () => {
+            const quranListDiv = document.getElementById('quran-list');
+            quranListDiv.innerHTML = '';
+            const surahFilter = document.getElementById('surah-filter').value;
+            const searchFilter = document.getElementById('quran-search-filter').value.toLowerCase();
+
+            const filteredAyahs = quranData.filter(ayah => {
+                const matchesSurah = surahFilter === '' || ayah.surah === parseInt(surahFilter, 10);
+                const matchesSearch = searchFilter === '' ||
+                                      ayah.arabic.toLowerCase().includes(searchFilter) ||
+                                      ayah.translation.toLowerCase().includes(searchFilter);
+                return matchesSurah && matchesSearch;
+            });
+
+             if (filteredAyahs.length === 0) {
+                quranListDiv.innerHTML = '<p>No Quran Ayahs found matching your criteria.</p>';
+                return;
+            }
+
+            filteredAyahs.forEach(ayah => {
+                const ayahElement = document.createElement('div');
+                ayahElement.classList.add('quran-ayah');
+                ayahElement.innerHTML = `
+                    <h3>Surah ${ayah.surah}, Ayah ${ayah.ayah}</h3>
+                    <div class="arabic">${ayah.arabic}</div>
+                    <div class="translation"><strong>Translation:</strong> ${ayah.translation}</div>
+                `;
+                quranListDiv.appendChild(ayahElement);
+            });
+             // Apply current text size to newly added elements
+            changeTextSize(0); // Apply current size without changing it
+        };
+
+
+        // Initialize the app
+        const init = async () => {
+            try {
+                await openDB();
+                await loadCategories();
+                displayDuas();
+                displayDuaOfTheDay();
+                await loadQuranData(); // Load Quran data on init
+            } catch (error) {
+                console.error('App initialization failed:', error);
+                alert('Failed to initialize the app. Please try again.');
+            }
+        };
+
+        // Run initialization when the DOM is ready
+        document.addEventListener('DOMContentLoaded', init);
+
+        // Set default tab
+        openTab('my-duas');
+
+        // Request Notification Permission (Optional, for future reminder feature)
+        if ('Notification' in window && Notification.permission !== 'granted') {
+             Notification.requestPermission().then(permission => {
+                if (permission === 'granted') {
+                    console.log('Notification permission granted.');
+                } else {
+                    console.warn('Notification permission denied.');
+                }
+             });
+        }
+
+    </script>
+</body>
+</html>

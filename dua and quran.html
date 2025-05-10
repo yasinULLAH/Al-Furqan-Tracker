@@ -1,0 +1,1842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dua Diary</title>
+    <style>
+        :root {
+            --primary-bg: #f0f4f8; /* Light grayish blue */
+            --secondary-bg: #ffffff;
+            --accent-color: #4a90e2; /* Calming blue */
+            --text-color: #333333;
+            --text-secondary-color: #555555;
+            --border-color: #d1d9e6;
+            --arabic-font: 'Noto Naskh Arabic', 'Amiri', 'KFGQPC Uthman Taha Naskh', serif;
+            --content-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-size-base: 16px;
+            --font-size-sm: 14px;
+            --font-size-lg: 18px;
+            --font-size-xl: 24px;
+            --futuristic-glow: 0 0 8px rgba(74, 144, 226, 0.3);
+            --futuristic-glow-hover: 0 0 12px rgba(74, 144, 226, 0.6);
+        }
+
+        [data-theme="dark"] {
+            --primary-bg: #1a1a2e;
+            --secondary-bg: #162447;
+            --accent-color: #1f4068;
+            --text-color: #e0e0e0;
+            --text-secondary-color: #b0b0b0;
+            --border-color: #2c3e50;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--content-font);
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+            font-size: var(--font-size-base);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            display: flex;
+            flex: 1;
+            overflow: hidden; /* Prevents scrollbars on container itself */
+        }
+
+        #sidebar {
+            width: 250px;
+            background-color: var(--secondary-bg);
+            padding: 20px;
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+            transition: background-color 0.3s, border-color 0.3s;
+            overflow-y: auto;
+        }
+
+        #sidebar h2 {
+            font-size: var(--font-size-lg);
+            color: var(--accent-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        #sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 20px;
+        }
+
+        #sidebar ul li button, #sidebar button {
+            display: block;
+            width: 100%;
+            padding: 10px 15px;
+            background: none;
+            border: none;
+            color: var(--text-secondary-color);
+            text-align: left;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: var(--font-size-base);
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        #sidebar ul li button:hover, #sidebar button:hover, #sidebar ul li button.active {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        #sidebar .category-list-header {
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        #main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto; /* Allows content to scroll */
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .view { display: none; }
+        .view.active { display: block; }
+
+        header {
+            background-color: var(--secondary-bg);
+            color: var(--text-color);
+            padding: 15px 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: var(--font-size-xl);
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .dua-card {
+            background-color: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: box-shadow 0.3s ease;
+        }
+        .dua-card:hover {
+            box-shadow: var(--futuristic-glow-hover);
+        }
+
+        .dua-card h3 {
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+
+        .dua-card .arabic-text {
+            font-family: var(--arabic-font);
+            font-size: var(--font-size-lg);
+            direction: rtl;
+            text-align: right;
+            margin-bottom: 10px;
+            line-height: 1.8;
+        }
+        .dua-card .translation-text, .dua-card .transliteration-text, .dua-card .source-text {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary-color);
+            margin-bottom: 5px;
+        }
+        .dua-card .personal-content {
+            margin-top: 10px;
+        }
+
+        .dua-actions button {
+            margin-right: 8px;
+            padding: 6px 10px;
+            font-size: var(--font-size-sm);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: var(--text-secondary-color);
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="time"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: var(--font-size-base);
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+        }
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        button, input[type="submit"], input[type="button"] {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: var(--font-size-base);
+            transition: background-color 0.2s, box-shadow 0.2s;
+            box-shadow: var(--futuristic-glow);
+        }
+        button:hover, input[type="submit"]:hover, input[type="button"]:hover {
+            background-color: #3a7bc8; /* Darker accent */
+            box-shadow: var(--futuristic-glow-hover);
+        }
+        button.secondary {
+            background-color: var(--text-secondary-color);
+        }
+        button.secondary:hover {
+            background-color: #666;
+        }
+        button.danger {
+            background-color: #e74c3c;
+        }
+        button.danger:hover {
+            background-color: #c0392b;
+        }
+
+        #richTextEditorToolbar button {
+            padding: 5px 8px;
+            margin-right: 5px;
+            font-size: var(--font-size-sm);
+        }
+        #personalDuaContentEditor {
+            border: 1px solid var(--border-color);
+            min-height: 150px;
+            padding: 10px;
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+            border-radius: 4px;
+        }
+
+        #duaOfTheDay {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        #duaOfTheDay h3 { color: white; }
+        #duaOfTheDay .arabic-text { font-size: var(--font-size-xl); }
+        #duaOfTheDay .translation-text { font-size: var(--font-size-base); }
+
+        .search-bar {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .search-bar input {
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: var(--secondary-bg);
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            width: 80%;
+            max-width: 600px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .modal-header h2 { color: var(--accent-color); }
+        .close-button {
+            color: var(--text-secondary-color);
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close-button:hover, .close-button:focus {
+            color: var(--text-color);
+        }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            #sidebar {
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                flex-direction: row; /* For a more compact mobile menu */
+                overflow-x: auto; /* Allow horizontal scrolling for menu items */
+                padding: 10px;
+            }
+            #sidebar h2 { display: none; } /* Hide title in compact menu */
+            #sidebar ul { display: flex; flex-direction: row; margin-bottom: 0;}
+            #sidebar ul li button, #sidebar button { padding: 8px 10px; font-size: var(--font-size-sm); white-space: nowrap; }
+            #sidebar .category-list-header, #sidebar #addCategoryBtnSidebar { display: none; } /* Hide these in compact menu */
+
+            header { flex-direction: column; gap: 10px; }
+            .modal-content { width: 95%; margin-top: 5%; }
+        }
+
+        #toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 2000;
+        }
+        .toast {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: opacity 0.5s, transform 0.5s;
+            transform: translateY(20px);
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .toast.error { background-color: #e74c3c; }
+        .toast.success { background-color: #2ecc71; }
+
+        .counter-display {
+            display: inline-block;
+            background-color: var(--primary-bg);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: var(--font-size-sm);
+            margin-left: 5px;
+            border: 1px solid var(--border-color);
+			color: red;
+        }
+        .quran-ayah-card {
+            border-left: 3px solid var(--accent-color);
+            padding-left: 10px;
+        }
+        .quran-ayah-card .urdu-translation {
+            font-style: italic;
+            color: var(--text-secondary-color);
+        }
+        .quran-ayah-card .metadata {
+            font-size: var(--font-size-sm);
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>My Dua Diary</h1>
+        <div>
+            <label for="fontSizeChanger">Font Size:</label>
+            <select id="fontSizeChanger">
+                <option value="14px">Small</option>
+                <option value="16px" selected>Medium</option>
+                <option value="18px">Large</option>
+                <option value="20px">X-Large</option>
+            </select>
+            <button id="toggleThemeBtn">Toggle Theme</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <aside id="sidebar">
+            <h2>Menu</h2>
+            <ul>
+                <li><button id="navAllDuas" class="nav-btn active" data-view="allDuasView">All Duas</button></li>
+                <li><button id="navFavorites" class="nav-btn" data-view="favoritesView">Favorites</button></li>
+                <li><button id="navQuranExplorer" class="nav-btn" data-view="quranExplorerView">Quran Explorer</button></li>
+                <li><button id="navSettings" class="nav-btn" data-view="settingsView">Settings</button></li>
+            </ul>
+            <div class="category-list-header">Categories</div>
+            <ul id="categoryListSidebar">
+                <!-- Categories will be populated here by JS -->
+            </ul>
+            <button id="addCategoryBtnSidebar">+ New Category</button>
+        </aside>
+
+        <main id="main-content">
+            <div id="allDuasView" class="view active">
+                <h2>All Duas</h2>
+                <button id="openAddDuaModalBtn" style="margin-bottom: 20px;">+ Add New Dua</button>
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Search Duas by keyword, category...">
+                    <button id="searchBtn">Search</button>
+                </div>
+                <div id="duaOfTheDay">
+                    <h3>Dua of the Day</h3>
+                    <p id="duaOfTheDayContent">Loading Dua of the Day...</p>
+                </div>
+                <div id="duaListContainer">
+                    <!-- Duas will be populated here -->
+                </div>
+            </div>
+
+            <div id="favoritesView" class="view">
+                <h2>Favorite Duas</h2>
+                <div id="favoriteDuaListContainer">
+                    <!-- Favorite Duas will be populated here -->
+                </div>
+            </div>
+            
+            <div id="quranExplorerView" class="view">
+                <h2>Quran Explorer</h2>
+                <div class="search-bar">
+                    <input type="text" id="quranSearchInput" placeholder="Search Quran (e.g., 2:255, forgiveness, mercy)...">
+                    <button id="quranSearchBtn">Search Quran</button>
+                </div>
+                 <div class="form-group">
+                    <label for="surahSelect">Surah:</label>
+                    <select id="surahSelect">
+                        <!-- Surah options will be populated here -->
+                    </select>
+                </div>
+                <div id="quranAyahListContainer">
+                    <!-- Quran Ayahs will be populated here -->
+                </div>
+            </div>
+
+            <div id="settingsView" class="view">
+                <h2>Settings</h2>
+                <div class="form-group">
+                    <h3>Reminders</h3>
+                    <p>Note: Reminders require notification permission from your browser.</p>
+                    <button id="requestNotificationPermBtn">Request Notification Permission</button>
+                    <div id="activeRemindersList">
+                        <!-- Active reminders list -->
+                    </div>
+                    <!-- Add reminder form could be here or in a modal -->
+                </div>
+                <div class="form-group">
+                    <h3>Data Management</h3>
+                    <button id="backupDataBtn">Backup Data</button>
+                    <label for="restoreDataInput" class="button-like-label">Restore Data
+                        <input type="file" id="restoreDataInput" accept=".json" style="display:none;">
+                    </label>
+                    <p style="font-size: var(--font-size-sm); color: var(--text-secondary-color); margin-top: 5px;">
+                        Backup creates a JSON file of your data. Restore will replace current data.
+                    </p>
+                </div>
+                 <div class="form-group">
+                    <h3>Load Quran Data</h3>
+                    <button id="forceLoadQuranDataBtn">Load/Re-load Quran Data (data.AM)</button>
+                    <p id="quranLoadStatus" style="font-size: var(--font-size-sm); color: var(--text-secondary-color); margin-top: 5px;">
+                        Quran data will be automatically loaded on first use if `data.AM` is present.
+                    </p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Dua Modal -->
+    <div id="duaModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="duaModalTitle">Add New Dua</h2>
+                <span class="close-button" id="closeDuaModalBtn">×</span>
+            </div>
+            <form id="duaForm">
+                <input type="hidden" id="duaIdInput">
+                <div class="form-group">
+                    <label for="duaTitleInput">Title (optional)</label>
+                    <input type="text" id="duaTitleInput">
+                </div>
+                <div class="form-group">
+                    <label for="duaTypeSelect">Type</label>
+                    <select id="duaTypeSelect">
+                        <option value="personal">Personal Dua</option>
+                        <option value="common">Common/Masnoon Dua</option>
+                    </select>
+                </div>
+                
+                <div id="commonDuaFields">
+                    <div class="form-group">
+                        <label for="duaArabicInput">Arabic Text</label>
+                        <textarea id="duaArabicInput" rows="3" dir="rtl" style="font-family: var(--arabic-font); font-size: var(--font-size-lg);"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="duaTranslationInput">Translation</label>
+                        <textarea id="duaTranslationInput" rows="2"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="duaTransliterationInput">Transliteration</label>
+                        <input type="text" id="duaTransliterationInput">
+                    </div>
+                    <div class="form-group">
+                        <label for="duaSourceInput">Source/Reference</label>
+                        <input type="text" id="duaSourceInput">
+                    </div>
+                </div>
+
+                <div id="personalDuaField">
+                    <div class="form-group">
+                        <label for="personalDuaContentEditor">Your Dua</label>
+                        <div id="richTextEditorToolbar">
+                            <button type="button" onclick="App.richText.format('bold')"><b>B</b></button>
+                            <button type="button" onclick="App.richText.format('italic')"><i>I</i></button>
+                            <button type="button" onclick="App.richText.format('underline')"><u>U</u></button>
+                            <button type="button" onclick="App.richText.format('insertOrderedList')">OL</button>
+                            <button type="button" onclick="App.richText.format('insertUnorderedList')">UL</button>
+                        </div>
+                        <div id="personalDuaContentEditor" contenteditable="true"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="duaCategorySelect">Category</label>
+                    <select id="duaCategorySelect">
+                        <!-- Categories populated by JS -->
+                    </select>
+                </div>
+                <button type="submit">Save Dua</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Category Modal -->
+    <div id="categoryModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="categoryModalTitle">Add New Category</h2>
+                <span class="close-button" id="closeCategoryModalBtn">×</span>
+            </div>
+            <form id="categoryForm">
+                <input type="hidden" id="categoryIdInput">
+                <div class="form-group">
+                    <label for="categoryNameInput">Category Name</label>
+                    <input type="text" id="categoryNameInput" required>
+                </div>
+                <button type="submit">Save Category</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Reminder Modal -->
+    <div id="reminderModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="reminderModalTitle">Set Reminder</h2>
+                <span class="close-button" id="closeReminderModalBtn">×</span>
+            </div>
+            <form id="reminderForm">
+                <input type="hidden" id="reminderDuaIdInput">
+                <p>Set reminder for: <strong id="reminderDuaTitle"></strong></p>
+                <div class="form-group">
+                    <label for="reminderTimeInput">Time (HH:MM)</label>
+                    <input type="time" id="reminderTimeInput" required>
+                </div>
+                <div class="form-group">
+                    <label>Days of the week:</label>
+                    <div>
+                        <input type="checkbox" id="daySun" value="0"><label for="daySun">Sun</label>
+                        <input type="checkbox" id="dayMon" value="1"><label for="dayMon">Mon</label>
+                        <input type="checkbox" id="dayTue" value="2"><label for="dayTue">Tue</label>
+                        <input type="checkbox" id="dayWed" value="3"><label for="dayWed">Wed</label>
+                        <input type="checkbox" id="dayThu" value="4"><label for="dayThu">Thu</label>
+                        <input type="checkbox" id="dayFri" value="5"><label for="dayFri">Fri</label>
+                        <input type="checkbox" id="daySat" value="6"><label for="daySat">Sat</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="reminderMessageInput">Custom Message (optional)</label>
+                    <input type="text" id="reminderMessageInput" placeholder="E.g., Time for morning Adhkar">
+                </div>
+                <button type="submit">Set Reminder</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script>
+    // --- Application Scope ---
+    const App = (() => {
+        // --- Constants ---
+        const DB_NAME = 'MyDuaDiaryDB_YasinUllah';
+        const DB_VERSION = 2; // Incremented for schema changes if any
+        const STORES = {
+            DUAS: 'duas',
+            CATEGORIES: 'categories',
+            REMINDERS: 'reminders',
+            QURAN_AYAH: 'quranAyahs',
+            SETTINGS: 'settings'
+        };
+
+        let db;
+
+        // --- DOM Elements Cache ---
+        const DOM = {};
+
+        // --- State ---
+        let currentView = 'allDuasView';
+        let currentEditingDuaId = null;
+        let currentEditingCategoryId = null;
+        let surahNames = []; // To be populated after Quran data load
+
+        // --- IndexedDB Module ---
+        const IDB = {
+            init: () => {
+                return new Promise((resolve, reject) => {
+                    const request = indexedDB.open(DB_NAME, DB_VERSION);
+                    request.onerror = event => reject("Database error: " + event.target.errorCode);
+                    request.onsuccess = event => {
+                        db = event.target.result;
+                        resolve(db);
+                    };
+                    request.onupgradeneeded = event => {
+                        db = event.target.result;
+                        if (!db.objectStoreNames.contains(STORES.DUAS)) {
+                            const duaStore = db.createObjectStore(STORES.DUAS, { keyPath: 'id', autoIncrement: true });
+                            duaStore.createIndex('title', 'title', { unique: false });
+                            duaStore.createIndex('isFavorite', 'isFavorite', { unique: false });
+                            duaStore.createIndex('categoryIds', 'categoryIds', { unique: false, multiEntry: true });
+                            duaStore.createIndex('type', 'type', { unique: false });
+                        }
+                        if (!db.objectStoreNames.contains(STORES.CATEGORIES)) {
+                            const categoryStore = db.createObjectStore(STORES.CATEGORIES, { keyPath: 'id', autoIncrement: true });
+                            categoryStore.createIndex('name', 'name', { unique: true });
+                        }
+                        if (!db.objectStoreNames.contains(STORES.REMINDERS)) {
+                            const reminderStore = db.createObjectStore(STORES.REMINDERS, { keyPath: 'id', autoIncrement: true });
+                            reminderStore.createIndex('duaId', 'duaId', { unique: false });
+                            reminderStore.createIndex('isActive', 'isActive', { unique: false });
+                        }
+                        if (!db.objectStoreNames.contains(STORES.QURAN_AYAH)) {
+                            const quranStore = db.createObjectStore(STORES.QURAN_AYAH, { keyPath: 'id' }); // id is surah_ayah
+                            quranStore.createIndex('surah', 'surah', { unique: false });
+                            quranStore.createIndex('arabic', 'arabic', { unique: false }); // For text search
+                            quranStore.createIndex('urdu', 'urdu', { unique: false }); // For text search
+                        }
+                        if (!db.objectStoreNames.contains(STORES.SETTINGS)) {
+                            db.createObjectStore(STORES.SETTINGS, { keyPath: 'key' });
+                        }
+                    };
+                });
+            },
+            add: (storeName, data) => {
+                return new Promise((resolve, reject) => {
+                    if (!db) { reject("DB not initialized"); return; }
+                    const transaction = db.transaction(storeName, 'readwrite');
+                    const store = transaction.objectStore(storeName);
+                    const request = store.add(data);
+                    request.onsuccess = event => resolve(event.target.result);
+                    request.onerror = event => reject("Add error: " + event.target.error);
+                });
+            },
+            put: (storeName, data) => {
+                 return new Promise((resolve, reject) => {
+                    if (!db) { reject("DB not initialized"); return; }
+                    const transaction = db.transaction(storeName, 'readwrite');
+                    const store = transaction.objectStore(storeName);
+                    const request = store.put(data);
+                    request.onsuccess = event => resolve(event.target.result);
+                    request.onerror = event => reject("Put error: " + event.target.error);
+                });
+            },
+            get: (storeName, key) => {
+                return new Promise((resolve, reject) => {
+                    if (!db) { reject("DB not initialized"); return; }
+                    const transaction = db.transaction(storeName, 'readonly');
+                    const store = transaction.objectStore(storeName);
+                    const request = store.get(key);
+                    request.onsuccess = event => resolve(event.target.result);
+                    request.onerror = event => reject("Get error: " + event.target.error);
+                });
+            },
+            getAll: (storeName, indexName = null, query = null) => {
+                return new Promise((resolve, reject) => {
+                    if (!db) { reject("DB not initialized"); return; }
+                    const transaction = db.transaction(storeName, 'readonly');
+                    const store = transaction.objectStore(storeName);
+                    let request;
+                    if (indexName && query !== null) {
+                        const index = store.index(indexName);
+                        request = index.getAll(query);
+                    } else {
+                        request = store.getAll();
+                    }
+                    request.onsuccess = event => resolve(event.target.result);
+                    request.onerror = event => reject("GetAll error: " + event.target.error);
+                });
+            },
+            delete: (storeName, key) => {
+                return new Promise((resolve, reject) => {
+                    if (!db) { reject("DB not initialized"); return; }
+                    const transaction = db.transaction(storeName, 'readwrite');
+                    const store = transaction.objectStore(storeName);
+                    const request = store.delete(key);
+                    request.onsuccess = () => resolve();
+                    request.onerror = event => reject("Delete error: " + event.target.error);
+                });
+            },
+            getSetting: async (key) => IDB.get(STORES.SETTINGS, key).then(res => res ? res.value : null),
+            setSetting: async (key, value) => IDB.put(STORES.SETTINGS, { key, value }),
+        };
+
+        // --- UI Module ---
+        const UI = {
+            initDOMCache: () => {
+                DOM.sidebar = document.getElementById('sidebar');
+                DOM.mainContent = document.getElementById('main-content');
+                DOM.navButtons = document.querySelectorAll('.nav-btn');
+                DOM.views = document.querySelectorAll('.view');
+                
+                DOM.openAddDuaModalBtn = document.getElementById('openAddDuaModalBtn');
+                DOM.duaModal = document.getElementById('duaModal');
+                DOM.closeDuaModalBtn = document.getElementById('closeDuaModalBtn');
+                DOM.duaForm = document.getElementById('duaForm');
+                DOM.duaIdInput = document.getElementById('duaIdInput');
+                DOM.duaTitleInput = document.getElementById('duaTitleInput');
+                DOM.duaTypeSelect = document.getElementById('duaTypeSelect');
+                DOM.commonDuaFields = document.getElementById('commonDuaFields');
+                DOM.personalDuaField = document.getElementById('personalDuaField');
+                DOM.duaArabicInput = document.getElementById('duaArabicInput');
+                DOM.duaTranslationInput = document.getElementById('duaTranslationInput');
+                DOM.duaTransliterationInput = document.getElementById('duaTransliterationInput');
+                DOM.duaSourceInput = document.getElementById('duaSourceInput');
+                DOM.personalDuaContentEditor = document.getElementById('personalDuaContentEditor');
+                DOM.duaCategorySelect = document.getElementById('duaCategorySelect');
+                DOM.duaListContainer = document.getElementById('duaListContainer');
+                DOM.favoriteDuaListContainer = document.getElementById('favoriteDuaListContainer');
+
+                DOM.addCategoryBtnSidebar = document.getElementById('addCategoryBtnSidebar');
+                DOM.categoryModal = document.getElementById('categoryModal');
+                DOM.closeCategoryModalBtn = document.getElementById('closeCategoryModalBtn');
+                DOM.categoryForm = document.getElementById('categoryForm');
+                DOM.categoryIdInput = document.getElementById('categoryIdInput');
+                DOM.categoryNameInput = document.getElementById('categoryNameInput');
+                DOM.categoryListSidebar = document.getElementById('categoryListSidebar');
+                
+                DOM.searchInput = document.getElementById('searchInput');
+                DOM.searchBtn = document.getElementById('searchBtn');
+
+                DOM.duaOfTheDayContent = document.getElementById('duaOfTheDayContent');
+                
+                DOM.settingsView = document.getElementById('settingsView');
+                DOM.requestNotificationPermBtn = document.getElementById('requestNotificationPermBtn');
+                DOM.backupDataBtn = document.getElementById('backupDataBtn');
+                DOM.restoreDataInput = document.getElementById('restoreDataInput');
+                DOM.forceLoadQuranDataBtn = document.getElementById('forceLoadQuranDataBtn');
+                DOM.quranLoadStatus = document.getElementById('quranLoadStatus');
+                DOM.fontSizeChanger = document.getElementById('fontSizeChanger');
+                DOM.toggleThemeBtn = document.getElementById('toggleThemeBtn');
+
+                DOM.reminderModal = document.getElementById('reminderModal');
+                DOM.closeReminderModalBtn = document.getElementById('closeReminderModalBtn');
+                DOM.reminderForm = document.getElementById('reminderForm');
+                DOM.reminderDuaIdInput = document.getElementById('reminderDuaIdInput');
+                DOM.reminderDuaTitle = document.getElementById('reminderDuaTitle');
+                DOM.reminderTimeInput = document.getElementById('reminderTimeInput');
+                DOM.reminderMessageInput = document.getElementById('reminderMessageInput');
+                DOM.activeRemindersList = document.getElementById('activeRemindersList');
+
+                DOM.quranExplorerView = document.getElementById('quranExplorerView');
+                DOM.quranSearchInput = document.getElementById('quranSearchInput');
+                DOM.quranSearchBtn = document.getElementById('quranSearchBtn');
+                DOM.surahSelect = document.getElementById('surahSelect');
+                DOM.quranAyahListContainer = document.getElementById('quranAyahListContainer');
+
+                DOM.toastContainer = document.getElementById('toast-container');
+            },
+            switchView: (viewId) => {
+                DOM.views.forEach(view => view.classList.remove('active'));
+                document.getElementById(viewId).classList.add('active');
+                DOM.navButtons.forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.dataset.view === viewId) {
+                        btn.classList.add('active');
+                    }
+                });
+                currentView = viewId;
+                // Special rendering for views if needed
+                if (viewId === 'allDuasView') DuaManager.renderAllDuas();
+                if (viewId === 'favoritesView') DuaManager.renderFavoriteDuas();
+                if (viewId === 'quranExplorerView') QuranManager.renderQuranExplorer();
+                if (viewId === 'settingsView') SettingsManager.renderSettings();
+            },
+            openModal: (modalElement) => { modalElement.style.display = 'block'; },
+            closeModal: (modalElement) => { modalElement.style.display = 'none'; },
+            toggleDuaTypeFields: () => {
+                if (DOM.duaTypeSelect.value === 'personal') {
+                    DOM.commonDuaFields.style.display = 'none';
+                    DOM.personalDuaField.style.display = 'block';
+                } else {
+                    DOM.commonDuaFields.style.display = 'block';
+                    DOM.personalDuaField.style.display = 'none';
+                }
+            },
+            populateCategoryDropdown: async () => {
+                const categories = await IDB.getAll(STORES.CATEGORIES);
+                DOM.duaCategorySelect.innerHTML = '<option value="">Uncategorized</option>';
+                categories.sort((a,b) => a.name.localeCompare(b.name)).forEach(cat => {
+                    const option = document.createElement('option');
+                    option.value = cat.id;
+                    option.textContent = cat.name;
+                    DOM.duaCategorySelect.appendChild(option);
+                });
+            },
+            renderDuaCard: (dua) => {
+                const card = document.createElement('div');
+                card.className = 'dua-card';
+                card.dataset.id = dua.id;
+
+                let categoryName = 'Uncategorized';
+                if (dua.categoryIds && dua.categoryIds.length > 0) {
+                    // In a real app, you'd fetch category names, but for simplicity:
+                    // This requires categories to be loaded or passed around.
+                    // For now, just show ID or a placeholder.
+                    // This will be improved when categories are fully integrated.
+                    // categoryName = `Category ID: ${dua.categoryIds[0]}`; 
+                }
+                
+                let contentHTML = `<h3>${dua.title || 'Untitled Dua'}</h3>`;
+                if (dua.type === 'common' || dua.type === 'quran') {
+                    if(dua.arabicText) contentHTML += `<div class="arabic-text">${dua.arabicText}</div>`;
+                    if(dua.translation) contentHTML += `<div class="translation-text"><strong>Translation:</strong> ${dua.translation}</div>`;
+                    if(dua.transliteration) contentHTML += `<div class="transliteration-text"><strong>Transliteration:</strong> ${dua.transliteration}</div>`;
+                    if(dua.source) contentHTML += `<div class="source-text"><strong>Source:</strong> ${dua.source}</div>`;
+                } else if (dua.type === 'personal') {
+                    contentHTML += `<div class="personal-content">${dua.personalContentHTML || ''}</div>`;
+                }
+                
+                contentHTML += `<p class="category-info" style="font-size:0.8em; color:grey;">Category: <span data-category-id="${dua.categoryIds && dua.categoryIds[0] ? dua.categoryIds[0] : ''}">Loading...</span></p>`;
+
+
+                contentHTML += `
+                    <div class="dua-actions" style="margin-top:10px;">
+                        <button class="edit-dua-btn">Edit</button>
+                        <button class="delete-dua-btn danger">Delete</button>
+                        <button class="fav-dua-btn">${dua.isFavorite ? 'Unfavorite' : 'Favorite'}</button>
+                        <button class="recite-dua-btn">Recited <span class="counter-display">${dua.recitationCount || 0}</span></button>
+                        <button class="set-reminder-btn">Set Reminder</button>
+                    </div>
+                `;
+                card.innerHTML = contentHTML;
+
+                // Update category name asynchronously
+                if (dua.categoryIds && dua.categoryIds[0]) {
+                    IDB.get(STORES.CATEGORIES, parseInt(dua.categoryIds[0])).then(cat => {
+                        if (cat) {
+                            card.querySelector('.category-info span').textContent = cat.name;
+                        } else {
+                            card.querySelector('.category-info span').textContent = 'Uncategorized';
+                        }
+                    }).catch(() => card.querySelector('.category-info span').textContent = 'Uncategorized');
+                } else {
+                     card.querySelector('.category-info span').textContent = 'Uncategorized';
+                }
+
+
+                card.querySelector('.edit-dua-btn').addEventListener('click', () => DuaManager.editDua(dua.id));
+                card.querySelector('.delete-dua-btn').addEventListener('click', () => DuaManager.deleteDua(dua.id));
+                card.querySelector('.fav-dua-btn').addEventListener('click', () => DuaManager.toggleFavorite(dua.id));
+                card.querySelector('.recite-dua-btn').addEventListener('click', () => DuaManager.incrementRecitation(dua.id));
+                card.querySelector('.set-reminder-btn').addEventListener('click', () => ReminderManager.openReminderModal(dua.id, dua.title || (dua.arabicText ? dua.arabicText.substring(0,30)+'...' : 'Untitled Dua')));
+                
+                return card;
+            },
+            renderCategoryInSidebar: (category) => {
+                const li = document.createElement('li');
+                li.innerHTML = `<button class="nav-btn category-nav-btn" data-category-id="${category.id}">${category.name}</button>`;
+                // TODO: Add edit/delete for categories directly in sidebar or a management view
+                li.querySelector('button').addEventListener('click', () => {
+                    DuaManager.renderDuasByCategory(category.id);
+                    // Highlight this category button and unhighlight others
+                    document.querySelectorAll('#sidebar .nav-btn').forEach(btn => btn.classList.remove('active'));
+                    li.querySelector('button').classList.add('active');
+                    // Ensure main "All Duas" view is active to show filtered list
+                    UI.switchView('allDuasView'); 
+                });
+                return li;
+            },
+            showToast: (message, type = 'info', duration = 3000) => {
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.textContent = message;
+                DOM.toastContainer.appendChild(toast);
+                
+                // Trigger reflow for transition
+                toast.offsetHeight; 
+
+                toast.classList.add('show');
+
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => {
+                        DOM.toastContainer.removeChild(toast);
+                    }, 500); // Match transition duration
+                }, duration);
+            },
+            applyFontSize: (size) => {
+                document.documentElement.style.setProperty('--font-size-base', size);
+                // Adjust other font sizes proportionally if needed
+                if (size === '14px') {
+                    document.documentElement.style.setProperty('--font-size-sm', '12px');
+                    document.documentElement.style.setProperty('--font-size-lg', '16px');
+                    document.documentElement.style.setProperty('--font-size-xl', '20px');
+                } else if (size === '16px') {
+                    document.documentElement.style.setProperty('--font-size-sm', '14px');
+                    document.documentElement.style.setProperty('--font-size-lg', '18px');
+                    document.documentElement.style.setProperty('--font-size-xl', '24px');
+                } else if (size === '18px') {
+                    document.documentElement.style.setProperty('--font-size-sm', '16px');
+                    document.documentElement.style.setProperty('--font-size-lg', '20px');
+                    document.documentElement.style.setProperty('--font-size-xl', '28px');
+                } else if (size === '20px') {
+                    document.documentElement.style.setProperty('--font-size-sm', '18px');
+                    document.documentElement.style.setProperty('--font-size-lg', '22px');
+                    document.documentElement.style.setProperty('--font-size-xl', '30px');
+                }
+                IDB.setSetting('fontSize', size);
+            },
+            applyTheme: (theme) => {
+                document.documentElement.setAttribute('data-theme', theme);
+                IDB.setSetting('theme', theme);
+                DOM.toggleThemeBtn.textContent = theme === 'dark' ? 'Light Mode' : 'Dark Mode';
+            }
+        };
+
+        // --- Rich Text Editor Module ---
+        const RichText = {
+            format: (command, value = null) => {
+                document.execCommand(command, false, value);
+                DOM.personalDuaContentEditor.focus();
+            }
+        };
+
+        // --- Dua Management Module ---
+        const DuaManager = {
+            addOrUpdateDua: async (event) => {
+                event.preventDefault();
+                const title = DOM.duaTitleInput.value.trim();
+                const type = DOM.duaTypeSelect.value;
+                const arabicText = DOM.duaArabicInput.value.trim();
+                const translation = DOM.duaTranslationInput.value.trim();
+                const transliteration = DOM.duaTransliterationInput.value.trim();
+                const source = DOM.duaSourceInput.value.trim();
+                const personalContentHTML = DOM.personalDuaContentEditor.innerHTML;
+                const categoryId = DOM.duaCategorySelect.value ? parseInt(DOM.duaCategorySelect.value) : null;
+
+                const duaData = {
+                    title, type, arabicText, translation, transliteration, source, personalContentHTML,
+                    categoryIds: categoryId ? [categoryId] : [],
+                    isFavorite: false, // Default, or load existing if editing
+                    recitationCount: 0, // Default, or load existing
+                    lastRecited: null,
+                    createdDate: new Date().toISOString(),
+                    lastModifiedDate: new Date().toISOString()
+                };
+
+                try {
+                    if (currentEditingDuaId) {
+                        const existingDua = await IDB.get(STORES.DUAS, currentEditingDuaId);
+                        duaData.id = currentEditingDuaId;
+                        duaData.isFavorite = existingDua.isFavorite; // Preserve favorite status
+                        duaData.recitationCount = existingDua.recitationCount; // Preserve count
+                        duaData.lastRecited = existingDua.lastRecited;
+                        duaData.createdDate = existingDua.createdDate; // Preserve original creation date
+                        await IDB.put(STORES.DUAS, duaData);
+                        UI.showToast('Dua updated successfully!', 'success');
+                    } else {
+                        await IDB.add(STORES.DUAS, duaData);
+                        UI.showToast('Dua added successfully!', 'success');
+                    }
+                    DOM.duaForm.reset();
+                    DOM.personalDuaContentEditor.innerHTML = '';
+                    UI.closeModal(DOM.duaModal);
+                    currentEditingDuaId = null;
+                    DuaManager.renderAllDuas(); // Re-render list
+                    DuaManager.showDuaOfTheDay(); // Update Dua of the Day potentially
+                } catch (error) {
+                    console.error("Error saving Dua:", error);
+                    UI.showToast('Error saving Dua: ' + error.message, 'error');
+                }
+            },
+            editDua: async (id) => {
+                currentEditingDuaId = id;
+                const dua = await IDB.get(STORES.DUAS, id);
+                if (!dua) {
+                    UI.showToast('Dua not found for editing.', 'error');
+                    return;
+                }
+                document.getElementById('duaModalTitle').textContent = 'Edit Dua';
+                DOM.duaIdInput.value = dua.id;
+                DOM.duaTitleInput.value = dua.title || '';
+                DOM.duaTypeSelect.value = dua.type;
+                UI.toggleDuaTypeFields(); // Ensure correct fields are shown based on type
+                DOM.duaArabicInput.value = dua.arabicText || '';
+                DOM.duaTranslationInput.value = dua.translation || '';
+                DOM.duaTransliterationInput.value = dua.transliteration || '';
+                DOM.duaSourceInput.value = dua.source || '';
+                DOM.personalDuaContentEditor.innerHTML = dua.personalContentHTML || '';
+                DOM.duaCategorySelect.value = (dua.categoryIds && dua.categoryIds.length > 0) ? dua.categoryIds[0] : '';
+                
+                UI.openModal(DOM.duaModal);
+            },
+            deleteDua: async (id) => {
+                if (confirm('Are you sure you want to delete this Dua? This action cannot be undone.')) {
+                    try {
+                        await IDB.delete(STORES.DUAS, id);
+                        // Also delete associated reminders
+                        const reminders = await IDB.getAll(STORES.REMINDERS, 'duaId', id);
+                        for (const reminder of reminders) {
+                            await IDB.delete(STORES.REMINDERS, reminder.id);
+                        }
+                        UI.showToast('Dua deleted successfully.', 'success');
+                        DuaManager.renderAllDuas();
+                        DuaManager.renderFavoriteDuas(); // If it was a favorite
+                        DuaManager.showDuaOfTheDay();
+                        ReminderManager.renderActiveReminders();
+                    } catch (error) {
+                        console.error("Error deleting Dua:", error);
+                        UI.showToast('Error deleting Dua: ' + error.message, 'error');
+                    }
+                }
+            },
+            toggleFavorite: async (id) => {
+                const dua = await IDB.get(STORES.DUAS, id);
+                if (dua) {
+                    dua.isFavorite = !dua.isFavorite;
+                    dua.lastModifiedDate = new Date().toISOString();
+                    await IDB.put(STORES.DUAS, dua);
+                    UI.showToast(dua.isFavorite ? 'Added to favorites.' : 'Removed from favorites.', 'success');
+                    DuaManager.renderAllDuas(); // Re-render to update button text
+                    DuaManager.renderFavoriteDuas(); // Re-render favorites list
+                    DuaManager.showDuaOfTheDay(); // Favorites might have changed
+                }
+            },
+            incrementRecitation: async (id) => {
+                const dua = await IDB.get(STORES.DUAS, id);
+                if (dua) {
+                    dua.recitationCount = (dua.recitationCount || 0) + 1;
+                    dua.lastRecited = new Date().toISOString();
+                    dua.lastModifiedDate = new Date().toISOString();
+                    await IDB.put(STORES.DUAS, dua);
+                    UI.showToast('Recitation count updated.', 'success');
+                    // Update counter on the specific card without full re-render for performance
+                    const card = DOM.duaListContainer.querySelector(`.dua-card[data-id="${id}"]`) || DOM.favoriteDuaListContainer.querySelector(`.dua-card[data-id="${id}"]`);
+                    if (card) {
+                        card.querySelector('.counter-display').textContent = dua.recitationCount;
+                    }
+                }
+            },
+            renderAllDuas: async (filterFn = null) => {
+                DOM.duaListContainer.innerHTML = 'Loading Duas...';
+                try {
+                    let duas = await IDB.getAll(STORES.DUAS);
+                    if (filterFn) {
+                        duas = duas.filter(filterFn);
+                    }
+                    duas.sort((a,b) => new Date(b.lastModifiedDate || b.createdDate) - new Date(a.lastModifiedDate || a.createdDate)); // Show newest first
+                    
+                    if (duas.length === 0) {
+                        DOM.duaListContainer.innerHTML = '<p>No Duas found. Add some to get started!</p>';
+                        return;
+                    }
+                    DOM.duaListContainer.innerHTML = ''; // Clear loading/previous
+                    duas.forEach(dua => {
+                        DOM.duaListContainer.appendChild(UI.renderDuaCard(dua));
+                    });
+                } catch (error) {
+                    console.error("Error rendering duas:", error);
+                    DOM.duaListContainer.innerHTML = '<p>Error loading Duas. Please try again.</p>';
+                    UI.showToast('Error loading Duas: ' + error.message, 'error');
+                }
+            },
+            renderFavoriteDuas: async () => {
+                DOM.favoriteDuaListContainer.innerHTML = 'Loading favorite Duas...';
+                try {
+                    const favDuas = await IDB.getAll(STORES.DUAS, 'isFavorite', true);
+                    favDuas.sort((a,b) => new Date(b.lastModifiedDate || b.createdDate) - new Date(a.lastModifiedDate || a.createdDate));
+                    
+                    if (favDuas.length === 0) {
+                        DOM.favoriteDuaListContainer.innerHTML = '<p>No favorite Duas yet. Mark some Duas as favorite!</p>';
+                        return;
+                    }
+                    DOM.favoriteDuaListContainer.innerHTML = '';
+                    favDuas.forEach(dua => {
+                        DOM.favoriteDuaListContainer.appendChild(UI.renderDuaCard(dua));
+                    });
+                } catch (error) {
+                    console.error("Error rendering favorite duas:", error);
+                    DOM.favoriteDuaListContainer.innerHTML = '<p>Error loading favorite Duas.</p>';
+                    UI.showToast('Error loading favorites: ' + error.message, 'error');
+                }
+            },
+            renderDuasByCategory: async (categoryId) => {
+                UI.switchView('allDuasView'); // Ensure we are on the correct view
+                DuaManager.renderAllDuas(dua => dua.categoryIds && dua.categoryIds.includes(categoryId));
+                const category = await IDB.get(STORES.CATEGORIES, categoryId);
+                document.querySelector('#allDuasView h2').textContent = category ? `Duas in ${category.name}` : 'Duas by Category';
+            },
+            searchDuas: async () => {
+                const query = DOM.searchInput.value.toLowerCase().trim();
+                if (!query) {
+                    DuaManager.renderAllDuas(); // Show all if search is empty
+                    document.querySelector('#allDuasView h2').textContent = 'All Duas';
+                    return;
+                }
+                document.querySelector('#allDuasView h2').textContent = `Search Results for "${query}"`;
+                DuaManager.renderAllDuas(dua => {
+                    const titleMatch = dua.title && dua.title.toLowerCase().includes(query);
+                    const arabicMatch = dua.arabicText && dua.arabicText.toLowerCase().includes(query);
+                    const translationMatch = dua.translation && dua.translation.toLowerCase().includes(query);
+                    const transliterationMatch = dua.transliteration && dua.transliteration.toLowerCase().includes(query);
+                    const personalContentMatch = dua.personalContentHTML && dua.personalContentHTML.toLowerCase().includes(query);
+                    // Category search would require fetching category names and matching
+                    return titleMatch || arabicMatch || translationMatch || transliterationMatch || personalContentMatch;
+                });
+            },
+            showDuaOfTheDay: async () => {
+                try {
+                    let potentialDuas = await IDB.getAll(STORES.DUAS, 'isFavorite', true);
+                    if (potentialDuas.length === 0) {
+                        potentialDuas = await IDB.getAll(STORES.DUAS);
+                    }
+                    if (potentialDuas.length === 0) {
+                        DOM.duaOfTheDayContent.innerHTML = 'No Duas available to display.';
+                        return;
+                    }
+                    const randomDua = potentialDuas[Math.floor(Math.random() * potentialDuas.length)];
+                    let content = `<strong>${randomDua.title || 'Untitled Dua'}</strong>`;
+                    if (randomDua.arabicText) content += `<div class="arabic-text" style="font-size: var(--font-size-lg);">${randomDua.arabicText}</div>`;
+                    if (randomDua.translation) content += `<div class="translation-text" style="font-size: var(--font-size-sm);">${randomDua.translation}</div>`;
+                    if (randomDua.personalContentHTML && !randomDua.arabicText) content += `<div>${randomDua.personalContentHTML.substring(0,150)}...</div>`;
+                    DOM.duaOfTheDayContent.innerHTML = content;
+                } catch (error) {
+                    console.error("Error fetching Dua of the Day:", error);
+                    DOM.duaOfTheDayContent.innerHTML = 'Could not load Dua of the Day.';
+                }
+            }
+        };
+
+        // --- Category Management Module ---
+        const CategoryManager = {
+            addOrUpdateCategory: async (event) => {
+                event.preventDefault();
+                const name = DOM.categoryNameInput.value.trim();
+                if (!name) {
+                    UI.showToast('Category name cannot be empty.', 'error');
+                    return;
+                }
+
+                const categoryData = { name };
+                try {
+                    if (currentEditingCategoryId) {
+                        // Update functionality not fully implemented in UI yet, but structure is here
+                        categoryData.id = currentEditingCategoryId;
+                        await IDB.put(STORES.CATEGORIES, categoryData);
+                        UI.showToast('Category updated successfully!', 'success');
+                    } else {
+                        // Check if category name already exists
+                        const existingCategories = await IDB.getAll(STORES.CATEGORIES, 'name', name);
+                        if (existingCategories.length > 0) {
+                            UI.showToast('Category with this name already exists.', 'error');
+                            return;
+                        }
+                        await IDB.add(STORES.CATEGORIES, categoryData);
+                        UI.showToast('Category added successfully!', 'success');
+                    }
+                    DOM.categoryForm.reset();
+                    UI.closeModal(DOM.categoryModal);
+                    currentEditingCategoryId = null;
+                    CategoryManager.renderCategoriesInSidebar();
+                    UI.populateCategoryDropdown(); // Update dropdown in Dua form
+                } catch (error) {
+                    console.error("Error saving category:", error);
+                    UI.showToast('Error saving category: ' + (error.message.includes("ConstraintError") ? "Name already exists." : error.message), 'error');
+                }
+            },
+            renderCategoriesInSidebar: async () => {
+                DOM.categoryListSidebar.innerHTML = ''; // Clear existing
+                try {
+                    const categories = await IDB.getAll(STORES.CATEGORIES);
+                    categories.sort((a,b) => a.name.localeCompare(b.name)).forEach(cat => {
+                        DOM.categoryListSidebar.appendChild(UI.renderCategoryInSidebar(cat));
+                    });
+                } catch (error) {
+                    console.error("Error rendering categories:", error);
+                    UI.showToast('Error loading categories: ' + error.message, 'error');
+                }
+            },
+            // TODO: Edit/Delete category functions
+        };
+        
+        // --- Quran Data Module ---
+        const QuranManager = {
+            loadQuranData: async (force = false) => {
+                try {
+                    const isLoaded = await IDB.getSetting('quranDataLoaded');
+                    if (isLoaded && !force) {
+                        DOM.quranLoadStatus.textContent = 'Quran data already loaded.';
+                        QuranManager.populateSurahNamesAndSelect();
+                        return;
+                    }
+                    DOM.quranLoadStatus.textContent = 'Loading Quran data from data.AM... Please wait.';
+                    UI.showToast('Fetching Quran data...', 'info');
+                    
+                    const response = await fetch('./data.AM'); // Assumes data.AM is in the same directory
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}. Make sure data.AM is in the same directory as the HTML file.`);
+                    }
+                    const textData = await response.text();
+                    const lines = textData.split('\n').filter(line => line.trim() !== '');
+
+                    const transaction = db.transaction(STORES.QURAN_AYAH, 'readwrite');
+                    const store = transaction.objectStore(STORES.QURAN_AYAH);
+                    
+                    // Clear existing Quran data if forcing a reload
+                    if (force) {
+                        await new Promise((resolve, reject) => {
+                            const clearRequest = store.clear();
+                            clearRequest.onsuccess = resolve;
+                            clearRequest.onerror = reject;
+                        });
+                    }
+
+                    let ayahsProcessed = 0;
+                    for (const line of lines) {
+                        // Example: بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ ترجمہ: شروع اللہ کے نام سے جو بڑا مہربان نہایت رحم والا ہے<br/>س 001 آ 001
+                        const parts = line.split(' ترجمہ: ');
+                        if (parts.length < 2) continue;
+                        const arabic = parts[0].trim();
+                        
+                        const translationAndMeta = parts[1].split('<br/>س ');
+                        if (translationAndMeta.length < 2) continue;
+                        const urdu = translationAndMeta[0].trim();
+                        
+                        const metaParts = translationAndMeta[1].split(' آ ');
+                        if (metaParts.length < 2) continue;
+                        
+                        const surah = metaParts[0].trim();
+                        const ayahNum = metaParts[1].trim();
+                        const id = `${surah}_${ayahNum}`;
+
+                        store.put({ id, surah, ayahNum, arabic, urdu });
+                        ayahsProcessed++;
+                    }
+                    
+                    await new Promise((resolve, reject) => {
+                        transaction.oncomplete = resolve;
+                        transaction.onerror = reject;
+                    });
+
+                    await IDB.setSetting('quranDataLoaded', true);
+                    DOM.quranLoadStatus.textContent = `Quran data loaded successfully (${ayahsProcessed} ayahs).`;
+                    UI.showToast(`Quran data loaded (${ayahsProcessed} ayahs).`, 'success');
+                    QuranManager.populateSurahNamesAndSelect();
+
+                } catch (error) {
+                    console.error("Error loading Quran data:", error);
+                    DOM.quranLoadStatus.textContent = 'Error loading Quran data: ' + error.message;
+                    UI.showToast('Error loading Quran data: ' + error.message, 'error', 5000);
+                    await IDB.setSetting('quranDataLoaded', false); // Mark as not loaded on error
+                }
+            },
+            populateSurahNamesAndSelect: async () => {
+                // This is a simplified list. A full list would be better.
+                // For now, we'll dynamically get unique surah numbers.
+                const ayahs = await IDB.getAll(STORES.QURAN_AYAH);
+                const uniqueSurahNumbers = [...new Set(ayahs.map(a => a.surah))].sort((a,b) => parseInt(a) - parseInt(b));
+                
+                // A more comprehensive list of Surah names (first few for example)
+                const surahNameMapping = {
+                    "001": "Al-Fatiha", "002": "Al-Baqarah", "003": "Aal-Imran", "004": "An-Nisa", "005": "Al-Ma'idah",
+                    "112": "Al-Ikhlas", "113": "Al-Falaq", "114": "An-Nas" 
+                    // ... add more as needed or use a full list
+                };
+                surahNames = uniqueSurahNumbers.map(num => ({ number: num, name: surahNameMapping[num] || `Surah ${parseInt(num)}` }));
+
+                DOM.surahSelect.innerHTML = '<option value="">Select Surah</option>';
+                surahNames.forEach(surah => {
+                    const option = document.createElement('option');
+                    option.value = surah.number;
+                    option.textContent = `${parseInt(surah.number)}. ${surah.name}`;
+                    DOM.surahSelect.appendChild(option);
+                });
+            },
+            renderQuranExplorer: () => {
+                // Initial state or message for Quran explorer
+                if (surahNames.length === 0) { // Check if surah names are populated
+                     QuranManager.populateSurahNamesAndSelect(); // Try to populate if not already
+                }
+                DOM.quranAyahListContainer.innerHTML = '<p>Select a Surah or use search to explore Quran.</p>';
+            },
+            renderAyahsForSurah: async (surahNumber) => {
+                DOM.quranAyahListContainer.innerHTML = `Loading ayahs for Surah ${surahNumber}...`;
+                try {
+                    const ayahs = await IDB.getAll(STORES.QURAN_AYAH, 'surah', surahNumber);
+                    ayahs.sort((a,b) => parseInt(a.ayahNum) - parseInt(b.ayahNum));
+
+                    if (ayahs.length === 0) {
+                        DOM.quranAyahListContainer.innerHTML = `<p>No ayahs found for Surah ${surahNumber}. Data might be missing.</p>`;
+                        return;
+                    }
+                    DOM.quranAyahListContainer.innerHTML = '';
+                    ayahs.forEach(ayah => {
+                        const ayahCard = QuranManager.createAyahCard(ayah);
+                        DOM.quranAyahListContainer.appendChild(ayahCard);
+                    });
+                } catch (error) {
+                    console.error(`Error rendering ayahs for Surah ${surahNumber}:`, error);
+                    DOM.quranAyahListContainer.innerHTML = `<p>Error loading ayahs. Please try again.</p>`;
+                    UI.showToast('Error loading ayahs: ' + error.message, 'error');
+                }
+            },
+            searchQuran: async () => {
+                const query = DOM.quranSearchInput.value.toLowerCase().trim();
+                if (!query) {
+                    DOM.quranAyahListContainer.innerHTML = '<p>Enter a search term (e.g., Surah:Ayah like 2:255, or keywords like "prayer", "forgiveness").</p>';
+                    return;
+                }
+
+                DOM.quranAyahListContainer.innerHTML = `Searching for "${query}"...`;
+                
+                // Check for Surah:Ayah format (e.g., 2:255 or 002:255)
+                const surahAyahMatch = query.match(/^(\d{1,3}):(\d{1,3})$/);
+                if (surahAyahMatch) {
+                    const surah = surahAyahMatch[1].padStart(3, '0');
+                    const ayahNum = surahAyahMatch[2].padStart(3, '0');
+                    const ayahId = `${surah}_${ayahNum}`;
+                    try {
+                        const ayah = await IDB.get(STORES.QURAN_AYAH, ayahId);
+                        DOM.quranAyahListContainer.innerHTML = '';
+                        if (ayah) {
+                            DOM.quranAyahListContainer.appendChild(QuranManager.createAyahCard(ayah));
+                        } else {
+                            DOM.quranAyahListContainer.innerHTML = `<p>Ayah ${query} not found.</p>`;
+                        }
+                    } catch (error) {
+                        DOM.quranAyahListContainer.innerHTML = `<p>Error searching for Ayah ${query}.</p>`;
+                    }
+                    return;
+                }
+
+                // Keyword search
+                try {
+                    const allAyahs = await IDB.getAll(STORES.QURAN_AYAH);
+                    const results = allAyahs.filter(ayah => 
+                        ayah.arabic.toLowerCase().includes(query) || 
+                        ayah.urdu.toLowerCase().includes(query)
+                    );
+                    results.sort((a,b) => { // Sort by Surah then Ayah
+                        if (a.surah === b.surah) return parseInt(a.ayahNum) - parseInt(b.ayahNum);
+                        return parseInt(a.surah) - parseInt(b.surah);
+                    });
+
+                    DOM.quranAyahListContainer.innerHTML = '';
+                    if (results.length === 0) {
+                        DOM.quranAyahListContainer.innerHTML = `<p>No results found for "${query}".</p>`;
+                        return;
+                    }
+                    results.forEach(ayah => {
+                        DOM.quranAyahListContainer.appendChild(QuranManager.createAyahCard(ayah));
+                    });
+
+                } catch (error) {
+                    console.error("Error searching Quran:", error);
+                    DOM.quranAyahListContainer.innerHTML = `<p>Error during search. Please try again.</p>`;
+                    UI.showToast('Error searching Quran: ' + error.message, 'error');
+                }
+            },
+            createAyahCard: (ayah) => {
+                const card = document.createElement('div');
+                card.className = 'dua-card quran-ayah-card'; // Re-use dua-card styling
+                
+                const surahNameObj = surahNames.find(s => s.number === ayah.surah);
+                const surahDisplayName = surahNameObj ? surahNameObj.name : `Surah ${parseInt(ayah.surah)}`;
+
+                card.innerHTML = `
+                    <h3>${surahDisplayName} (${parseInt(ayah.surah)}:${parseInt(ayah.ayahNum)})</h3>
+                    <div class="arabic-text">${ayah.arabic}</div>
+                    <div class="urdu-translation"><strong>ترجمہ:</strong> ${ayah.urdu}</div>
+                    <div class="metadata">Surah ${parseInt(ayah.surah)}, Ayah ${parseInt(ayah.ayahNum)}</div>
+                    <div class="dua-actions" style="margin-top:10px;">
+                        <button class="add-ayah-as-dua-btn">Add as Dua</button>
+                    </div>
+                `;
+                card.querySelector('.add-ayah-as-dua-btn').addEventListener('click', () => QuranManager.addAyahAsDua(ayah));
+                return card;
+            },
+            addAyahAsDua: async (ayah) => {
+                // Pre-fill the Add Dua form with Ayah details
+                currentEditingDuaId = null; // Ensure it's a new Dua
+                document.getElementById('duaModalTitle').textContent = 'Add Quran Ayah as Dua';
+                DOM.duaForm.reset();
+                DOM.personalDuaContentEditor.innerHTML = '';
+
+                DOM.duaTypeSelect.value = 'common'; // Or a new 'quran' type if desired
+                UI.toggleDuaTypeFields();
+
+                const surahNameObj = surahNames.find(s => s.number === ayah.surah);
+                const surahDisplayName = surahNameObj ? surahNameObj.name : `Surah ${parseInt(ayah.surah)}`;
+
+                DOM.duaTitleInput.value = `Quran: ${surahDisplayName} (${parseInt(ayah.surah)}:${parseInt(ayah.ayahNum)})`;
+                DOM.duaArabicInput.value = ayah.arabic;
+                DOM.duaTranslationInput.value = ayah.urdu; // Assuming Urdu is the primary translation here
+                DOM.duaTransliterationInput.value = ''; // No transliteration from data.AM
+                DOM.duaSourceInput.value = `Quran ${ayah.surah}:${ayah.ayahNum}`;
+                
+                await UI.populateCategoryDropdown(); // Ensure categories are loaded
+                // Optionally, auto-select a "Quran" category if it exists
+                const quranCategory = (await IDB.getAll(STORES.CATEGORIES)).find(c => c.name.toLowerCase() === 'quran');
+                if (quranCategory) {
+                    DOM.duaCategorySelect.value = quranCategory.id;
+                }
+
+                UI.openModal(DOM.duaModal);
+            }
+        };
+
+        // --- ReminderManager Module ---
+        const ReminderManager = {
+            requestPermission: async () => {
+                if (!('Notification' in window)) {
+                    UI.showToast('This browser does not support desktop notification.', 'error');
+                    return false;
+                }
+                if (Notification.permission === 'granted') {
+                    UI.showToast('Notification permission already granted.', 'info');
+                    return true;
+                }
+                if (Notification.permission !== 'denied') {
+                    const permission = await Notification.requestPermission();
+                    if (permission === 'granted') {
+                        UI.showToast('Notification permission granted!', 'success');
+                        return true;
+                    } else {
+                        UI.showToast('Notification permission denied.', 'warning');
+                        return false;
+                    }
+                } else {
+                     UI.showToast('Notification permission was previously denied. Please enable it in browser settings.', 'warning', 5000);
+                     return false;
+                }
+            },
+            openReminderModal: async (duaId, duaTitle) => {
+                if (Notification.permission !== 'granted') {
+                    const gotPermission = await ReminderManager.requestPermission();
+                    if (!gotPermission) return;
+                }
+
+                DOM.reminderDuaIdInput.value = duaId;
+                DOM.reminderDuaTitle.textContent = duaTitle;
+                DOM.reminderForm.reset(); // Clear previous values
+                // Check for existing reminder for this dua and populate form
+                const existingReminders = await IDB.getAll(STORES.REMINDERS, 'duaId', duaId);
+                if (existingReminders.length > 0) {
+                    const reminder = existingReminders[0]; // Assuming one reminder per dua for now
+                    DOM.reminderTimeInput.value = reminder.time;
+                    reminder.days.forEach(dayIndex => {
+                        document.getElementById(`day${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][dayIndex]}`).checked = true;
+                    });
+                    DOM.reminderMessageInput.value = reminder.message || '';
+                }
+
+                UI.openModal(DOM.reminderModal);
+            },
+            saveReminder: async (event) => {
+                event.preventDefault();
+                const duaId = parseInt(DOM.reminderDuaIdInput.value);
+                const time = DOM.reminderTimeInput.value;
+                const message = DOM.reminderMessageInput.value.trim();
+                const days = [];
+                ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach((day, index) => {
+                    if (document.getElementById(`day${day}`).checked) {
+                        days.push(index);
+                    }
+                });
+
+                if (!time || days.length === 0) {
+                    UI.showToast('Please select time and at least one day.', 'error');
+                    return;
+                }
+
+                const reminderData = {
+                    duaId, time, days, message,
+                    isActive: true,
+                    lastShown: null // Timestamp of last notification shown
+                };
+                
+                try {
+                    // Remove existing reminders for this duaId before adding new one
+                    const existingReminders = await IDB.getAll(STORES.REMINDERS, 'duaId', duaId);
+                    for (const rem of existingReminders) {
+                        await IDB.delete(STORES.REMINDERS, rem.id);
+                    }
+
+                    await IDB.add(STORES.REMINDERS, reminderData);
+                    UI.showToast('Reminder set successfully!', 'success');
+                    UI.closeModal(DOM.reminderModal);
+                    ReminderManager.renderActiveReminders();
+                    ReminderManager.scheduleNextNotificationCheck(); 
+                } catch (error) {
+                    console.error("Error saving reminder:", error);
+                    UI.showToast('Error saving reminder: ' + error.message, 'error');
+                }
+            },
+            checkAndShowReminders: async () => {
+                if (Notification.permission !== 'granted') return;
+
+                const now = new Date();
+                const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+                const currentDay = now.getDay(); // 0 for Sunday, 1 for Monday, etc.
+
+                const activeReminders = await IDB.getAll(STORES.REMINDERS, 'isActive', true);
+                for (const reminder of activeReminders) {
+                    if (reminder.time === currentTime && reminder.days.includes(currentDay)) {
+                        // Check if already shown today for this specific time
+                        const todayDateStr = now.toISOString().split('T')[0];
+                        if (reminder.lastShown && reminder.lastShown.startsWith(todayDateStr) && reminder.lastShown.includes(reminder.time)) {
+                            continue; // Already shown for this time slot today
+                        }
+
+                        const dua = await IDB.get(STORES.DUAS, reminder.duaId);
+                        if (dua) {
+                            const title = reminder.message || `Reminder: ${dua.title || 'Recite Dua'}`;
+                            let body = dua.arabicText ? dua.arabicText.substring(0, 100) + '...' : (dua.personalContentHTML ? 'Open app to read your personal dua.' : 'Time for your remembrance.');
+                            if (dua.translation) body += `\n${dua.translation.substring(0,100)}...`;
+
+                            new Notification(title, {
+                                body: body,
+                                icon: './icon.png' // Optional: Add an icon file
+                            });
+                            
+                            reminder.lastShown = `${todayDateStr} ${reminder.time}`;
+                            await IDB.put(STORES.REMINDERS, reminder);
+                        }
+                    }
+                }
+                ReminderManager.scheduleNextNotificationCheck(); // Reschedule for the next minute
+            },
+            scheduleNextNotificationCheck: () => {
+                // Check every minute
+                setTimeout(ReminderManager.checkAndShowReminders, 60 * 1000);
+            },
+            renderActiveReminders: async () => {
+                DOM.activeRemindersList.innerHTML = '<h4>Your Reminders:</h4>';
+                const reminders = await IDB.getAll(STORES.REMINDERS, 'isActive', true);
+                if (reminders.length === 0) {
+                    DOM.activeRemindersList.innerHTML += '<p>No active reminders set.</p>';
+                    return;
+                }
+                const ul = document.createElement('ul');
+                for (const reminder of reminders) {
+                    const dua = await IDB.get(STORES.DUAS, reminder.duaId);
+                    const li = document.createElement('li');
+                    const daysStr = reminder.days.map(d => ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][d]).join(', ');
+                    li.textContent = `${dua ? (dua.title || "Dua " + dua.id) : "Unknown Dua"} at ${reminder.time} on ${daysStr}. ${reminder.message || ''}`;
+                    
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.textContent = 'Delete';
+                    deleteBtn.className = 'danger';
+                    deleteBtn.style.marginLeft = '10px';
+                    deleteBtn.style.padding = '3px 6px';
+                    deleteBtn.style.fontSize = '0.8em';
+                    deleteBtn.onclick = async () => {
+                        if (confirm('Delete this reminder?')) {
+                            await IDB.delete(STORES.REMINDERS, reminder.id);
+                            UI.showToast('Reminder deleted.', 'success');
+                            ReminderManager.renderActiveReminders();
+                        }
+                    };
+                    li.appendChild(deleteBtn);
+                    ul.appendChild(li);
+                }
+                DOM.activeRemindersList.appendChild(ul);
+            }
+        };
+
+        // --- Settings & Data Management Module ---
+        const SettingsManager = {
+            backupData: async () => {
+                try {
+                    UI.showToast('Preparing backup... This may take a moment.', 'info');
+                    const dataToBackup = {};
+                    for (const storeName of Object.values(STORES)) {
+                        dataToBackup[storeName] = await IDB.getAll(storeName);
+                    }
+                    
+                    const jsonString = JSON.stringify(dataToBackup, null, 2);
+                    const blob = new Blob([jsonString], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    const date = new Date().toISOString().slice(0,10);
+                    a.download = `MyDuaDiary_Backup_${date}.json`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    UI.showToast('Backup successful! File downloaded.', 'success');
+                } catch (error) {
+                    console.error("Backup error:", error);
+                    UI.showToast('Backup failed: ' + error.message, 'error', 5000);
+                }
+            },
+            restoreData: async (event) => {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                if (!confirm('Restoring data will overwrite all current data in the app. Are you sure you want to proceed?')) {
+                    DOM.restoreDataInput.value = ''; // Reset file input
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    try {
+                        UI.showToast('Restoring data... Please wait.', 'info');
+                        const data = JSON.parse(e.target.result);
+                        
+                        // Clear existing data from all stores
+                        const transaction = db.transaction(Object.values(STORES), 'readwrite');
+                        for (const storeName of Object.values(STORES)) {
+                            await new Promise((resolve, reject) => {
+                                const clearRequest = transaction.objectStore(storeName).clear();
+                                clearRequest.onsuccess = resolve;
+                                clearRequest.onerror = reject;
+                            });
+                        }
+                        
+                        // Add new data
+                        const addTransaction = db.transaction(Object.values(STORES), 'readwrite');
+                        for (const storeName in data) {
+                            if (data.hasOwnProperty(storeName) && Object.values(STORES).includes(storeName)) {
+                                const store = addTransaction.objectStore(storeName);
+                                for (const item of data[storeName]) {
+                                    // Fix for autoIncrement keys if they are present in backup
+                                    if (store.autoIncrement && item.hasOwnProperty(store.keyPath)) {
+                                        delete item[store.keyPath];
+                                    }
+                                    store.put(item); // Use put to handle potential key issues better than add
+                                }
+                            }
+                        }
+
+                        await new Promise((resolve, reject) => {
+                            addTransaction.oncomplete = resolve;
+                            addTransaction.onerror = (err) => {
+                                console.error("Restore transaction error:", err.target.error);
+                                reject(err.target.error);
+                            };
+                        });
+
+                        UI.showToast('Data restored successfully! Reloading app...', 'success');
+                        // Reload all data and UI
+                        setTimeout(() => window.location.reload(), 1500);
+
+                    } catch (error) {
+                        console.error("Restore error:", error);
+                        UI.showToast('Restore failed: Invalid file or data format. ' + error.message, 'error', 5000);
+                    } finally {
+                        DOM.restoreDataInput.value = ''; // Reset file input
+                    }
+                };
+                reader.readAsText(file);
+            },
+            loadInitialSettings: async () => {
+                const savedFontSize = await IDB.getSetting('fontSize');
+                if (savedFontSize) {
+                    DOM.fontSizeChanger.value = savedFontSize;
+                    UI.applyFontSize(savedFontSize);
+                }
+                const savedTheme = await IDB.getSetting('theme');
+                if (savedTheme) {
+                    UI.applyTheme(savedTheme);
+                } else { // Default to light theme if nothing saved
+                    UI.applyTheme('light');
+                }
+            },
+            renderSettings: () => {
+                // This function is called when settings view is active.
+                // Populate reminder list, etc.
+                ReminderManager.renderActiveReminders();
+            }
+        };
+        
+        // --- Event Listeners Setup ---
+        const setupEventListeners = () => {
+            DOM.navButtons.forEach(btn => {
+                btn.addEventListener('click', () => UI.switchView(btn.dataset.view));
+            });
+
+            DOM.openAddDuaModalBtn.addEventListener('click', () => {
+                currentEditingDuaId = null;
+                document.getElementById('duaModalTitle').textContent = 'Add New Dua';
+                DOM.duaForm.reset();
+                DOM.personalDuaContentEditor.innerHTML = '';
+                UI.toggleDuaTypeFields(); // Set to default
+                UI.populateCategoryDropdown(); // Ensure categories are fresh
+                UI.openModal(DOM.duaModal);
+            });
+            DOM.closeDuaModalBtn.addEventListener('click', () => UI.closeModal(DOM.duaModal));
+            DOM.duaForm.addEventListener('submit', DuaManager.addOrUpdateDua);
+            DOM.duaTypeSelect.addEventListener('change', UI.toggleDuaTypeFields);
+
+            DOM.addCategoryBtnSidebar.addEventListener('click', () => {
+                currentEditingCategoryId = null;
+                document.getElementById('categoryModalTitle').textContent = 'Add New Category';
+                DOM.categoryForm.reset();
+                UI.openModal(DOM.categoryModal);
+            });
+            DOM.closeCategoryModalBtn.addEventListener('click', () => UI.closeModal(DOM.categoryModal));
+            DOM.categoryForm.addEventListener('submit', CategoryManager.addOrUpdateCategory);
+
+            DOM.searchBtn.addEventListener('click', DuaManager.searchDuas);
+            DOM.searchInput.addEventListener('keyup', (e) => { if (e.key === 'Enter') DuaManager.searchDuas(); });
+
+            DOM.requestNotificationPermBtn.addEventListener('click', ReminderManager.requestPermission);
+            DOM.backupDataBtn.addEventListener('click', SettingsManager.backupData);
+            DOM.restoreDataInput.addEventListener('change', SettingsManager.restoreData);
+            DOM.forceLoadQuranDataBtn.addEventListener('click', () => QuranManager.loadQuranData(true));
+            
+            DOM.fontSizeChanger.addEventListener('change', (e) => UI.applyFontSize(e.target.value));
+            DOM.toggleThemeBtn.addEventListener('click', () => {
+                const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+                UI.applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+            });
+
+            DOM.closeReminderModalBtn.addEventListener('click', () => UI.closeModal(DOM.reminderModal));
+            DOM.reminderForm.addEventListener('submit', ReminderManager.saveReminder);
+
+            DOM.quranSearchBtn.addEventListener('click', QuranManager.searchQuran);
+            DOM.quranSearchInput.addEventListener('keyup', (e) => { if (e.key === 'Enter') QuranManager.searchQuran(); });
+            DOM.surahSelect.addEventListener('change', (e) => {
+                if (e.target.value) {
+                    QuranManager.renderAyahsForSurah(e.target.value);
+                } else {
+                    DOM.quranAyahListContainer.innerHTML = '<p>Select a Surah to view its ayahs.</p>';
+                }
+            });
+
+            // Close modals on escape key
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    if (DOM.duaModal.style.display === 'block') UI.closeModal(DOM.duaModal);
+                    if (DOM.categoryModal.style.display === 'block') UI.closeModal(DOM.categoryModal);
+                    if (DOM.reminderModal.style.display === 'block') UI.closeModal(DOM.reminderModal);
+                }
+            });
+            // Close modals on outside click
+            window.addEventListener('click', (e) => {
+                if (e.target === DOM.duaModal) UI.closeModal(DOM.duaModal);
+                if (e.target === DOM.categoryModal) UI.closeModal(DOM.categoryModal);
+                if (e.target === DOM.reminderModal) UI.closeModal(DOM.reminderModal);
+            });
+        };
+
+        // --- Initialization ---
+        const init = async () => {
+            UI.initDOMCache();
+            try {
+                await IDB.init();
+                UI.showToast('Database initialized.', 'success');
+                
+                await SettingsManager.loadInitialSettings(); // Load theme and font size first
+                
+                setupEventListeners();
+                
+                UI.switchView('allDuasView'); // Set initial view
+                UI.toggleDuaTypeFields(); // Set initial state for dua form
+                
+                await CategoryManager.renderCategoriesInSidebar();
+                await UI.populateCategoryDropdown();
+                await DuaManager.renderAllDuas();
+                await DuaManager.showDuaOfTheDay();
+                
+                await QuranManager.loadQuranData(); // Auto-load on first run logic is inside
+                
+                ReminderManager.scheduleNextNotificationCheck(); // Start reminder checks
+                ReminderManager.renderActiveReminders(); // Display any existing reminders
+
+            } catch (error) {
+                console.error("Initialization failed:", error);
+                UI.showToast('App initialization failed: ' + error.message, 'error', 10000);
+                document.body.innerHTML = `<div style="padding:20px; text-align:center; color:red;">
+                    <h1>Application Error</h1>
+                    <p>Could not initialize the application. Please try refreshing the page. If the problem persists, try clearing browser data for this site or contact support.</p>
+                    <p><em>Details: ${error.message}</em></p>
+                    </div>`;
+            }
+        };
+
+        return {
+            init,
+            richText: RichText // Expose for inline onclick
+        };
+    })();
+
+    // --- Start the App ---
+    document.addEventListener('DOMContentLoaded', App.init);
+
+    </script>
+</body>
+</html>
