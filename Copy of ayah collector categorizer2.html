@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayah Gems Collector</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Roboto:wght@300;400;700&display=swap');
+
+        :root {
+            --primary-color: #4CAF50; /* Green */
+            --secondary-color: #8BC34A; /* Light Green */
+            --background-color: #E8F5E9; /* Lightest Green */
+            --card-background: #FFFFFF;
+            --text-color: #212121; /* Dark Grey */
+            --arabic-text-color: #388E3C; /* Darker Green */
+            --border-color: #C8E6C9; /* Lighter Green */
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --font-arabic: 'Amiri', serif;
+            --font-latin: 'Roboto', sans-serif;
+            --header-height: 60px;
+        }
+
+        body {
+            font-family: var(--font-latin);
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            box-shadow: 0 2px 4px var(--shadow-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.8em;
+        }
+
+        .container {
+            flex-grow: 1;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 20px auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                grid-template-columns: 1fr 2fr;
+            }
+        }
+
+        .sidebar {
+            background-color: var(--card-background);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px var(--shadow-color);
+            overflow-y: auto;
+            max-height: calc(100vh - var(--header-height) - 40px); /* Adjust for header and padding */
+        }
+
+        .main-content {
+            background-color: var(--card-background);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px var(--shadow-color);
+            overflow-y: auto;
+            max-height: calc(100vh - var(--header-height) - 40px); /* Adjust for header and padding */
+        }
+
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        textarea,
+        select {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1em;
+            font-family: var(--font-latin);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .ayah-list {
+            margin-top: 20px;
+        }
+
+        .ayah-item {
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            background-color: var(--background-color);
+            position: relative;
+        }
+
+        .ayah-arabic {
+            font-family: var(--font-arabic);
+            font-size: 1.5em;
+            text-align: right;
+            margin-bottom: 10px;
+            color: var(--arabic-text-color);
+            line-height: 2;
+        }
+
+        .ayah-translation {
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
+        .ayah-meta {
+            font-size: 0.9em;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .ayah-notes {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--border-color);
+            font-size: 0.9em;
+        }
+
+        .ayah-tags {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--border-color);
+        }
+
+        .tag {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            margin-right: 5px;
+            font-size: 0.8em;
+        }
+
+        .delete-ayah {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #f44336; /* Red */
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            font-size: 0.8em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .delete-ayah:hover {
+            background-color: #d32f2f; /* Darker Red */
+        }
+
+        .theme-list {
+            margin-top: 15px;
+        }
+
+        .theme-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px dashed var(--border-color);
+            cursor: pointer;
+        }
+
+        .theme-item:last-child {
+            border-bottom: none;
+        }
+
+        .theme-item span {
+            flex-grow: 1;
+        }
+
+        .theme-item button {
+            background-color: transparent;
+            color: #f44336;
+            border: none;
+            padding: 0 5px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        .theme-item button:hover {
+            color: #d32f2f;
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+        }
+
+        .search-bar input {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1em;
+        }
+
+        .collection-list {
+            margin-top: 15px;
+        }
+
+        .collection-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px dashed var(--border-color);
+            cursor: pointer;
+        }
+
+        .collection-item:last-child {
+            border-bottom: none;
+        }
+
+        .collection-item span {
+            flex-grow: 1;
+        }
+
+        .collection-actions button {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: none;
+            padding: 0 5px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        .collection-actions button:hover {
+            color: var(--secondary-color);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--card-background);
+            margin: auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px var(--shadow-color);
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            margin-top: 20px;
+        }
+
+        .modal-body .form-group {
+            margin-bottom: 15px;
+        }
+
+        .modal-body label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .modal-body input[type="text"],
+        .modal-body textarea,
+        .modal-body select {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1em;
+        }
+
+        .modal-body button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        .modal-body button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .backup-restore {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid var(--border-color);
+        }
+
+        .backup-restore input[type="file"] {
+            display: none;
+        }
+
+        .backup-restore label {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .backup-restore label:hover {
+            background-color: var(--primary-color);
+        }
+
+        .backup-restore button {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        .backup-restore button:hover {
+            background-color: var(--primary-color);
+        }
+
+        .error-message {
+            color: #f44336;
+            margin-top: 10px;
+        }
+
+        .success-message {
+            color: var(--primary-color);
+            margin-top: 10px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px;
+            margin-top: 20px;
+            color: #555;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Ayah Gems Collector</h1>
+    </header>
+
+    <div class="container">
+        <aside class="sidebar">
+            <h2>Themes</h2>
+            <div class="form-group">
+                <label for="new-theme-name">Add New Theme:</label>
+                <input type="text" id="new-theme-name" placeholder="e.g., Patience">
+                <button onclick="addTheme()">Add Theme</button>
+            </div>
+            <div id="theme-list" class="theme-list">
+                <!-- Themes will be loaded here -->
+            </div>
+
+            <h2>Collections</h2>
+            <div class="form-group">
+                <label for="new-collection-name">Add New Collection:</label>
+                <input type="text" id="new-collection-name" placeholder="e.g., Study on Tawakkul">
+                <button onclick="addCollection()">Add Collection</button>
+            </div>
+            <div id="collection-list" class="collection-list">
+                <!-- Collections will be loaded here -->
+            </div>
+
+            <div class="backup-restore">
+                <h2>Backup & Restore</h2>
+                <button onclick="backupData()">Backup Data</button>
+                <label for="restore-file">Restore Data</label>
+                <input type="file" id="restore-file" accept=".json" onchange="restoreData(event)">
+                <div id="backup-restore-message" class="message"></div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <h2>Collected Ayahs</h2>
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Search Ayahs by keyword or tag">
+            </div>
+            <div id="ayah-list" class="ayah-list">
+                <!-- Collected Ayahs will be displayed here -->
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        © 2023 Ayah Gems Collector. Developed by Yasin Ullah.
+    </footer>
+
+    <!-- Modal for adding/editing Ayah -->
+    <div id="ayahModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal('ayahModal')">×</span>
+            <h2>Add/Edit Ayah</h2>
+            <div class="modal-body">
+                <input type="hidden" id="modal-ayah-id">
+                <div class="form-group">
+                    <label for="modal-ayah-arabic">Arabic Ayah:</label>
+                    <textarea id="modal-ayah-arabic" dir="rtl" lang="ar" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="modal-ayah-translation">Translation (Urdu):</label>
+                    <textarea id="modal-ayah-translation" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="modal-ayah-surah">Surah Number:</label>
+                    <input type="number" id="modal-ayah-surah" min="1" max="114" required>
+                </div>
+                <div class="form-group">
+                    <label for="modal-ayah-ayah">Ayah Number:</label>
+                    <input type="number" id="modal-ayah-ayah" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="modal-ayah-notes">Personal Notes:</label>
+                    <textarea id="modal-ayah-notes"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="modal-ayah-themes">Assign Themes (comma separated):</label>
+                    <input type="text" id="modal-ayah-themes" placeholder="e.g., Patience, Guidance">
+                </div>
+                 <div class="form-group">
+                    <label for="modal-ayah-collections">Assign to Collections (comma separated):</label>
+                    <input type="text" id="modal-ayah-collections" placeholder="e.g., Study on Tawakkul">
+                </div>
+                <button onclick="saveAyah()">Save Ayah</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for viewing Collection -->
+    <div id="collectionModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal('collectionModal')">×</span>
+            <h2 id="collection-modal-title">Collection Name</h2>
+            <div class="modal-body">
+                <div id="collection-ayah-list">
+                    <!-- Ayahs in the collection will be displayed here -->
+                </div>
+                <button onclick="exportCollection()">Export Collection (Text)</button>
+                <button onclick="exportCollectionJson()">Export Collection (JSON)</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const DB_NAME = 'AyahGemsDB';
+        const DB_VERSION = 1;
+        const STORE_AYAH = 'ayahs';
+        const STORE_THEME = 'themes';
+        const STORE_COLLECTION = 'collections';
+
+        let db;
+        let allAyahs = [];
+        let allThemes = [];
+        let allCollections = [];
+        let currentFilter = { type: 'all', value: null }; // { type: 'all' | 'theme' | 'collection', value: null | themeName | collectionName }
+
+        // IndexedDB Initialization
+        function openDatabase() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+                request.onupgradeneeded = (event) => {
+                    db = event.target.result;
+                    if (!db.objectStoreNames.contains(STORE_AYAH)) {
+                        db.createObjectStore(STORE_AYAH, { keyPath: 'id', autoIncrement: true });
+                    }
+                    if (!db.objectStoreNames.contains(STORE_THEME)) {
+                        db.createObjectStore(STORE_THEME, { keyPath: 'name' });
+                    }
+                     if (!db.objectStoreNames.contains(STORE_COLLECTION)) {
+                        db.createObjectStore(STORE_COLLECTION, { keyPath: 'name' });
+                    }
+                };
+
+                request.onsuccess = (event) => {
+                    db = event.target.result;
+                    console.log('Database opened successfully');
+                    resolve(db);
+                };
+
+                request.onerror = (event) => {
+                    console.error('Database error:', event.target.errorCode);
+                    reject(event.target.error);
+                };
+            });
+        }
+
+        // Data Loading and Display
+        async function loadData() {
+            try {
+                await openDatabase();
+                await loadAyahs();
+                await loadThemes();
+                await loadCollections();
+                displayAyahs(); // Display all ayahs initially
+            } catch (error) {
+                console.error('Failed to load data:', error);
+                displayMessage('backup-restore-message', 'Error loading data. Please try restoring from a backup.', 'error');
+            }
+        }
+
+        async function loadAyahs() {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([STORE_AYAH], 'readonly');
+                const store = transaction.objectStore(STORE_AYAH);
+                const request = store.getAll();
+
+                request.onsuccess = (event) => {
+                    allAyahs = event.target.result;
+                    console.log('Ayahs loaded:', allAyahs.length);
+                    resolve();
+                };
+
+                request.onerror = (event) => {
+                    console.error('Error loading ayahs:', event.target.errorCode);
+                    reject(event.target.error);
+                };
+            });
+        }
+
+        async function loadThemes() {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([STORE_THEME], 'readonly');
+                const store = transaction.objectStore(STORE_THEME);
+                const request = store.getAll();
+
+                request.onsuccess = (event) => {
+                    allThemes = event.target.result;
+                    console.log('Themes loaded:', allThemes.length);
+                    displayThemes();
+                    resolve();
+                };
+
+                request.onerror = (event) => {
+                    console.error('Error loading themes:', event.target.errorCode);
+                    reject(event.target.error);
+                };
+            });
+        }
+
+         async function loadCollections() {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([STORE_COLLECTION], 'readonly');
+                const store = transaction.objectStore(STORE_COLLECTION);
+                const request = store.getAll();
+
+                request.onsuccess = (event) => {
+                    allCollections = event.target.result;
+                    console.log('Collections loaded:', allCollections.length);
+                    displayCollections();
+                    resolve();
+                };
+
+                request.onerror = (event) => {
+                    console.error('Error loading collections:', event.target.errorCode);
+                    reject(event.target.error);
+                };
+            });
+        }
+
+
+        function displayAyahs(ayahsToDisplay = allAyahs) {
+            const ayahListDiv = document.getElementById('ayah-list');
+            ayahListDiv.innerHTML = '';
+
+            if (ayahsToDisplay.length === 0) {
+                ayahListDiv.innerHTML = '<p>No Ayahs found.</p>';
+                return;
+            }
+
+            ayahsToDisplay.forEach(ayah => {
+                const ayahItem = document.createElement('div');
+                ayahItem.classList.add('ayah-item');
+                ayahItem.innerHTML = `
+                    <button class="delete-ayah" onclick="deleteAyah(${ayah.id})">×</button>
+                    <div class="ayah-arabic">${ayah.arabic}</div>
+                    <div class="ayah-translation">${ayah.translation}</div>
+                    <div class="ayah-meta">Surah ${ayah.surah}, Ayah ${ayah.ayah}</div>
+                    ${ayah.notes ? `<div class="ayah-notes"><strong>Notes:</strong> ${ayah.notes}</div>` : ''}
+                    ${ayah.themes && ayah.themes.length > 0 ? `<div class="ayah-tags"><strong>Themes:</strong> ${ayah.themes.map(tag => `<span class="tag">${tag}</span>`).join('')}</div>` : ''}
+                     ${ayah.collections && ayah.collections.length > 0 ? `<div class="ayah-tags"><strong>Collections:</strong> ${ayah.collections.map(tag => `<span class="tag">${tag}</span>`).join('')}</div>` : ''}
+                `;
+                ayahItem.onclick = (event) => {
+                    // Prevent opening modal when clicking delete button
+                    if (!event.target.classList.contains('delete-ayah')) {
+                        editAyah(ayah.id);
+                    }
+                };
+                ayahListDiv.appendChild(ayahItem);
+            });
+        }
+
+        function displayThemes() {
+            const themeListDiv = document.getElementById('theme-list');
+            themeListDiv.innerHTML = '';
+
+            const allThemesItem = document.createElement('div');
+            allThemesItem.classList.add('theme-item');
+            allThemesItem.innerHTML = `<span>All Ayahs</span>`;
+            allThemesItem.onclick = () => filterAyahs('all', null);
+            themeListDiv.appendChild(allThemesItem);
+
+            allThemes.forEach(theme => {
+                const themeItem = document.createElement('div');
+                themeItem.classList.add('theme-item');
+                themeItem.innerHTML = `
+                    <span>${theme.name}</span>
+                    <button onclick="deleteTheme('${theme.name}', event)">×</button>
+                `;
+                themeItem.onclick = () => filterAyahs('theme', theme.name);
+                themeListDiv.appendChild(themeItem);
+            });
+        }
+
+         function displayCollections() {
+            const collectionListDiv = document.getElementById('collection-list');
+            collectionListDiv.innerHTML = '';
+
+            allCollections.forEach(collection => {
+                const collectionItem = document.createElement('div');
+                collectionItem.classList.add('collection-item');
+                collectionItem.innerHTML = `
+                    <span>${collection.name}</span>
+                    <div class="collection-actions">
+                        <button onclick="viewCollection('${collection.name}', event)">View</button>
+                        <button onclick="deleteCollection('${collection.name}', event)">×</button>
+                    </div>
+                `;
+                collectionListDiv.appendChild(collectionItem);
+            });
+        }
+
+        // Ayah Management
+        function openAyahModal(ayah = {}) {
+            document.getElementById('modal-ayah-id').value = ayah.id || '';
+            document.getElementById('modal-ayah-arabic').value = ayah.arabic || '';
+            document.getElementById('modal-ayah-translation').value = ayah.translation || '';
+            document.getElementById('modal-ayah-surah').value = ayah.surah || '';
+            document.getElementById('modal-ayah-ayah').value = ayah.ayah || '';
+            document.getElementById('modal-ayah-notes').value = ayah.notes || '';
+            document.getElementById('modal-ayah-themes').value = ayah.themes ? ayah.themes.join(', ') : '';
+            document.getElementById('modal-ayah-collections').value = ayah.collections ? ayah.collections.join(', ') : '';
+            document.getElementById('ayahModal').style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        async function saveAyah() {
+            const id = document.getElementById('modal-ayah-id').value;
+            const arabic = document.getElementById('modal-ayah-arabic').value.trim();
+            const translation = document.getElementById('modal-ayah-translation').value.trim();
+            const surah = parseInt(document.getElementById('modal-ayah-surah').value, 10);
+            const ayahNum = parseInt(document.getElementById('modal-ayah-ayah').value, 10);
+            const notes = document.getElementById('modal-ayah-notes').value.trim();
+            const themes = document.getElementById('modal-ayah-themes').value.split(',').map(tag => tag.trim()).filter(tag => tag);
+            const collections = document.getElementById('modal-ayah-collections').value.split(',').map(tag => tag.trim()).filter(tag => tag);
+
+            if (!arabic || !translation || isNaN(surah) || isNaN(ayahNum)) {
+                alert('Please fill in all required fields (Arabic, Translation, Surah, Ayah).');
+                return;
+            }
+
+            const ayahData = {
+                arabic: arabic,
+                translation: translation,
+                surah: surah,
+                ayah: ayahNum,
+                notes: notes,
+                themes: themes,
+                collections: collections
+            };
+
+            const transaction = db.transaction([STORE_AYAH, STORE_THEME, STORE_COLLECTION], 'readwrite');
+            const ayahStore = transaction.objectStore(STORE_AYAH);
+            const themeStore = transaction.objectStore(STORE_THEME);
+             const collectionStore = transaction.objectStore(STORE_COLLECTION);
+
+            // Add new themes if they don't exist
+            themes.forEach(themeName => {
+                if (!allThemes.some(theme => theme.name === themeName)) {
+                    themeStore.add({ name: themeName });
+                }
+            });
+
+             // Add new collections if they don't exist
+            collections.forEach(collectionName => {
+                if (!allCollections.some(collection => collection.name === collectionName)) {
+                    collectionStore.add({ name: collectionName });
+                }
+            });
+
+
+            let request;
+            if (id) {
+                ayahData.id = parseInt(id, 10);
+                request = ayahStore.put(ayahData);
+            } else {
+                request = ayahStore.add(ayahData);
+            }
+
+            request.onsuccess = async () => {
+                console.log('Ayah saved successfully');
+                closeModal('ayahModal');
+                await loadData(); // Reload all data to update lists
+                applyCurrentFilter(); // Re-apply the current filter
+            };
+
+            request.onerror = (event) => {
+                console.error('Error saving ayah:', event.target.errorCode);
+                alert('Error saving Ayah.');
+            };
+        }
+
+        function editAyah(id) {
+            const ayah = allAyahs.find(a => a.id === id);
+            if (ayah) {
+                openAyahModal(ayah);
+            }
+        }
+
+        async function deleteAyah(id) {
+            if (confirm('Are you sure you want to delete this Ayah?')) {
+                const transaction = db.transaction([STORE_AYAH], 'readwrite');
+                const store = transaction.objectStore(STORE_AYAH);
+                const request = store.delete(id);
+
+                request.onsuccess = async () => {
+                    console.log('Ayah deleted successfully');
+                    await loadAyahs(); // Reload ayahs
+                    applyCurrentFilter(); // Re-apply the current filter
+                };
+
+                request.onerror = (event) => {
+                    console.error('Error deleting ayah:', event.target.errorCode);
+                    alert('Error deleting Ayah.');
+                };
+            }
+        }
+
+        // Theme Management
+        async function addTheme() {
+            const themeNameInput = document.getElementById('new-theme-name');
+            const themeName = themeNameInput.value.trim();
+
+            if (themeName) {
+                if (allThemes.some(theme => theme.name === themeName)) {
+                    alert('Theme already exists.');
+                    return;
+                }
+
+                const transaction = db.transaction([STORE_THEME], 'readwrite');
+                const store = transaction.objectStore(STORE_THEME);
+                const request = store.add({ name: themeName });
+
+                request.onsuccess = async () => {
+                    console.log('Theme added successfully');
+                    themeNameInput.value = '';
+                    await loadThemes(); // Reload themes
+                };
+
+                request.onerror = (event) => {
+                    console.error('Error adding theme:', event.target.errorCode);
+                    alert('Error adding theme.');
+                };
+            }
+        }
+
+        async function deleteTheme(themeName, event) {
+             event.stopPropagation(); // Prevent theme item click
+            if (confirm(`Are you sure you want to delete the theme "${themeName}"? This will not delete the Ayahs.`)) {
+                const transaction = db.transaction([STORE_THEME], 'readwrite');
+                const store = transaction.objectStore(STORE_THEME);
+                const request = store.delete(themeName);
+
+                request.onsuccess = async () => {
+                    console.log('Theme deleted successfully');
+                    await loadThemes(); // Reload themes
+                    // Remove theme from ayahs that used it
+                    const ayahsToUpdate = allAyahs.filter(ayah => ayah.themes && ayah.themes.includes(themeName));
+                    const ayahTransaction = db.transaction([STORE_AYAH], 'readwrite');
+                    const ayahStore = ayahTransaction.objectStore(STORE_AYAH);
+                    ayahsToUpdate.forEach(ayah => {
+                        ayah.themes = ayah.themes.filter(t => t !== themeName);
+                        ayahStore.put(ayah);
+                    });
+                     ayahTransaction.oncomplete = async () => {
+                         await loadAyahs(); // Reload ayahs after updating
+                         applyCurrentFilter(); // Re-apply filter in case the deleted theme was active
+                     };
+                };
+
+                request.onerror = (event) => {
+                    console.error('Error deleting theme:', event.target.errorCode);
+                    alert('Error deleting theme.');
+                };
+            }
+        }
+
+        // Collection Management
+        async function addCollection() {
+            const collectionNameInput = document.getElementById('new-collection-name');
+            const collectionName = collectionNameInput.value.trim();
+
+            if (collectionName) {
+                if (allCollections.some(collection => collection.name === collectionName)) {
+                    alert('Collection already exists.');
+                    return;
+                }
+
+                const transaction = db.transaction([STORE_COLLECTION], 'readwrite');
+                const store = transaction.objectStore(STORE_COLLECTION);
+                const request = store.add({ name: collectionName });
+
+                request.onsuccess = async () => {
+                    console.log('Collection added successfully');
+                    collectionNameInput.value = '';
+                    await loadCollections(); // Reload collections
+                };
+
+                request.onerror = (event) => {
+                    console.error('Error adding collection:', event.target.errorCode);
+                    alert('Error adding collection.');
+                };
+            }
+        }
+
+        async function deleteCollection(collectionName, event) {
+             event.stopPropagation(); // Prevent collection item click
+            if (confirm(`Are you sure you want to delete the collection "${collectionName}"? This will not delete the Ayahs.`)) {
+                const transaction = db.transaction([STORE_COLLECTION], 'readwrite');
+                const store = transaction.objectStore(STORE_COLLECTION);
+                const request = store.delete(collectionName);
+
+                request.onsuccess = async () => {
+                    console.log('Collection deleted successfully');
+                    await loadCollections(); // Reload collections
+                     // Remove collection from ayahs that used it
+                    const ayahsToUpdate = allAyahs.filter(ayah => ayah.collections && ayah.collections.includes(collectionName));
+                    const ayahTransaction = db.transaction([STORE_AYAH], 'readwrite');
+                    const ayahStore = ayahTransaction.objectStore(STORE_AYAH);
+                    ayahsToUpdate.forEach(ayah => {
+                        ayah.collections = ayah.collections.filter(c => c !== collectionName);
+                        ayahStore.put(ayah);
+                    });
+                     ayahTransaction.oncomplete = async () => {
+                         await loadAyahs(); // Reload ayahs after updating
+                         applyCurrentFilter(); // Re-apply filter in case the deleted collection was active
+                     };
+                };
+
+                request.onerror = (event) => {
+                    console.error('Error deleting collection:', event.target.errorCode);
+                    alert('Error deleting collection.');
+                };
+            }
+        }
+
+        function viewCollection(collectionName, event) {
+            event.stopPropagation(); // Prevent collection item click
+            currentFilter = { type: 'collection', value: collectionName };
+            document.getElementById('collection-modal-title').textContent = collectionName;
+            const collectionAyahs = allAyahs.filter(ayah => ayah.collections && ayah.collections.includes(collectionName));
+            displayCollectionAyahs(collectionAyahs);
+            document.getElementById('collectionModal').style.display = 'flex';
+        }
+
+        function displayCollectionAyahs(ayahsToDisplay) {
+             const collectionAyahListDiv = document.getElementById('collection-ayah-list');
+            collectionAyahListDiv.innerHTML = '';
+
+            if (ayahsToDisplay.length === 0) {
+                collectionAyahListDiv.innerHTML = '<p>No Ayahs in this collection.</p>';
+                return;
+            }
+
+            ayahsToDisplay.forEach(ayah => {
+                const ayahItem = document.createElement('div');
+                ayahItem.classList.add('ayah-item'); // Reuse ayah-item styling
+                 ayahItem.style.cursor = 'default'; // Disable click for editing in modal
+                ayahItem.innerHTML = `
+                    <div class="ayah-arabic">${ayah.arabic}</div>
+                    <div class="ayah-translation">${ayah.translation}</div>
+                    <div class="ayah-meta">Surah ${ayah.surah}, Ayah ${ayah.ayah}</div>
+                    ${ayah.notes ? `<div class="ayah-notes"><strong>Notes:</strong> ${ayah.notes}</div>` : ''}
+                    ${ayah.themes && ayah.themes.length > 0 ? `<div class="ayah-tags"><strong>Themes:</strong> ${ayah.themes.map(tag => `<span class="tag">${tag}</span>`).join('')}</div>` : ''}
+                `;
+                collectionAyahListDiv.appendChild(ayahItem);
+            });
+        }
+
+        function exportCollection() {
+            const collectionName = document.getElementById('collection-modal-title').textContent;
+            const collectionAyahs = allAyahs.filter(ayah => ayah.collections && ayah.collections.includes(collectionName));
+
+            let exportText = `# Collection: ${collectionName}\n\n`;
+            collectionAyahs.forEach(ayah => {
+                exportText += `Surah ${ayah.surah}, Ayah ${ayah.ayah}\n`;
+                exportText += `${ayah.arabic}\n`;
+                exportText += `${ayah.translation}\n`;
+                if (ayah.notes) {
+                    exportText += `Notes: ${ayah.notes}\n`;
+                }
+                if (ayah.themes && ayah.themes.length > 0) {
+                    exportText += `Themes: ${ayah.themes.join(', ')}\n`;
+                }
+                exportText += '---\n\n';
+            });
+
+            const blob = new Blob([exportText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${collectionName.replace(/[^a-z0-9]/gi, '_')}_collection.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+         function exportCollectionJson() {
+            const collectionName = document.getElementById('collection-modal-title').textContent;
+            const collectionAyahs = allAyahs.filter(ayah => ayah.collections && ayah.collections.includes(collectionName));
+
+            const exportData = {
+                name: collectionName,
+                ayahs: collectionAyahs.map(ayah => ({
+                    arabic: ayah.arabic,
+                    translation: ayah.translation,
+                    surah: ayah.surah,
+                    ayah: ayah.ayah,
+                    notes: ayah.notes,
+                    themes: ayah.themes,
+                    collections: ayah.collections // Include collections in export data
+                }))
+            };
+
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${collectionName.replace(/[^a-z0-9]/gi, '_')}_collection.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+
+        // Filtering and Searching
+        function filterAyahs(type, value) {
+            currentFilter = { type, value };
+            applyCurrentFilter();
+        }
+
+        function applyCurrentFilter() {
+            let filteredAyahs = [];
+            if (currentFilter.type === 'all') {
+                filteredAyahs = allAyahs;
+            } else if (currentFilter.type === 'theme') {
+                filteredAyahs = allAyahs.filter(ayah => ayah.themes && ayah.themes.includes(currentFilter.value));
+            } else if (currentFilter.type === 'collection') {
+                 // Filtering by collection is handled by the modal view,
+                 // but we can still filter the main list if needed, though the UI is designed for modal view.
+                 // For now, let's just display all ayahs in the main view when a collection is selected in the sidebar.
+                 // If you want the main view to filter by collection, uncomment the line below:
+                 // filteredAyahs = allAyahs.filter(ayah => ayah.collections && ayah.collections.includes(currentFilter.value));
+                 filteredAyahs = allAyahs; // Display all in main view when collection is selected in sidebar
+            }
+
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            if (searchTerm) {
+                filteredAyahs = filteredAyahs.filter(ayah =>
+                    (ayah.translation && ayah.translation.toLowerCase().includes(searchTerm)) ||
+                    (ayah.notes && ayah.notes.toLowerCase().includes(searchTerm)) ||
+                    (ayah.themes && ayah.themes.some(tag => tag.toLowerCase().includes(searchTerm)))
+                );
+            }
+
+            displayAyahs(filteredAyahs);
+        }
+
+        document.getElementById('search-input').addEventListener('input', applyCurrentFilter);
+
+        // Backup and Restore
+        async function backupData() {
+            try {
+                const transaction = db.transaction([STORE_AYAH, STORE_THEME, STORE_COLLECTION], 'readonly');
+                const ayahStore = transaction.objectStore(STORE_AYAH);
+                const themeStore = transaction.objectStore(STORE_THEME);
+                const collectionStore = transaction.objectStore(STORE_COLLECTION);
+
+                const ayahs = await new Promise((resolve, reject) => {
+                    const request = ayahStore.getAll();
+                    request.onsuccess = (event) => resolve(event.target.result);
+                    request.onerror = (event) => reject(event.target.error);
+                });
+
+                const themes = await new Promise((resolve, reject) => {
+                    const request = themeStore.getAll();
+                    request.onsuccess = (event) => resolve(event.target.result);
+                    request.onerror = (event) => reject(event.target.error);
+                });
+
+                 const collections = await new Promise((resolve, reject) => {
+                    const request = collectionStore.getAll();
+                    request.onsuccess = (event) => resolve(event.target.result);
+                    request.onerror = (event) => reject(event.target.error);
+                });
+
+
+                const backupData = {
+                    ayahs: ayahs,
+                    themes: themes,
+                    collections: collections,
+                    timestamp: new Date().toISOString()
+                };
+
+                const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `ayah_gems_backup_${Date.now()}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                displayMessage('backup-restore-message', 'Backup created successfully.', 'success');
+
+            } catch (error) {
+                console.error('Backup failed:', error);
+                displayMessage('backup-restore-message', 'Backup failed: ' + error.message, 'error');
+            }
+        }
+
+        async function restoreData(event) {
+            const file = event.target.files[0];
+            if (!file) {
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                try {
+                    const backupData = JSON.parse(e.target.result);
+
+                    if (!backupData || !Array.isArray(backupData.ayahs) || !Array.isArray(backupData.themes) || !Array.isArray(backupData.collections)) {
+                        throw new Error('Invalid backup file format.');
+                    }
+
+                    if (confirm('Restoring will overwrite your current data. Are you sure?')) {
+                        // Close existing database connection
+                        if (db) {
+                            db.close();
+                        }
+
+                        // Delete the existing database
+                        const deleteRequest = indexedDB.deleteDatabase(DB_NAME);
+
+                        deleteRequest.onsuccess = async () => {
+                            console.log('Old database deleted successfully');
+                            // Re-open and populate the database
+                            db = await openDatabase();
+                            const transaction = db.transaction([STORE_AYAH, STORE_THEME, STORE_COLLECTION], 'readwrite');
+                            const ayahStore = transaction.objectStore(STORE_AYAH);
+                            const themeStore = transaction.objectStore(STORE_THEME);
+                            const collectionStore = transaction.objectStore(STORE_COLLECTION);
+
+                            // Add ayahs (remove old IDs to let IndexedDB assign new ones)
+                            for (const ayah of backupData.ayahs) {
+                                delete ayah.id; // Remove old ID
+                                await new Promise((resolve, reject) => {
+                                    const request = ayahStore.add(ayah);
+                                    request.onsuccess = resolve;
+                                    request.onerror = reject;
+                                });
+                            }
+
+                            // Add themes
+                             for (const theme of backupData.themes) {
+                                await new Promise((resolve, reject) => {
+                                    const request = themeStore.add(theme);
+                                    request.onsuccess = resolve;
+                                    request.onerror = (event) => {
+                                        // Ignore errors if theme already exists (e.g., restoring same backup)
+                                        if (event.target.error.name === 'ConstraintError') {
+                                            resolve();
+                                        } else {
+                                            reject(event.target.error);
+                                        }
+                                    };
+                                });
+                            }
+
+                             // Add collections
+                             for (const collection of backupData.collections) {
+                                await new Promise((resolve, reject) => {
+                                    const request = collectionStore.add(collection);
+                                    request.onsuccess = resolve;
+                                    request.onerror = (event) => {
+                                        // Ignore errors if collection already exists
+                                        if (event.target.error.name === 'ConstraintError') {
+                                            resolve();
+                                        } else {
+                                            reject(event.target.error);
+                                        }
+                                    };
+                                });
+                            }
+
+
+                            transaction.oncomplete = async () => {
+                                console.log('Restore complete');
+                                displayMessage('backup-restore-message', 'Data restored successfully.', 'success');
+                                await loadData(); // Reload data into memory and display
+                            };
+
+                            transaction.onerror = (event) => {
+                                console.error('Restore transaction failed:', event.target.errorCode);
+                                displayMessage('backup-restore-message', 'Restore failed during transaction: ' + event.target.error.message, 'error');
+                            };
+                        };
+
+                        deleteRequest.onerror = (event) => {
+                            console.error('Error deleting old database:', event.target.errorCode);
+                             // Attempt to restore anyway if deletion fails? Or just report error?
+                             // For simplicity, let's just report the error.
+                            displayMessage('backup-restore-message', 'Error deleting old database. Restore failed: ' + event.target.error.message, 'error');
+                        };
+
+                         deleteRequest.onblocked = () => {
+                            console.warn('Database deletion blocked. Close all tabs with this app.');
+                            displayMessage('backup-restore-message', 'Database deletion blocked. Please close all other tabs with this app and try again.', 'error');
+                        };
+
+                    }
+                } catch (error) {
+                    console.error('Error processing restore file:', error);
+                    displayMessage('backup-restore-message', 'Error processing restore file: ' + error.message, 'error');
+                } finally {
+                     // Clear the file input value so the same file can be selected again
+                    event.target.value = '';
+                }
+            };
+            reader.onerror = (e) => {
+                console.error('FileReader error:', e);
+                displayMessage('backup-restore-message', 'Error reading file.', 'error');
+                 event.target.value = ''; // Clear input
+            };
+            reader.readAsText(file);
+        }
+
+        function displayMessage(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = type + '-message'; // Use CSS classes for styling
+            setTimeout(() => {
+                element.textContent = '';
+                element.className = 'message'; // Reset class
+            }, 5000); // Hide message after 5 seconds
+        }
+
+
+        // Initial data loading on page load
+        window.onload = loadData;
+
+    </script>
+</body>
+</html>
