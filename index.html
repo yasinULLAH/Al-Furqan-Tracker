@@ -1186,7 +1186,7 @@
                 }
             }
             
-            async function renderSurahAyahsPreview(surahNumber, count = 300) {
+            async function renderSurahAyahsPreview(surahNumber, count = 400) {
                 surahAyahsPreviewContainer.innerHTML = '<p>Loading ayahs...</p>';
                 try {
                     const transaction = db.transaction(['quranData'], 'readonly');
@@ -1844,25 +1844,48 @@
 
             // --- Initialization ---
             async function main() {
-                showLoading("Initializing App...");
-                try {
-                    await initDB();
-                    await loadThemePreference(); // Apply theme early
-                    await initializeSurahProgress();
-                    await checkQuranDataStatus();
-                    
-                    populateGoalSelectors(); // For goal modal
-                    populateLogSurahSelect(); // For log modal
+    showLoading("Initializing App...");
+    try {
+        await initDB();
+        await loadThemePreference();
+        await initializeSurahProgress();
+        
+        // Check if Quran data is already loaded
+        const transaction = db.transaction(['quranData'], 'readonly');
+        const store = transaction.objectStore('quranData');
+        const countRequest = store.count();
+        const isDataLoaded = await new Promise((resolve) => {
+            countRequest.onsuccess = () => resolve(countRequest.result > 0);
+        });
 
-                    setupEventListeners();
-                    switchView('dashboard'); // Load initial view
-                } catch (error) {
-                    console.error("Initialization failed:", error);
-                    document.body.innerHTML = "<p>Error initializing application. Please try refreshing or clearing application data. Check console for details.</p>";
-                } finally {
-                    hideLoading();
-                }
+        // Load data.AM automatically if not found
+        if (!isDataLoaded) {
+            showLoading("Loading default Quran data...");
+            try {
+                const response = await fetch('data.AM'); // Adjust path if needed
+                if (!response.ok) throw new Error('Failed to fetch data.AM');
+                const fileContent = await response.text();
+                await parseAndStoreQuranData(fileContent);
+                quranDataStatus.textContent = `Status: Default data.AM loaded successfully.`;
+            } catch (error) {
+                console.error("Error loading default Quran data:", error);
+                quranDataStatus.textContent = `Status: Failed to load default data.AM. Please upload manually.`;
             }
+        } else {
+            await checkQuranDataStatus();
+        }
+
+        populateGoalSelectors();
+        populateLogSurahSelect();
+        setupEventListeners();
+        switchView('dashboard');
+    } catch (error) {
+        console.error("Initialization failed:", error);
+        document.body.innerHTML = "<p>Error initializing application. Please try refreshing or clearing application data. Check console for details.</p>";
+    } finally {
+        hideLoading();
+    }
+}
 
             document.addEventListener('DOMContentLoaded', main);
 
